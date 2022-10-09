@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Persia Atlas</string>
+    <string name="title_activity_main">Persia Atlas</string>
+    <string name="package_name">com.persiaatlas.quasar.capacitor</string>
+    <string name="custom_url_scheme">com.persiaatlas.quasar.capacitor</string>
+</resources>

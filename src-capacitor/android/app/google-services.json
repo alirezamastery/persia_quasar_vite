@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "128470068708",
+    "project_id": "persia-atlas",
+    "storage_bucket": "persia-atlas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128470068708:android:1afdd786aba67348286bf1",
+        "android_client_info": {
+          "package_name": "com.persiaatlas.quasar.capacitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128470068708-c0tasuspe7javvqskuov18ahnhjkdspr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCa9VUzNil1p49kyGWDXo_iaZQPziQj-SU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128470068708-c0tasuspe7javvqskuov18ahnhjkdspr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

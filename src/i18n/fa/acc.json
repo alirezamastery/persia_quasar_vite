@@ -1,0 +1,17 @@
+{
+  "accounting": "حسابداری",
+  "profit": "سود",
+  "profitInMonth": "سود در ماه",
+  "totalCount": "تعداد کل",
+  "cost": "هزینه",
+  "costs": "هزینه ها",
+  "costType": "نوع هزینه",
+  "costTypes": "انواع هزینه",
+  "income": "درآمد",
+  "incomes": "درآمدها",
+  "productCost": "هزینه محصول",
+  "productCosts": "هزینه های محصول",
+  "stopLoss": "حد ضرر",
+  "profitEachMonth": "سود در هر ماه از سال",
+  "profitYearView": "سود در نگاه سالیانه"
+}

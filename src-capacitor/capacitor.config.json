@@ -1,0 +1,16 @@
+{
+  "appId": "com.persiaatlas.quasar.capacitor",
+  "appName": "Persia Atlas",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ]
+    }
+  }
+}
