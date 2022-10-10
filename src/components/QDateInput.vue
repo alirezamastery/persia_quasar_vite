@@ -31,7 +31,7 @@
   </q-input>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {ref, watch} from 'vue'
 import {isRequired} from 'src/modules/form-validation'
 import moment from 'moment-jalaali'
@@ -49,7 +49,7 @@ const props = defineProps({
 })
 
 
-const date = ref<string | null>(null)
+const date = ref(null)
 // watch(() => props.modelValue, (newVal, oldVal) => {
 //   console.log('first val  ', newVal, oldVal)
 //   let n = newVal
@@ -61,7 +61,7 @@ const date = ref<string | null>(null)
 //     date.value = n
 // })
 watch(date, (val) => {
-  console.log('before emit', val)
+  console.log('QDateInput | before emit', val)
   let payload = val
   if (!val)
     payload = null
@@ -72,9 +72,12 @@ watch(date, (val) => {
   emits('update:modelValue', payload)
 })
 
-if (q.lang.isoName === 'fa') {
-  date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
-} else
-  date.value = cloneDeep(props.modelValue) as string
-
+// if (q.lang.isoName === 'fa') {
+//   date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
+// } else
+//   date.value = cloneDeep(props.modelValue)
+console.log('QDateInput | props:', props.modelValue)
+date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
+//
+// console.log('date value:', date.value)
 </script>

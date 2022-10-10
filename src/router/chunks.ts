@@ -7,7 +7,7 @@ export const logout = () =>
 export const profile = () =>
   import(/* webpackChunkName: "general" */ '../views/dashboard/Profile.vue')
 export const justRain = () =>
-    import(/* webpackChunkName: "general" */ '../views/JustRain.vue')
+  import(/* webpackChunkName: "general" */ '../views/JustRain.vue')
 export const test = () =>
   import(/* webpackChunkName: "general" */ '../views/robot/test.vue')
 
@@ -19,7 +19,7 @@ export const actualProductAddEdit = () =>
 export const brandList = () =>
   import(/* webpackChunkName: "products" */ '../views/products/brand/List.vue')
 export const brandAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/brand/AddEdit.vue')
+  import(/* webpackChunkName: "products" */ '../views/products/brand/EditTest.vue')
 
 export const productsList = () =>
   import(/* webpackChunkName: "products" */ '../views/products/product/List.vue')
@@ -33,13 +33,8 @@ export const productTypeAddEdit = () =>
 
 // export const productTypeSelectorsList = () =>
 //   import(/* webpackChunkName: "products" */ '../views/products/productTypeSelector/List.vue')
-// export const productTypeSelectorAddEdit = () =>
-//   import(/* webpackChunkName: "products" */ '../views/products/productTypeSelector/AddEdit_Composition.vue')
-//
 // export const productTypeSelectorValuesList = () =>
 //   import(/* webpackChunkName: "products" */ '../views/products/productTypeSelectorValues/List.vue')
-// export const productTypeSelectorValueAddEdit = () =>
-//   import(/* webpackChunkName: "products" */ '../views/products/productTypeSelectorValues/AddEdit_Composition.vue')
 
 export const variantsList = () =>
   import(/* webpackChunkName: "products" */ '../views/products/variant/List.vue')
@@ -64,7 +59,7 @@ export const inactiveVariants = () =>
   import(/* webpackChunkName: "robot" */ '../views/robot/inactiveVariants/List.vue')
 
 export const WebRTCTest = () =>
-    import(/* webpackChunkName: "robot" */ '../views/robot/call/WebRTCTest.vue')
+  import(/* webpackChunkName: "robot" */ '../views/robot/call/WebRTCTest.vue')
 
 
 export const invoiceList = () =>

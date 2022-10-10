@@ -3,11 +3,15 @@
 
     <div class="text-h6 q-ma-md">{{ formTitle }}</div>
 
-    <q-form v-if="showForm" @submit.prevent="saveItem" class="q-gutter-sm">
+    <q-form
+      v-if="showForm"
+      @submit.prevent="handleFormSubmit"
+      class="q-gutter-sm"
+    >
       <div class="row">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <AutoComplete
-            v-model="form.type.id"
+            v-model="form.costTypeId"
             :label="$t('general.type')"
             :query-param="'search'"
             :obj-repr-field="'title'"
@@ -50,78 +54,71 @@
       </div>
 
       <FormActions
-        :show-delete="!!editingItemId"
-        @delete="deleteDialog = true"
+        :show-delete="itemId !== null"
+        @delete="toggleDeleteDialog"
       />
 
     </q-form>
 
     <DeleteDialog
-      v-if="editingItemId"
-      v-model="deleteDialog"
+      v-if="itemId !== null"
+      v-model="showDeleteDialog"
       :item-repr="itemRepr"
-      @delete="handleDeleteItem"
+      @delete="handleDelete"
     />
 
   </q-card>
 </template>
 
-<script>
-import {cloneDeep} from 'lodash'
-import {dataToolsMixin} from 'src/mixins/data-tools'
-import {addEditViewMixin} from 'src/mixins/add-edit'
+<script setup lang="ts">
+import {ref, computed, watch} from 'vue'
+import {useRoute} from 'vue-router/dist/vue-router'
+import {isRequired} from 'src/modules/form-validation'
+import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
+import {formatIntNumber} from 'src/modules/number-tools'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import FormActions from 'src/components/addEdit/FormActions.vue'
 import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
 import QDateInput from 'src/components/QDateInput.vue'
 import urls from 'src/urls'
+import {CostForm} from 'src/typings/domain/accounting/cost'
+import {CostPayload} from 'src/typings/network/payload/accounting/cost'
+import {CostResponse} from 'src/typings/network/response/accounting/cost'
+import {costResponseToForm, costFormToPayload} from 'src/typings/converter/accounting/cost'
 
-export default {
-  name: 'AddEdit',
-  components: {
-    DeleteDialog,
-    AutoComplete,
-    FormActions,
-    QDateInput,
-  },
-  mixins: [dataToolsMixin, addEditViewMixin],
-  data() {
-    return {
-      urls: urls,
-      apiRoot: urls.costs,
-      listViewRoute: 'costList',
-      itemType: 'acc.cost',
-      form: {
-        type: {title: ''},
-        amount: '',
-        date: '',
-        description: '',
-      },
-    }
-  },
-  computed: {
-    itemRepr() {
-      return this.form.type.title
-    },
-  },
-  watch: {
-    'form.amount': function (newVal) {
-      this.form.amount = this.formatIntNumber(newVal)
-    },
-  },
-  methods: {
-    formInit(resData) {
-      this.form = cloneDeep(resData)
-      this.form.amount = this.formatIntNumber(this.form.amount.toString())
-    },
-    getRequestData() {
-      return {
-        type: this.form.type.id,
-        amount: this.numberWithCommaToInt(this.form.amount),
-        date: this.form.date,
-        description: this.form.description,
-      }
-    },
-  },
-}
+
+const route = useRoute()
+const itemId = getItemIdFromRoute(route)
+const apiRoot = urls.costs
+const listViewRoute = 'costList'
+const itemTypeTranslate = 'acc.cost'
+const form = ref<CostForm>({
+  costTypeId: null,
+  amount: null,
+  date: '',
+  description: '',
+})
+const itemRepr = computed(() => form.value.description)
+
+watch(() => form.value.amount, (newVal) => {
+  form.value.amount = formatIntNumber(newVal)
+})
+
+const {
+  formTitle,
+  showForm,
+  showDeleteDialog,
+  toggleDeleteDialog,
+  handleFormSubmit,
+  handleDelete,
+} = useAddEdit<CostPayload, CostResponse, CostForm>(
+  form,
+  itemId,
+  apiRoot,
+  listViewRoute,
+  itemTypeTranslate,
+  itemRepr,
+  costResponseToForm,
+  costFormToPayload,
+)
 </script>

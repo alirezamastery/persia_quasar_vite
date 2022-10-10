@@ -39,7 +39,7 @@
   </Table>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useI18n} from 'vue-i18n'
 import {useQuasar} from 'quasar'
 import Table from 'src/components/table/Table.vue'
@@ -70,5 +70,4 @@ const filters = [
     label: 'general.untilDate',
   },
 ]
-
 </script>

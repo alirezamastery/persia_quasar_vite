@@ -104,7 +104,7 @@ import Variant from 'src/components/Variant.vue'
 import {visualizeVariantSelector} from 'src/utils'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {ActualProduct, Brand, Variant as VariantObj, VariantDk, VariantSelector} from 'src/types'
+import {ActualProduct, Brand, Variant as VariantObj, VariantDk, VariantSelector} from 'src/typings/types'
 import {SelectedIdHierarchy} from './composables'
 
 

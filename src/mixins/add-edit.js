@@ -1,4 +1,4 @@
-import {notifyErrors, addBanner, notifyMessage, notifyAxiosError} from '../modules/notif'
+import {addBanner} from 'src/modules/notif'
 
 export const addEditViewMixin = {
   data() {

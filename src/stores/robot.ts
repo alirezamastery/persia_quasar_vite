@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {WebsocketBaseResponse} from 'src/types'
+import {WebsocketBaseResponse} from 'src/typings/types'
 
 export interface RobotStoreState {
   robotRunning: boolean,

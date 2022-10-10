@@ -57,9 +57,9 @@
 </template>
 
 <script setup>
-import {ref, watch, reactive} from 'vue'
-import {axiosInstance} from '../boot/axios'
+import {ref, watch} from 'vue'
 import {isEqual} from 'lodash'
+import {axiosInstance} from 'src/boot/axios'
 
 const props = defineProps({
   modelValue: {type: [Number, Array, String]},
@@ -82,7 +82,6 @@ const emits = defineEmits(['update', 'update:modelValue', 'new-selection'])
 const loading = ref(false)
 const items = ref([])
 const selectedValue = ref(null)
-
 const nextPage = ref('')
 
 
@@ -194,6 +193,7 @@ function getInitialDataToDisplay(modelVal) {
  * logic for single and multiple selection gets more complicated
  */
 watch(selectedValue, (newValue) => {
+  console.log('auto complete newValue:',newValue)
   if (Array.isArray(selectedValue.value)) {
     const data = newValue.map(item => item[props.objUniqueId])
     // console.log('emit payload', data)

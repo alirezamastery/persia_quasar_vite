@@ -5,8 +5,7 @@ import localDb from 'src/local-db'
 import {broadcastInstance} from 'src/boot/broadcast'
 import useWebsocketStore from './websocket'
 import useRobotStore from './robot'
-import useWebRTCStore from './webrtc'
-import {UserProfile} from 'src/types'
+import {UserProfile} from 'src/typings/types'
 
 const storeID = 'user'
 
@@ -55,8 +54,6 @@ export const useUserStore = defineStore({
       wsStore.HandleLogout()
       const robotStore = useRobotStore()
       robotStore.$reset()
-      const webrtcStore = useWebRTCStore()
-      webrtcStore.$reset()
       this.$reset()
       routerInstance.push({name: 'Login'})
     },

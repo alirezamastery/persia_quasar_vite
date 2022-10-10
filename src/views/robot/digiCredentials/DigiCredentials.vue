@@ -60,10 +60,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, computed} from 'vue'
-import {notifyAxiosError, notifyErrors, notifyMessage} from 'src/modules/notif'
 import {useI18n} from 'vue-i18n'
+import {notifyMessage} from 'src/modules/notif'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 
@@ -95,9 +95,6 @@ function handleSubmit() {
       oldPassword.value = res.data.digi_password
       newPassword.value = oldPassword.value
       notifyMessage('positive', t('general.snack.saveSuccess'))
-    })
-    .catch(err => {
-      // notifyAxiosError(err)
     })
 }
 

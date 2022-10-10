@@ -33,10 +33,10 @@
 
 <script setup>
 import {useI18n} from 'vue-i18n'
+import {notifyMessage} from 'src/modules/notif'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
-import {axiosInstance} from '../../../boot/axios'
-import {notifyMessage} from 'src/modules/notif'
+import {axiosInstance} from 'src/boot/axios'
 
 const {t} = useI18n()
 
@@ -48,13 +48,12 @@ const columns = [
   {name: 'brand', label: t('products.brand'), field: 'brand', align: 'left'},
   {name: 'price_step', label: t('general.priceStepRial'), field: 'price_step', align: 'left'},
 ]
-
 const priceStepOptions = [
-  {label:'1,000',value: 1000},
-  {label:'2,000',value:2000 },
-  {label:'3,000',value: 3000},
-  {label:'4,000',value: 4000},
-  {label:'5,000',value: 5000},
+  {label: '1,000', value: 1000},
+  {label: '2,000', value: 2000},
+  {label: '3,000', value: 3000},
+  {label: '4,000', value: 4000},
+  {label: '5,000', value: 5000},
 ]
 
 function handlePriceStepChange(id, tableData, event) {

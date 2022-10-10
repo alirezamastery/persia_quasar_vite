@@ -200,7 +200,7 @@ import {useI18n} from 'vue-i18n'
 import {visualizeVariantSelector} from '../utils'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {VariantDk} from 'src/types'
+import {VariantDk} from 'src/typings/types'
 
 
 const {t} = useI18n()

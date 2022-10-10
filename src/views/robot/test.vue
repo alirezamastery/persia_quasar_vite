@@ -37,9 +37,7 @@ const dialogOpen = ref(false)
 const showAvatarMenu = ref(false)
 const deletedImage = ref(false)
 
-function handleCropperCancel() {
 
-}
 
 function handleImageSelect() {
   const imageInput = document.createElement('input')

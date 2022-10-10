@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import {ref} from 'vue'
 import Variant from 'src/components/Variant.vue'
-import {VariantDk} from 'src/types'
+import {VariantDk} from 'src/typings/types'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 

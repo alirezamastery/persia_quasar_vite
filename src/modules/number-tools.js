@@ -1,15 +1,15 @@
-export const addCommaForIntNumber = (x) => {
+export const addCommaToIntNumber = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 export const removeCommas = (val) => {
   const str = val || ''
-  return str.replace(/,/g, '')
+  return String(str).replace(/,/g, '')
 }
 
 export const formatIntNumber = (val) => {
   const commaRemoved = removeCommas(val)
-  return addCommaForIntNumber(commaRemoved)
+  return addCommaToIntNumber(commaRemoved)
 }
 
 export const numberWithCommaToInt = (val) => {

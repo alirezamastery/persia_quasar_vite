@@ -12,8 +12,8 @@
           </div>
         </div>
         <template
-          v-for="variant in variants"
-          :key="variant.id"
+            v-for="variant in variants"
+            :key="variant.id"
         >
           <Variant :variant="variant"/>
           <div class="q-my-lg"></div>
@@ -25,11 +25,16 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import {axiosInstance} from 'src/boot/axios'
-import urls from 'src/urls'
 import {cloneDeep} from 'lodash'
 import Variant from 'src/components/Variant.vue'
-import {Variant as VariantObj, VariantDk, VariantDigikala, InactiveVariantsResponse} from 'src/types'
+import {axiosInstance} from 'src/boot/axios'
+import urls from 'src/urls'
+import {
+  Variant as VariantObj,
+  VariantDk,
+  VariantDigikala,
+  InactiveVariantsResponse,
+} from 'src/typings/types'
 
 
 const digiItems = ref<VariantDigikala[]>([])
@@ -38,12 +43,12 @@ const variants = ref<VariantDk[]>([])
 const loaded = ref(false)
 
 axiosInstance.get<InactiveVariantsResponse>(urls.inactiveVariants)
-  .then(res => {
-    console.log('inactive variants:', res)
-    digiItems.value = res.data.items
-    totalCount.value = res.data.total_count
-    fetchPersiaData()
-  })
+    .then(res => {
+      console.log('inactive variants:', res)
+      digiItems.value = res.data.items
+      totalCount.value = res.data.total_count
+      fetchPersiaData()
+    })
 
 function fetchPersiaData() {
   let query = '?'
@@ -52,10 +57,10 @@ function fetchPersiaData() {
   }
   const url = urls.variants + 'get_by_list/' + query
   axiosInstance.get<VariantObj[]>(url)
-    .then(res => {
-      console.log('persia data:', res)
-      constructData(res.data)
-    })
+      .then(res => {
+        console.log('persia data:', res)
+        constructData(res.data)
+      })
 }
 
 function constructData(resData: VariantObj[]) {

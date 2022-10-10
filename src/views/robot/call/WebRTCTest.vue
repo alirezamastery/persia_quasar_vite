@@ -84,14 +84,12 @@
 
 <script setup>
 import {ref, computed} from 'vue'
-import adapter from 'webrtc-adapter'
+// import adapter from 'webrtc-adapter'
+import useUserStore from 'src/stores/user'
 import useWebsocketStore from 'src/stores/websocket'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import useUserStore from 'src/stores/user'
-import {useQuasar} from 'quasar'
 
-const q = useQuasar()
 
 const wsStore = useWebsocketStore()
 const userStore = useUserStore()
@@ -103,7 +101,7 @@ const callConnected = computed(() => wsStore.myPeerConnection !== null)
 const callee = computed(() => wsStore.callee)
 
 
-console.log('adapter.browserDetails.browser:', adapter.browserDetails.browser)
+// console.log('adapter.browserDetails.browser:', adapter.browserDetails.browser)
 
 function inviteToCall(targetUser) {
   console.log('targetUser:', targetUser)

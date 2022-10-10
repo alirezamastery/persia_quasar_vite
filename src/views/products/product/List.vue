@@ -27,15 +27,12 @@
   </Table>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
-import {useQuasar} from 'quasar'
-import {axiosInstance} from 'src/boot/axios'
 
 const {t} = useI18n()
-const q = useQuasar()
 const apiRoot = urls.products
 const editRoute = 'productEdit'
 const addRoute = 'productAdd'
@@ -58,6 +55,4 @@ const filters = [
     options: [100, 200, 300, 400, 500],
   },
 ]
-
-
 </script>

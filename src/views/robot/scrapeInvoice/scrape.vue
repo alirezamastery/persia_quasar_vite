@@ -65,13 +65,14 @@
 </template>
 
 <script setup>
-import {ref, computed, onBeforeUnmount} from 'vue'
-import {axiosInstance} from 'src/boot/axios'
-import urls from 'src/urls'
-import {notifyAxiosError, notifyErrors, notifyMessage} from 'src/modules/notif'
+import {ref, onBeforeUnmount} from 'vue'
 import {useRouter} from 'vue-router'
 import {useI18n} from 'vue-i18n'
+import {notifyMessage} from 'src/modules/notif'
 import {positiveNaturalNumber} from 'src/modules/form-validation'
+import {axiosInstance} from 'src/boot/axios'
+import urls from 'src/urls'
+
 
 const router = useRouter()
 const {t} = useI18n()
@@ -82,13 +83,6 @@ const taskDone = ref(null)
 const rowNumber = ref(1)
 
 const stateInterval = ref(null)
-const taskColors = {
-  'FAILURE': 'red',
-  'PENDING': 'yellow',
-  'SUCCESS': 'success',
-}
-
-const taskColor = computed(() => taskColors[taskState.value] || 'black')
 
 onBeforeUnmount(() => stopChecking())
 
@@ -107,7 +101,6 @@ function handleScrape() {
     })
     .catch(err => {
       console.log('task test error', err)
-      // notifyAxiosError(err)
     })
 }
 
@@ -132,10 +125,8 @@ function handleTaskId() {
       })
       .catch(err => {
         console.log('task state error', err)
-        // notifyAxiosError(err)
         stopChecking()
       })
   }, 5000)
-
 }
 </script>

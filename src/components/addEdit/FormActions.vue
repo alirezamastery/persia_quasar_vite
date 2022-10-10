@@ -1,7 +1,7 @@
 <template>
   <div
     class="row q-pa-md q-my-sm q-mt-lg rounded-borders"
-    :class="q.dark.isActive ? ['bg-grey-10'] : ['bg-grey-2']"
+    :class="$q.dark.isActive ? ['bg-grey-10'] : ['bg-grey-2']"
   >
     <q-btn
       v-if="showDelete"
@@ -22,32 +22,17 @@
   </div>
 </template>
 
-<script>
-import {useQuasar} from 'quasar'
-
-export default {
-  name: 'FormActions',
-  props: {
-    saveDisabled: {
-      type: Boolean,
-      default: false,
-      required: false,
-    },
-    showDelete: {
-      type: Boolean,
-      default: true,
-      required: false,
-    },
+<script setup>
+defineProps({
+  saveDisabled: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
-  setup() {
-    const q = useQuasar()
-    return {
-      q,
-    }
+  showDelete: {
+    type: Boolean,
+    default: true,
+    required: false,
   },
-}
+})
 </script>
-
-<style scoped>
-
-</style>

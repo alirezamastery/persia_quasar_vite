@@ -3,7 +3,10 @@
 
     <div class="text-h6 q-ma-md">{{ formTitle }}</div>
 
-    <q-form @submit.prevent="saveItem">
+    <q-form
+      v-if="showForm"
+      @submit.prevent="handleFormSubmit"
+    >
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <q-input
@@ -18,7 +21,7 @@
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <AutoComplete
-            v-model="form.brand.id"
+            v-model="form.brandId"
             :label="$t('products.brand')"
             :query-param="'search'"
             :obj-repr-field="'title'"
@@ -31,7 +34,7 @@
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <q-select
-            v-model="form.price_step"
+            v-model="form.priceStep"
             :options="priceStepOptions"
             :label="$t('general.priceStepRial')"
             filled
@@ -40,79 +43,74 @@
       </div>
 
       <FormActions
-        :show-delete="!!editingItemId"
-        @delete="deleteDialog = true"
+        :show-delete="itemId !== null"
+        @delete="toggleDeleteDialog"
       />
 
     </q-form>
 
     <DeleteDialog
-      v-if="editingItemId"
-      v-model="deleteDialog"
+      v-if="itemId !== null"
+      v-model="showDeleteDialog"
       :item-repr="itemRepr"
-      @delete="handleDeleteItem"
+      @delete="handleDelete"
     />
 
   </div>
 </template>
 
-<script>
-import {cloneDeep} from 'lodash'
-import {dataToolsMixin} from 'src/mixins/data-tools'
-import {addEditViewMixin} from 'src/mixins/add-edit'
+<script setup lang="ts">
+import {ref, computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
+import {isRequired} from 'src/modules/form-validation'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import FormActions from 'src/components/addEdit/FormActions.vue'
 import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
 import urls from 'src/urls'
+import {ActualProductAddEditForm} from 'src/typings/domain/actual-product'
+import {ActualProductPayload} from 'src/typings/network/payload/actual-product'
+import {ActualProductResponse} from 'src/typings/network/response/actual-product'
+import {
+  actualProductFormToPayload,
+  actualProductResponseToForm,
+} from 'src/typings/converter/actual-product'
 
-export default {
-  name: 'AddEdit',
-  components: {
-    DeleteDialog,
-    AutoComplete,
-    FormActions,
-  },
-  mixins: [dataToolsMixin, addEditViewMixin],
-  data() {
-    return {
-      urls: urls,
-      apiRoot: urls.actualProducts,
-      listViewRoute: 'actualProductList',
-      itemType: 'products.actualProduct',
-      form: {
-        title: null,
-        brand: {id: null},
-      },
-      priceStepOptions: [
-        {label: '1,000', value: 1000},
-        {label: '2,000', value: 2000},
-        {label: '3,000', value: 3000},
-        {label: '4,000', value: 4000},
-        {label: '5,000', value: 5000},
-      ]
-    }
-  },
-  computed: {
-    itemRepr() {
-      return this.form.title
-    },
-  },
-  methods: {
-    formInit(resData) {
-      this.form = cloneDeep(resData)
-    },
-    getRequestData() {
-      console.log(this.form.price_step)
-      return {
-        title: this.form.title,
-        brand: this.form.brand.id,
-        price_step: this.form.price_step.value,
-      }
-    },
-  },
-}
+
+const route = useRoute()
+const itemId = getItemIdFromRoute(route)
+const apiRoot = urls.actualProducts
+const listViewRoute = 'actualProductList'
+const itemTypeTranslate = 'products.actualProduct'
+const form = ref<ActualProductAddEditForm>({
+  title: '',
+  priceStep: null,
+  brandId: null,
+})
+const itemRepr = computed(() => form.value.title)
+const priceStepOptions = [
+  {label: '1,000', value: 1000},
+  {label: '2,000', value: 2000},
+  {label: '3,000', value: 3000},
+  {label: '4,000', value: 4000},
+  {label: '5,000', value: 5000},
+]
+
+const {
+  formTitle,
+  showForm,
+  showDeleteDialog,
+  toggleDeleteDialog,
+  handleFormSubmit,
+  handleDelete,
+} = useAddEdit<ActualProductPayload, ActualProductResponse, ActualProductAddEditForm>(
+  form,
+  itemId,
+  apiRoot,
+  listViewRoute,
+  itemTypeTranslate,
+  itemRepr,
+  actualProductResponseToForm,
+  actualProductFormToPayload,
+)
 </script>
-
-<style scoped>
-
-</style>

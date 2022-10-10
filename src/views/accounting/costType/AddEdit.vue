@@ -1,10 +1,13 @@
 <template>
   <div class="fit q-pa-sm">
 
-    <div class="text-h6 q-ma-md">{{ formTitle }}</div>
+    <div class="text-h6 q-ma-md">{{ formTools.formTitle }}</div>
 
-    <q-form v-if="showForm" @submit.prevent="saveItem" class="q-gutter-sm">
-
+    <q-form
+      v-if="formTools.showForm"
+      @submit.prevent="formTools.handleFormSubmit"
+      class="q-gutter-sm"
+    >
       <div class="row">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <q-input
@@ -17,62 +20,54 @@
       </div>
 
       <FormActions
-        :show-delete="!!editingItemId"
-        @delete="deleteDialog = true"
+        :show-delete="itemId !== null"
+        @delete="formTools.toggleDeleteDialog"
       />
 
     </q-form>
 
     <DeleteDialog
-      v-if="editingItemId"
-      v-model="deleteDialog"
+      v-if="itemId !== null"
+      v-model="formTools.showDeleteDialog"
       :item-repr="itemRepr"
-      @delete="handleDeleteItem"
+      @delete="formTools.handleDelete"
     />
 
   </div>
 </template>
 
-<script>
-import {cloneDeep} from 'lodash'
-import {dataToolsMixin} from 'src/mixins/data-tools'
-import {addEditViewMixin} from 'src/mixins/add-edit'
+<script setup lang="ts">
+import {ref, computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
+import {isRequired} from 'src/modules/form-validation'
 import FormActions from 'src/components/addEdit/FormActions.vue'
 import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
 import urls from 'src/urls'
+import {CostTypeForm} from 'src/typings/domain/accounting/cost-type'
+import {CostTypePayload} from 'src/typings/network/payload/accounting/cost-type'
+import {CostTypeResponse} from 'src/typings/network/response/accounting/cost-type'
+import {costTypeFormToPayload, costTypeResponseToForm} from 'src/typings/converter/accounting/cost-type'
 
-export default {
-  name: 'AddEdit',
-  components: {
-    DeleteDialog,
-    FormActions,
-  },
-  mixins: [dataToolsMixin, addEditViewMixin],
-  data() {
-    return {
-      urls: urls,
-      apiRoot: urls.costTypes,
-      listViewRoute: 'costTypeList',
-      itemType: 'acc.costType',
-      form: {
-        title: '',
-      },
-    }
-  },
-  computed: {
-    itemRepr() {
-      return this.form.title
-    },
-  },
-  methods: {
-    formInit(resData) {
-      this.form = cloneDeep(resData)
-    },
-    getRequestData() {
-      return {
-        title: this.form.title,
-      }
-    },
-  },
-}
+
+const route = useRoute()
+const itemId = getItemIdFromRoute(route)
+const apiRoot = urls.costTypes
+const listViewRoute = 'costTypeList'
+const itemTypeTranslate = 'acc.costType'
+const form = ref<CostTypeForm>({
+  title: '',
+})
+const itemRepr = computed(() => form.value.title)
+
+const formTools = useAddEdit<CostTypePayload, CostTypeResponse, CostTypeForm>(
+  form,
+  itemId,
+  apiRoot,
+  listViewRoute,
+  itemTypeTranslate,
+  itemRepr,
+  costTypeResponseToForm,
+  costTypeFormToPayload,
+)
 </script>

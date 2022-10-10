@@ -1,14 +1,13 @@
 import {defineStore} from 'pinia'
 import {uid} from 'quasar'
 import useRobotStore from './robot'
-import useWebRTCStore from './webrtc'
 import localDb from '../local-db'
 import {
   WebsocketFetchResponse,
   WebsocketRobotStatusResponse,
   WebsocketRobotStopResponse,
 } from './robot'
-import { WebsocketErrorResponse} from 'src/types'
+import { WebsocketErrorResponse} from 'src/typings/types'
 
 
 const websocketServerURL = process.env.WEBSOCKET_BASE as string
@@ -111,10 +110,6 @@ export const useWebsocketStore = defineStore({
     },
 
     HandleLogout() {
-      const webrtcStore = useWebRTCStore()
-      if (webrtcStore.myPeerConnection)
-        webrtcStore.hangUpCall()
-
       if (this.WS) {
         this.WS.onclose = function () {
           console.log('ws close after logout')

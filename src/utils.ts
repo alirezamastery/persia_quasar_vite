@@ -1,4 +1,4 @@
-import {VariantSelector} from 'src/types'
+import {VariantSelector} from 'src/typings/types'
 
 export const logger = (...msg: string[]): void => {
   let txt = ''
