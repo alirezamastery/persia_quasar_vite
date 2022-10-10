@@ -72,12 +72,8 @@ watch(date, (val) => {
   emits('update:modelValue', payload)
 })
 
-// if (q.lang.isoName === 'fa') {
-//   date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
-// } else
-//   date.value = cloneDeep(props.modelValue)
-console.log('QDateInput | props:', props.modelValue)
-date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
-//
-// console.log('date value:', date.value)
+if (q.lang.isoName === 'fa') {
+  date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
+} else
+  date.value = cloneDeep(props.modelValue)
 </script>

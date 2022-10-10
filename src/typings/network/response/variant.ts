@@ -2,15 +2,15 @@ import {VariantDigikalaResponse} from './variant-digikala'
 // import {VariantAddEditForm} from 'src/typings/domain/variant'
 
 export interface VariantResponse {
-  id: number,
-  dkpc: number,
-  price_min: number,
-  stop_loss: number,
-  is_active: boolean,
-  has_competition: boolean,
-  product: Product,
-  selector: VariantSelector,
-  actual_product: ActualProduct,
+  id: number
+  dkpc: number
+  price_min: number
+  stop_loss: number
+  is_active: boolean
+  has_competition: boolean
+  product: Product
+  selector: VariantSelector
+  actual_product: ActualProduct
 }
 
 // export class VariantResponse {
@@ -45,47 +45,47 @@ export interface VariantDkResponse extends VariantResponse {
 }
 
 export interface InactiveVariantsResponse {
-  total_count: number,
+  total_count: number
   items: VariantDigikalaResponse[]
 }
 
 export interface VariantSelectorType {
-  id: number,
+  id: number
   title: string
 }
 
 export interface VariantSelector {
-  id: number,
-  digikala_id: number,
-  extra_info: string | null,
-  value: string,
+  id: number
+  digikala_id: number
+  extra_info: string | null
+  value: string
   selector_type: VariantSelectorType
 }
 
 export interface ProductType {
-  id: number,
-  title: string,
-  selector_type: VariantSelectorType,
+  id: number
+  title: string
+  selector_type: VariantSelectorType
 }
 
 export interface Product {
-  id: number,
-  dkp: string,
-  is_active: boolean,
-  title: string,
+  id: number
+  dkp: string
+  is_active: boolean
+  title: string
   type: ProductType
 }
 
 export interface Brand {
-  id: number,
+  id: number
   title: string
 }
 
 export interface ActualProduct {
-  id: number,
-  title: string,
-  price_step: number,
-  brand: Brand,
+  id: number
+  title: string
+  price_step: number
+  brand: Brand
 }
 
 

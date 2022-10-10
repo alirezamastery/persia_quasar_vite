@@ -1,13 +1,16 @@
 <template>
-  <q-card class="q-pa-lg q-ma-lg">
+  <AddEdit
+    :form-title="formTitle"
+    :item-repr="itemRepr"
+    :show-form="showForm"
+    :show-delete-dialog="showDeleteDialog"
+    @form-submit="handleFormSubmit"
+    @handle-delete-dialog="toggleDeleteDialog($event)"
+    @delete="handleDelete"
+  >
 
-    <div class="text-h6 q-ma-md">{{ formTitle }}</div>
+    <template v-slot:form-fields>
 
-    <q-form
-      v-if="showForm"
-      @submit.prevent="handleFormSubmit"
-      class="q-gutter-sm"
-    >
       <div class="row">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <AutoComplete
@@ -53,21 +56,9 @@
         </div>
       </div>
 
-      <FormActions
-        :show-delete="itemId !== null"
-        @delete="toggleDeleteDialog"
-      />
+    </template>
 
-    </q-form>
-
-    <DeleteDialog
-      v-if="itemId !== null"
-      v-model="showDeleteDialog"
-      :item-repr="itemRepr"
-      @delete="handleDelete"
-    />
-
-  </q-card>
+  </AddEdit>
 </template>
 
 <script setup lang="ts">
@@ -76,15 +67,14 @@ import {useRoute} from 'vue-router/dist/vue-router'
 import {isRequired} from 'src/modules/form-validation'
 import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
 import {formatIntNumber} from 'src/modules/number-tools'
-import AutoComplete from 'src/components/AutoComplete.vue'
-import FormActions from 'src/components/addEdit/FormActions.vue'
-import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
-import QDateInput from 'src/components/QDateInput.vue'
-import urls from 'src/urls'
+import {costResponseToForm, costFormToPayload} from 'src/typings/converter/accounting/cost'
 import {CostForm} from 'src/typings/domain/accounting/cost'
 import {CostPayload} from 'src/typings/network/payload/accounting/cost'
 import {CostResponse} from 'src/typings/network/response/accounting/cost'
-import {costResponseToForm, costFormToPayload} from 'src/typings/converter/accounting/cost'
+import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import QDateInput from 'src/components/QDateInput.vue'
+import AutoComplete from 'src/components/AutoComplete.vue'
+import urls from 'src/urls'
 
 
 const route = useRoute()

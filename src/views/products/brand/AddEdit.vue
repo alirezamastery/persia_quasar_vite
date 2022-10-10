@@ -1,38 +1,30 @@
 <template>
-  <div class="fit q-pa-sm">
+  <AddEdit
+    :form-title="formTitle"
+    :item-repr="itemRepr"
+    :show-form="showForm"
+    :show-delete-dialog="showDeleteDialog"
+    @form-submit="handleFormSubmit"
+    @handle-delete-dialog="toggleDeleteDialog($event)"
+    @delete="handleDelete"
+  >
 
-    <div class="text-h6 q-ma-md">{{ formTitle }}</div>
+    <template v-slot:form-fields>
 
-    <q-form
-        v-if="showForm"
-        @submit.prevent="handleFormSubmit"
-    >
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <q-input
-              v-model="form.title"
-              :label="$t('general.title')"
-              filled
-              :rules="[isRequired]"
+            v-model="form.title"
+            :label="$t('general.title')"
+            :rules="[isRequired]"
+            filled
           />
         </div>
       </div>
 
-      <FormActions
-        :show-delete="itemId !== null"
-        @delete="toggleDeleteDialog"
-      />
+    </template>
 
-    </q-form>
-
-    <DeleteDialog
-      v-if="itemId !== null"
-      v-model="showDeleteDialog"
-      :item-repr="itemRepr"
-      @delete="handleDelete"
-    />
-
-  </div>
+  </AddEdit>
 </template>
 
 <script setup lang="ts">
@@ -40,13 +32,12 @@ import {ref, computed} from 'vue'
 import {useRoute} from 'vue-router'
 import {useAddEdit, getItemIdFromRoute} from 'src/modules/add-edit-composable'
 import {isRequired} from 'src/modules/form-validation'
-import FormActions from 'src/components/addEdit/FormActions.vue'
-import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
-import urls from 'src/urls'
+import {brandResponseToForm, brandFormToRequestPayload} from 'src/typings/converter/brand'
 import {BrandAddEditForm} from 'src/typings/domain/brand'
 import {BrandRequestPayload} from 'src/typings/network/payload/brand'
 import {BrandResponse} from 'src/typings/network/response/brand'
-import {brandFormToRequestPayload, brandResponseToForm} from 'src/typings/converter/brand'
+import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import urls from 'src/urls'
 
 
 const route = useRoute()
@@ -66,14 +57,14 @@ const {
   toggleDeleteDialog,
   handleFormSubmit,
   handleDelete,
-}  = useAddEdit<BrandRequestPayload, BrandResponse, BrandAddEditForm>(
-    form,
-    itemId,
-    apiRoot,
-    listViewRoute,
-    itemTypeTranslate,
-    itemRepr,
-    brandResponseToForm,
-    brandFormToRequestPayload,
+} = useAddEdit<BrandRequestPayload, BrandResponse, BrandAddEditForm>(
+  form,
+  itemId,
+  apiRoot,
+  listViewRoute,
+  itemTypeTranslate,
+  itemRepr,
+  brandResponseToForm,
+  brandFormToRequestPayload,
 )
 </script>

@@ -16,16 +16,14 @@
     </Table>
 </template>
 
-<script setup>
-import urls from 'src/urls'
-import Table from 'src/components/table/Table.vue'
+<script setup lang="ts">
 import {useI18n} from 'vue-i18n'
+import Table from 'src/components/table/Table.vue'
+import urls from 'src/urls'
 
 const {t} = useI18n()
 
 const apiRoot = urls.invoices
-const editRoute = 'variantEdit'
-const addRoute = 'variantAdd'
 const columns = [
   {name: 'number', label: t('general.number'), field: 'number', align: 'left'},
   {name: 'start_date_persian', label: t('general.fromDate'), field: 'start_date_persian', align: 'left'},

@@ -28,14 +28,14 @@
   </Table>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import {useQuasar} from 'quasar'
 import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
-import {useQuasar} from 'quasar'
 
-const {t} = useI18n()
 const q = useQuasar()
+const {t} = useI18n()
 
 const apiRoot = urls.productCosts
 const editRoute = 'productCostEdit'
@@ -57,5 +57,4 @@ const filters = [
     label: 'general.untilDate',
   },
 ]
-
 </script>

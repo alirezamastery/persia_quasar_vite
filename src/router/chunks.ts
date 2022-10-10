@@ -19,7 +19,7 @@ export const actualProductAddEdit = () =>
 export const brandList = () =>
   import(/* webpackChunkName: "products" */ '../views/products/brand/List.vue')
 export const brandAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/brand/EditTest.vue')
+  import(/* webpackChunkName: "products" */ '../views/products/brand/AddEdit.vue')
 
 export const productsList = () =>
   import(/* webpackChunkName: "products" */ '../views/products/product/List.vue')
