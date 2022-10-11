@@ -1,5 +1,6 @@
 <template>
   <AddEdit
+    :item-id="itemId"
     :form-title="formTitle"
     :item-repr="itemRepr"
     :show-form="showForm"

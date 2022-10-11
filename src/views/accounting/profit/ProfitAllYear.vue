@@ -25,12 +25,12 @@
 </template>
 
 <script setup>
-import {ref, onMounted, watch} from 'vue'
-import Chart from 'chart.js/auto'
-import {axiosInstance} from '../../../boot/axios'
-import urls from '../../../urls'
+import {ref, onMounted} from 'vue'
 import {useI18n} from 'vue-i18n'
+import Chart from 'chart.js/auto'
 import moment from 'moment-jalaali'
+import {axiosInstance} from 'src/boot/axios'
+import urls from 'src/urls'
 
 const {t} = useI18n()
 const persianMonth = ('فروردین_اردیبهشت_خرداد_تیر_مرداد_شهریور_مهر_آبان_آذر_دی_بهمن_اسفند').split('_')
@@ -103,9 +103,7 @@ function createChart() {
 
 onMounted(() => {
   getProfitData()
-
 })
-
 </script>
 
 <style scoped lang="scss">

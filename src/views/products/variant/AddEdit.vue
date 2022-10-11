@@ -1,11 +1,17 @@
 <template>
-  <div class="fit q-pa-sm">
-    <div class="text-h6 q-ma-md">{{ formTitle }}</div>
+  <AddEdit
+    :item-id="itemId"
+    :form-title="formTitle"
+    :item-repr="itemRepr"
+    :show-form="showForm"
+    :show-delete-dialog="showDeleteDialog"
+    @form-submit="handleFormSubmit"
+    @handle-delete-dialog="toggleDeleteDialog($event)"
+    @delete="handleDelete"
+  >
 
-    <q-form
-      v-if="showForm"
-      @submit.prevent="handleFormSubmit"
-    >
+    <template v-slot:form-fields>
+
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <AutoComplete
@@ -77,21 +83,9 @@
         </div>
       </div>
 
-      <FormActions
-        :show-delete="itemId !== null"
-        @delete="toggleDeleteDialog"
-      />
+    </template>
 
-    </q-form>
-
-    <DeleteDialog
-      v-if="itemId !== null"
-      v-model="showDeleteDialog"
-      :item-repr="itemRepr"
-      @delete="handleDelete"
-    />
-
-  </div>
+  </AddEdit>
 </template>
 
 <script setup lang="ts">
@@ -100,14 +94,13 @@ import {useRoute} from 'vue-router'
 import {useAddEdit, getItemIdFromRoute} from 'src/modules/add-edit-composable'
 import {formatIntNumber} from 'src/modules/number-tools'
 import {isRequired} from 'src/modules/form-validation'
-import AutoComplete from 'src/components/AutoComplete.vue'
-import FormActions from 'src/components/addEdit/FormActions.vue'
-import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
-import urls from 'src/urls'
+import {variantResponseToForm, variantFormToRequestPayload} from 'src/typings/converter/variant'
 import {VariantAddEditForm} from 'src/typings/domain/variant'
 import {VariantRequestPayload} from 'src/typings/network/payload/variant'
 import {VariantResponse} from 'src/typings/network/response/variant'
-import {variantResponseToForm, variantFormToRequestPayload} from 'src/typings/converter/variant'
+import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import AutoComplete from 'src/components/AutoComplete.vue'
+import urls from 'src/urls'
 
 
 const route = useRoute()

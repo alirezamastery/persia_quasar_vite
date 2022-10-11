@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia'
-import {uid} from 'quasar'
+import {LocalStorage, uid} from 'quasar'
 import useRobotStore from './robot'
-import localDb from '../local-db'
 import {
   WebsocketFetchResponse,
   WebsocketRobotStatusResponse,
@@ -36,7 +35,7 @@ export const useWebsocketStore = defineStore({
   getters: {},
   actions: {
     openWS() {
-      const accessToken = localDb.get('access_token')
+      const accessToken = LocalStorage.getItem('access_token') as string
       this.WS = new WebSocket(websocketServerURL, [accessToken])
       this.setupWS()
     },
@@ -99,7 +98,7 @@ export const useWebsocketStore = defineStore({
     },
 
     HandleTokenUpdate() {
-      const accessToken = localDb.get('access_token')
+      const accessToken = LocalStorage.getItem('access_token')
       console.log('Token Updated', accessToken)
       if (accessToken) {
         if (this.WS) {

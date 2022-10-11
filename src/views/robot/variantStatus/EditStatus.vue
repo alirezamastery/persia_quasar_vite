@@ -11,7 +11,7 @@
         <q-btn
           size="lg"
           class="full-width"
-          :class="selectedBtnClass(brand.id === selectedIds.brand, $q.dark.isActive)"
+          :class="selectedBtnClass(brand.id === selectedIds.brand)"
           :glossy="brand.id === selectedIds.brand"
           :outline="brand.id !== selectedIds.brand"
           @click="handleBrandSelect(brand.id)"
@@ -100,20 +100,31 @@
 
 <script setup lang="ts">
 import {ref, nextTick} from 'vue'
-import Variant from 'src/components/Variant.vue'
 import {visualizeVariantSelector} from 'src/utils'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {ActualProduct, Brand, Variant as VariantObj, VariantDk, VariantSelector} from 'src/typings/types'
-import {SelectedIdHierarchy} from './composables'
+import {
+  ActualProduct,
+  Brand,
+  Variant as VariantObj,
+  VariantDk,
+  VariantSelector,
+} from 'src/typings/types'
+import Variant from 'src/components/Variant.vue'
 
+
+export interface SelectedIdHierarchy {
+  brand: Nullable<number>,
+  actualProduct: Nullable<number>,
+  selector: Nullable<number>,
+  variant: Nullable<number>,
+}
 
 const brands = ref<Brand[]>([])
 const actualProducts = ref<ActualProduct[]>([])
 const relatedSelectors = ref<VariantSelector[]>([])
 const variants = ref<VariantObj[]>([])
-const variant = ref<VariantDk | null>(null)
-
+const variant = ref<Nullable<VariantDk>>(null)
 const selectedIds = ref({
   brand: null,
   actualProduct: null,
@@ -146,7 +157,6 @@ function handleBrandSelect(brandId: number) {
       el?.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
     })
 }
-
 
 function handleActualProductSelect(id: number) {
   selectedIds.value.actualProduct = id

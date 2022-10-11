@@ -60,11 +60,10 @@
 
 <script setup>
 import {ref} from 'vue'
+import moment from 'moment-jalaali'
+import {isRequired} from 'src/modules/form-validation'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {notifyAxiosError, notifyErrors} from 'src/modules/notif'
-import {isRequired} from 'src/modules/form-validation'
-import moment from 'moment-jalaali'
 
 const month = []
 for (let i = 1; i < 13; i++) month.push(i)
@@ -82,13 +81,10 @@ function getProfit() {
   }).then(res => {
     console.log('res:', res)
     data.value = res.data
-  }).catch(err => {
-    // notifyAxiosError(err)
   })
 }
 
 const today = moment()
 jMonth.value = today.format('jM')
 jYear.value = today.format('jYYYY')
-
 </script>

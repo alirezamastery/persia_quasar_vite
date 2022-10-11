@@ -1,5 +1,6 @@
 <template>
   <AddEdit
+    :item-id="itemId"
     :form-title="formTitle"
     :item-repr="itemRepr"
     :show-form="showForm"
@@ -33,11 +34,11 @@ import {useRoute} from 'vue-router'
 import {useAddEdit, getItemIdFromRoute} from 'src/modules/add-edit-composable'
 import {isRequired} from 'src/modules/form-validation'
 import {brandResponseToForm, brandFormToRequestPayload} from 'src/typings/converter/brand'
+import urls from 'src/urls'
 import {BrandAddEditForm} from 'src/typings/domain/brand'
 import {BrandRequestPayload} from 'src/typings/network/payload/brand'
 import {BrandResponse} from 'src/typings/network/response/brand'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
-import urls from 'src/urls'
 
 
 const route = useRoute()

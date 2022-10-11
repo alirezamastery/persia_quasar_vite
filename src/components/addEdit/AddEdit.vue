@@ -32,14 +32,16 @@ import {ref, watch} from 'vue'
 import FormActions from 'src/components/addEdit/FormActions.vue'
 import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
 
+export interface AddEditProps {
+  itemId: Nullable<string>,
+  formTitle: string,
+  itemRepr: string,
+  showForm: boolean,
+  showDeleteDialog: boolean,
+}
 
-const props = defineProps({
-  itemId: String,
-  formTitle: String,
-  itemRepr: String,
-  showForm: Boolean,
-  showDeleteDialog: Boolean,
-})
+const props = defineProps<AddEditProps>()
+
 const emits = defineEmits([
   'form-submit',
   'handle-delete-dialog',

@@ -1,17 +1,16 @@
 import {defineStore} from 'pinia'
-import {routerInstance} from 'src/router'
-import {axiosInstance} from 'src/boot/axios'
-import localDb from 'src/local-db'
-import {broadcastInstance} from 'src/boot/broadcast'
+import {LocalStorage} from 'quasar'
 import useWebsocketStore from './websocket'
 import useRobotStore from './robot'
+import {routerInstance} from 'src/router'
+import {axiosInstance} from 'src/boot/axios'
+import {broadcastInstance} from 'src/boot/broadcast'
 import {UserProfile} from 'src/typings/types'
 
 const storeID = 'user'
 
-
 export interface UserStoreState {
-  user: string | null,
+  user: Nullable<string>,
   profile: UserProfile
 }
 
@@ -27,10 +26,10 @@ export const useUserStore = defineStore({
   } as UserStoreState),
   getters: {
     isAuthenticated(): boolean {
-      if (this.user) return true
+      if (this.user !== null) return true
       else {
-        const user = localDb.get('user')
-        if (user !== undefined) {
+        const user = LocalStorage.getItem('user') as Nullable<string>
+        if (user) {
           this.user = user
           return true
         }
@@ -41,15 +40,17 @@ export const useUserStore = defineStore({
   actions: {
     Login(user: string) {
       this.user = user
-      localDb.set('user', user)
+      LocalStorage.set('user', user)
       const wsStore = useWebsocketStore()
       wsStore.HandleTokenUpdate()
     },
     Logout() {
+      console.log('logout')
       this.user = null
-      localDb.clearAll()
+      LocalStorage.clear()
       delete axiosInstance.defaults.headers['Authorization']
       broadcastInstance.sendBroadcastMessage('LOGOUT', {})
+      broadcastInstance.teardown()
       const wsStore = useWebsocketStore()
       wsStore.HandleLogout()
       const robotStore = useRobotStore()

@@ -1,5 +1,6 @@
 <template>
   <AddEdit
+    :item-id="itemId"
     :form-title="formTitle"
     :item-repr="itemRepr"
     :show-form="showForm"
@@ -55,12 +56,12 @@ import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
 import {formatIntNumber} from 'src/modules/number-tools'
 import {isRequired} from 'src/modules/form-validation'
 import {incomeResponseToForm, incomeFormToPayload} from 'src/typings/converter/accounting/income'
+import urls from 'src/urls'
 import {IncomePayload} from 'src/typings/network/payload/accounting/income'
 import {IncomeResponse} from 'src/typings/network/response/accounting/income'
 import {IncomeForm} from 'src/typings/domain/accounting/income'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import QDateInput from 'src/components/QDateInput.vue'
-import urls from 'src/urls'
 
 
 const route = useRoute()

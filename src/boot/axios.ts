@@ -1,11 +1,10 @@
 import {boot} from 'quasar/wrappers'
+import {LocalStorage} from 'quasar'
 import axios, {AxiosInstance} from 'axios'
-import {useGeneralStore} from 'src/stores/general'
-import urls from 'src/urls'
-import localDb from 'src/local-db'
 import {notifyAxiosError} from 'src/modules/notif'
 import useUserStore from '../stores/user'
 import useWebsocketStore from '../stores/websocket'
+import urls from 'src/urls'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -26,8 +25,8 @@ const axiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 0,
   headers: {
-    Authorization: localDb.get('access_token')
-      ? `Bearer ${String(localDb.get('access_token'))}`
+    Authorization: LocalStorage.getItem('access_token')
+      ? `Bearer ${LocalStorage.getItem('access_token')}`
       : null,
     'Content-Type': 'application/json',
     accept: 'application/json',
@@ -37,22 +36,15 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   function (response) {
-    const generalStore = useGeneralStore()
-    generalStore.DecrementHttpRequestQueue()
     // console.log('intercept' , response)
     return response
   },
   async function (error) {
-    const generalStore = useGeneralStore()
     const userStore = useUserStore()
-
-    generalStore.DecrementHttpRequestQueue()
 
     const originalRequest = error.config
     console.log('in axiosInstance | BEGINNING | error: ', error)
-
     console.log('config baseURL:', error.config.baseURL)
-
 
     if (!error.response || typeof error.response === 'undefined') {
       console.log('axios error.response is undefined', error)
@@ -87,7 +79,7 @@ axiosInstance.interceptors.response.use(
       //&& error.response.data.code === 'token_not_valid'
       //&& error.response.statusText === 'Unauthorized'
     ) {
-      const refreshToken = localDb.get('refresh_token')
+      const refreshToken = LocalStorage.getItem('refresh_token') as string
 
       if (refreshToken) {
         console.log(`response.status was ${error.response.status} so we will use refreshToken: `, refreshToken)
@@ -99,8 +91,8 @@ axiosInstance.interceptors.response.use(
           return axiosInstance
             .post(urls.refreshToken, {refresh: refreshToken})
             .then((response) => {
-              localDb.set('access_token', response.data.access)
-              localDb.set('refresh_token', response.data.refresh)
+              LocalStorage.set('access_token', response.data.access)
+              LocalStorage.set('refresh_token', response.data.refresh)
 
               axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + response.data.access
               originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access

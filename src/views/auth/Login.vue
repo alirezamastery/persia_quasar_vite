@@ -9,7 +9,7 @@
     >
       <div class="fixed-full bg-grey" style="opacity: 0.5;z-index: 2000"></div>
       <q-spinner-tail
-        size="10rem"
+        :size="'10rem'"
         color="teal-5"
         class="fixed"
         style="z-index: 3000"
@@ -71,30 +71,38 @@
   </div>
 </template>
 
-<script setup>
-import {useQuasar} from 'quasar'
+<script setup lang="ts">
 import {ref, reactive} from 'vue'
 import {useRouter} from 'vue-router'
-import {axiosInstance} from 'src/boot/axios'
-import useUserStore from 'src/stores/user'
-import useWebsocketStore from 'src/stores/websocket'
-import MatrixRain from 'src/components/MatrixRain.vue'
+import {useQuasar} from 'quasar'
 import {isRequired} from 'src/modules/form-validation'
+import useUserStore from 'src/stores/user'
+import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import localDb from 'src/local-db'
-
+import {LoginForm} from 'src/typings/domain/auth/login'
 
 const q = useQuasar()
 const userStore = useUserStore()
-const wsStore = useWebsocketStore()
 const router = useRouter()
 const showPassword = ref(false)
 const rememberMe = ref(false)
-const form = reactive({
+const form = reactive<LoginForm>({
   mobile: '',
   password: '',
 })
 const isLoading = ref(false)
+
+let rem = q.localStorage.getItem('rememberMe')
+if (rem === null) {
+  rem = false
+  q.localStorage.set('rememberMe', false)
+}
+rememberMe.value = rem as boolean
+if (rememberMe.value) {
+  const credentials = q.localStorage.getItem('credentials') as LoginForm
+  form.mobile = credentials.mobile
+  form.password = credentials.password
+}
 
 function handleSubmit() {
   isLoading.value = true
@@ -102,9 +110,9 @@ function handleSubmit() {
   axiosInstance.post(urls.token, form)
     .then(res => {
       console.log('Login', res)
-      localDb.set('access_token', res.data.access)
-      localDb.set('refresh_token', res.data.refresh)
-      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localDb.get('access_token')
+      q.localStorage.set('access_token', res.data.access)
+      q.localStorage.set('refresh_token', res.data.refresh)
+      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + res.data.access
       userStore.Login(form.mobile)
       router.push({name: 'Home'})
     })
@@ -126,19 +134,6 @@ function storeCredentials() {
     q.localStorage.remove('credentials')
   }
 }
-
-let rem = q.localStorage.getItem('rememberMe')
-if (rem === null) {
-  rem = false
-  q.localStorage.set('rememberMe', false)
-}
-rememberMe.value = rem
-if (rememberMe.value) {
-  const credentials = q.localStorage.getItem('credentials')
-  form.mobile = credentials.mobile
-  form.password = credentials.password
-}
-
 </script>
 
 <style scoped lang="scss">
@@ -149,7 +144,6 @@ if (rememberMe.value) {
   width: 100%;
   height: 90vh;
   background-color: transparent;
-  color: white;
   z-index: 2;
   margin-right: auto;
 }

@@ -15,14 +15,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useRouter} from 'vue-router'
-import useUserStore from '../../stores/user'
-import useWebsocketStore from '../../stores/websocket'
+import useUserStore from 'src/stores/user'
 
 const router = useRouter()
 const userStore = useUserStore()
-const wsStore = useWebsocketStore()
 
 function goBack() {
   router.go(-1)

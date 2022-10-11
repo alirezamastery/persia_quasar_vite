@@ -1,13 +1,17 @@
 <template>
-  <div class="fit q-pa-sm">
+  <AddEdit
+    :item-id="itemId"
+    :form-title="formTitle"
+    :item-repr="itemRepr"
+    :show-form="showForm"
+    :show-delete-dialog="showDeleteDialog"
+    @form-submit="handleFormSubmit"
+    @handle-delete-dialog="toggleDeleteDialog($event)"
+    @delete="handleDelete"
+  >
 
-    <div class="text-h6 q-ma-md">{{ formTools.formTitle }}</div>
+    <template v-slot:form-fields>
 
-    <q-form
-      v-if="formTools.showForm"
-      @submit.prevent="formTools.handleFormSubmit"
-      class="q-gutter-sm"
-    >
       <div class="row">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <q-input
@@ -19,21 +23,9 @@
         </div>
       </div>
 
-      <FormActions
-        :show-delete="itemId !== null"
-        @delete="formTools.toggleDeleteDialog"
-      />
+    </template>
 
-    </q-form>
-
-    <DeleteDialog
-      v-if="itemId !== null"
-      v-model="formTools.showDeleteDialog"
-      :item-repr="itemRepr"
-      @delete="formTools.handleDelete"
-    />
-
-  </div>
+  </AddEdit>
 </template>
 
 <script setup lang="ts">
@@ -41,13 +33,12 @@ import {ref, computed} from 'vue'
 import {useRoute} from 'vue-router'
 import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
 import {isRequired} from 'src/modules/form-validation'
-import FormActions from 'src/components/addEdit/FormActions.vue'
-import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
 import urls from 'src/urls'
 import {CostTypeForm} from 'src/typings/domain/accounting/cost-type'
 import {CostTypePayload} from 'src/typings/network/payload/accounting/cost-type'
 import {CostTypeResponse} from 'src/typings/network/response/accounting/cost-type'
 import {costTypeFormToPayload, costTypeResponseToForm} from 'src/typings/converter/accounting/cost-type'
+import AddEdit from 'src/components/addEdit/AddEdit.vue'
 
 
 const route = useRoute()
@@ -60,7 +51,14 @@ const form = ref<CostTypeForm>({
 })
 const itemRepr = computed(() => form.value.title)
 
-const formTools = useAddEdit<CostTypePayload, CostTypeResponse, CostTypeForm>(
+const {
+  formTitle,
+  showForm,
+  showDeleteDialog,
+  toggleDeleteDialog,
+  handleFormSubmit,
+  handleDelete,
+} = useAddEdit<CostTypePayload, CostTypeResponse, CostTypeForm>(
   form,
   itemId,
   apiRoot,

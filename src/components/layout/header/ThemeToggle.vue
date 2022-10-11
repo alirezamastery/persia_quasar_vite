@@ -20,15 +20,11 @@
 <script setup lang="ts">
 import {useQuasar} from 'quasar'
 import {LocalStorage} from 'quasar'
-import localDb from 'src/local-db'
-
 
 const q = useQuasar()
 
 function handleThemeToggle() {
   q.dark.toggle()
-  localDb.set('isDark', q.dark.isActive)
   LocalStorage.set('isDark', q.dark.isActive)
 }
-
 </script>

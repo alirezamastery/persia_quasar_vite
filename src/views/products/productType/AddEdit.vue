@@ -1,12 +1,16 @@
 <template>
-  <div class="fit q-pa-sm">
+  <AddEdit
+    :item-id="itemId"
+    :form-title="formTitle"
+    :item-repr="itemRepr"
+    :show-form="showForm"
+    :show-delete-dialog="showDeleteDialog"
+    @form-submit="handleFormSubmit"
+    @handle-delete-dialog="toggleDeleteDialog($event)"
+    @delete="handleDelete"
+  >
 
-    <div class="text-h6 q-ma-md">{{ formTitle }}</div>
-
-    <q-form
-      v-if="showForm"
-      @submit.prevent="handleFormSubmit"
-    >
+    <template v-slot:form-fields>
 
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
@@ -32,21 +36,9 @@
         </div>
       </div>
 
-      <FormActions
-        :show-delete="itemId !== null"
-        @delete="toggleDeleteDialog"
-      />
+    </template>
 
-    </q-form>
-
-    <DeleteDialog
-      v-if="itemId !== null"
-      v-model="showDeleteDialog"
-      :item-repr="itemRepr"
-      @delete="handleDelete"
-    />
-
-  </div>
+  </AddEdit>
 </template>
 
 <script setup lang="ts">
@@ -54,17 +46,16 @@ import {computed, ref} from 'vue'
 import {useRoute} from 'vue-router'
 import {useAddEdit} from 'src/modules/add-edit-composable'
 import {isRequired} from 'src/modules/form-validation'
-import AutoComplete from 'src/components/AutoComplete.vue'
-import FormActions from 'src/components/addEdit/FormActions.vue'
-import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
-import urls from 'src/urls'
-import {ProductTypeAddEditForm} from 'src/typings/domain/product-type'
-import {ProductTypeRequestPayload} from 'src/typings/network/payload/product-type'
-import {ProductTypeResponse} from 'src/typings/network/response/product-type'
 import {
   productTypeResponseToForm,
   productTypeFormToRequest,
 } from 'src/typings/converter/product-type'
+import {ProductTypeAddEditForm} from 'src/typings/domain/product-type'
+import {ProductTypeRequestPayload} from 'src/typings/network/payload/product-type'
+import {ProductTypeResponse} from 'src/typings/network/response/product-type'
+import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import AutoComplete from 'src/components/AutoComplete.vue'
+import urls from 'src/urls'
 
 
 const route = useRoute()
