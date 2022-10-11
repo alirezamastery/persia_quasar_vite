@@ -1,4 +1,5 @@
 import {boot} from 'quasar/wrappers'
+import {gregorianDateToPersian} from 'src/modules/string-tools'
 
 
 // "async" is optional;
@@ -18,9 +19,7 @@ export default boot(({app}) => {
     },
 
     persianDate(dateString: string, format = 'fa-IR-u-nu-latn') {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      return new Intl.DateTimeFormat(format, {dateStyle: 'short'}).format(date)
+      return gregorianDateToPersian(dateString, format)
     },
 
   }
