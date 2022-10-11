@@ -20,11 +20,12 @@
 <script setup lang="ts">
 import {useQuasar} from 'quasar'
 import {LocalStorage} from 'quasar'
+import {StorageKeys} from 'src/utils'
 
 const q = useQuasar()
 
 function handleThemeToggle() {
   q.dark.toggle()
-  LocalStorage.set('isDark', q.dark.isActive)
+  LocalStorage.set(StorageKeys.IS_DARK, q.dark.isActive)
 }
 </script>

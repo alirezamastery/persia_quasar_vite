@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {GlobalBanner} from 'src/typings/types'
+import {GlobalBanner} from 'src/types/types'
 
 const storeID = 'general'
 

@@ -1,30 +1,15 @@
 import {defineStore} from 'pinia'
-import {WebsocketBaseResponse} from 'src/typings/types'
+import {
+  WebsocketFetchResponse,
+  WebsocketRobotStatusResponse,
+  WebsocketRobotStopResponse
+} from 'src/types/websocket'
+
 
 export interface RobotStoreState {
   robotRunning: boolean,
   robotIsOn: boolean | null,
 }
-
-export interface WebsocketFetchResponse extends WebsocketBaseResponse {
-  data: {
-    robot_running: boolean,
-    robot_is_on: boolean
-  }
-}
-
-export interface WebsocketRobotStatusResponse extends WebsocketBaseResponse {
-  data: {
-    robot_running: boolean,
-  }
-}
-
-export interface WebsocketRobotStopResponse extends WebsocketBaseResponse {
-  data: {
-    robot_is_on: boolean,
-  }
-}
-
 
 export const useRobotStore = defineStore({
   id: 'robot',

@@ -5,6 +5,7 @@ import {notifyAxiosError} from 'src/modules/notif'
 import useUserStore from '../stores/user'
 import useWebsocketStore from '../stores/websocket'
 import urls from 'src/urls'
+import {StorageKeys} from 'src/utils'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -25,8 +26,8 @@ const axiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 0,
   headers: {
-    Authorization: LocalStorage.getItem('access_token')
-      ? `Bearer ${LocalStorage.getItem('access_token')}`
+    Authorization: LocalStorage.getItem(StorageKeys.ACCESS_TOKEN)
+      ? `Bearer ${LocalStorage.getItem(StorageKeys.ACCESS_TOKEN)}`
       : null,
     'Content-Type': 'application/json',
     accept: 'application/json',
@@ -79,7 +80,7 @@ axiosInstance.interceptors.response.use(
       //&& error.response.data.code === 'token_not_valid'
       //&& error.response.statusText === 'Unauthorized'
     ) {
-      const refreshToken = LocalStorage.getItem('refresh_token') as string
+      const refreshToken = LocalStorage.getItem(StorageKeys.REFRESH_TOKEN) as string
 
       if (refreshToken) {
         console.log(`response.status was ${error.response.status} so we will use refreshToken: `, refreshToken)
@@ -91,8 +92,8 @@ axiosInstance.interceptors.response.use(
           return axiosInstance
             .post(urls.refreshToken, {refresh: refreshToken})
             .then((response) => {
-              LocalStorage.set('access_token', response.data.access)
-              LocalStorage.set('refresh_token', response.data.refresh)
+              LocalStorage.set(StorageKeys.ACCESS_TOKEN, response.data.access)
+              LocalStorage.set(StorageKeys.REFRESH_TOKEN, response.data.refresh)
 
               axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + response.data.access
               originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access

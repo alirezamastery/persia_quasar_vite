@@ -27,8 +27,8 @@ import {useQuasar} from 'quasar'
 import useUserStore from 'src/stores/user'
 import useWebsocketStore from 'src/stores/websocket'
 import {broadcastInstance} from 'src/boot/broadcast'
-import {setupFireBase} from 'src/modules/push-notif'
-import {logger} from 'src/utils'
+import {firebaseSetup} from 'src/modules/push-notif-setup'
+import {logger, StorageKeys} from 'src/utils'
 import Header from 'src/components/layout/header/Header.vue'
 import Sidebar from 'src/components/layout/Sidebar.vue'
 import Banners from 'src/components/layout/Banners.vue'
@@ -48,20 +48,18 @@ if (userStore.isAuthenticated && !wsStore.WS) {
   wsStore.openWS()
 }
 
-let isDark = q.localStorage.getItem('isDark')
-if (isDark === undefined) {
-  q.localStorage.set('isDark', true)
+let isDark = q.localStorage.getItem(StorageKeys.IS_DARK)
+if (isDark) {
+  q.localStorage.set(StorageKeys.IS_DARK, true)
   isDark = true
 }
-q.dark.set(isDark)
+q.dark.set(!!isDark)
 
 logger('check platform')
 if (q.platform.is.android) {
   logger('android detected')
-  setupFireBase()
+  firebaseSetup()
 }
 
-broadcastInstance.addBroadcastCallback('LOGOUT', () => {
-  userStore.Logout()
-})
+broadcastInstance.addBroadcastCallback('LOGOUT', () => userStore.Logout())
 </script>

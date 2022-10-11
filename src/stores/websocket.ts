@@ -2,11 +2,12 @@ import {defineStore} from 'pinia'
 import {LocalStorage, uid} from 'quasar'
 import useRobotStore from './robot'
 import {
+  WebsocketErrorResponse,
   WebsocketFetchResponse,
   WebsocketRobotStatusResponse,
   WebsocketRobotStopResponse,
-} from './robot'
-import { WebsocketErrorResponse} from 'src/typings/types'
+} from 'src/types/websocket'
+import {StorageKeys} from 'src/utils'
 
 
 const websocketServerURL = process.env.WEBSOCKET_BASE as string
@@ -35,7 +36,7 @@ export const useWebsocketStore = defineStore({
   getters: {},
   actions: {
     openWS() {
-      const accessToken = LocalStorage.getItem('access_token') as string
+      const accessToken = LocalStorage.getItem(StorageKeys.ACCESS_TOKEN) as string
       this.WS = new WebSocket(websocketServerURL, [accessToken])
       this.setupWS()
     },
@@ -75,9 +76,9 @@ export const useWebsocketStore = defineStore({
         // If the response was not for a command sent from this device, do nothing
         const passThroughMsgTypes = ['robot_stopped']
         if (
-          !!reqKey
-          && !passThroughMsgTypes.includes(msgType)
-          && !this.sentCommands.hasOwnProperty(reqKey)
+            !!reqKey
+            && !passThroughMsgTypes.includes(msgType)
+            && !this.sentCommands.hasOwnProperty(reqKey)
         ) {
           console.warn('no sent command with this req key')
           return
@@ -90,15 +91,15 @@ export const useWebsocketStore = defineStore({
         console.log(`ws close | reason: ${ev.reason} | code: ${ev.code}`)
         this.$reset()
         setTimeout(() => {
-            this.openWS()
-          },
-          WS_RECONNECT_INTERVAL,
+              this.openWS()
+            },
+            WS_RECONNECT_INTERVAL,
         )
       }
     },
 
     HandleTokenUpdate() {
-      const accessToken = LocalStorage.getItem('access_token')
+      const accessToken = LocalStorage.getItem(StorageKeys.ACCESS_TOKEN)
       console.log('Token Updated', accessToken)
       if (accessToken) {
         if (this.WS) {

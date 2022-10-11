@@ -1,93 +1,93 @@
 export const home = () =>
-  import(/* webpackChunkName: "general" */ '../views/dashboard/Profile.vue')
+  import(/* webpackChunkName: "general" */ '../pages/dashboard/Profile.vue')
 export const login = () =>
-  import(/* webpackChunkName: "general" */ '../views/auth/Login.vue')
+  import(/* webpackChunkName: "general" */ '../pages/auth/Login.vue')
 export const logout = () =>
-  import(/* webpackChunkName: "general" */ '../views/auth/Logout.vue')
+  import(/* webpackChunkName: "general" */ '../pages/auth/Logout.vue')
 export const profile = () =>
-  import(/* webpackChunkName: "general" */ '../views/dashboard/Profile.vue')
+  import(/* webpackChunkName: "general" */ '../pages/dashboard/Profile.vue')
 export const justRain = () =>
-  import(/* webpackChunkName: "general" */ '../views/JustRain.vue')
+  import(/* webpackChunkName: "general" */ '../pages/JustRain.vue')
 export const test = () =>
-  import(/* webpackChunkName: "general" */ '../views/robot/test.vue')
+  import(/* webpackChunkName: "general" */ '../pages/robot/test.vue')
 
 export const actualProductsList = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/actualProduct/List.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/actualProduct/List.vue')
 export const actualProductAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/actualProduct/AddEdit.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/actualProduct/AddEdit.vue')
 
 export const brandList = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/brand/List.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/brand/List.vue')
 export const brandAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/brand/AddEdit.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/brand/AddEdit.vue')
 
 export const productsList = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/product/List.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/product/List.vue')
 export const productAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/product/AddEdit.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/product/AddEdit.vue')
 
 export const productTypesList = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/productType/List.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/productType/List.vue')
 export const productTypeAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/productType/AddEdit.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/productType/AddEdit.vue')
 
 // export const productTypeSelectorsList = () =>
-//   import(/* webpackChunkName: "products" */ '../views/products/productTypeSelector/List.vue')
+//   import(/* webpackChunkName: "products" */ '../pages/products/productTypeSelector/List.vue')
 // export const productTypeSelectorValuesList = () =>
-//   import(/* webpackChunkName: "products" */ '../views/products/productTypeSelectorValues/List.vue')
+//   import(/* webpackChunkName: "products" */ '../pages/products/productTypeSelectorValues/List.vue')
 
 export const variantsList = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/variant/List.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/variant/List.vue')
 export const variantAddEdit = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/variant/AddEdit.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/variant/AddEdit.vue')
 export const variantBulkCreate = () =>
-  import(/* webpackChunkName: "products" */ '../views/products/variant/BulkCreate.vue')
+  import(/* webpackChunkName: "products" */ '../pages/products/variant/BulkCreate.vue')
 
 export const editVariantStatus = () =>
-  import(/* webpackChunkName: "robot" */ '../views/robot/variantStatus/EditStatus.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/robot/variantStatus/EditStatus.vue')
 
 export const editVariantStatusDKPC = () =>
-  import(/* webpackChunkName: "robot" */ '../views/robot/variantStatusDKPC/Status.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/robot/variantStatusDKPC/Status.vue')
 
 export const digiCredentials = () =>
-  import(/* webpackChunkName: "robot" */ '../views/robot/digiCredentials/DigiCredentials.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/robot/digiCredentials/DigiCredentials.vue')
 
 export const scrapeInvoice = () =>
-  import(/* webpackChunkName: "robot" */ '../views/robot/scrapeInvoice/scrape.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/robot/scrapeInvoice/scrape.vue')
 
 export const inactiveVariants = () =>
-  import(/* webpackChunkName: "robot" */ '../views/robot/inactiveVariants/List.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/robot/inactiveVariants/List.vue')
 
 export const WebRTCTest = () =>
-  import(/* webpackChunkName: "robot" */ '../views/robot/call/WebRTCTest.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/robot/call/WebRTCTest.vue')
 
 
 export const invoiceList = () =>
-  import(/* webpackChunkName: "robot" */ '../views/accounting/invoice/List.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/accounting/invoice/List.vue')
 export const invoiceDetails = () =>
-  import(/* webpackChunkName: "robot" */ '../views/accounting/invoice/Details.vue')
+  import(/* webpackChunkName: "robot" */ '../pages/accounting/invoice/Details.vue')
 
 export const costList  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/cost/List.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/cost/List.vue')
 export const costAddEdit  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/cost/AddEdit.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/cost/AddEdit.vue')
 
 export const costTypeList  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/costType/List.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/costType/List.vue')
 export const costTypeAddEdit  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/costType/AddEdit.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/costType/AddEdit.vue')
 
 export const incomeList  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/income/List.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/income/List.vue')
 export const incomeAddEdit  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/income/AddEdit.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/income/AddEdit.vue')
 
 export const productCostList  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/productCost/List.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/productCost/List.vue')
 export const productCostAddEdit  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/productCost/AddEdit.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/productCost/AddEdit.vue')
 
 export const profitByDate  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/profit/ProfitByDate.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/profit/ProfitByDate.vue')
 export const profitAllYear  = () =>
-  import(/* webpackChunkName: "accounting" */ '../views/accounting/profit/ProfitAllYear.vue')
+  import(/* webpackChunkName: "accounting" */ '../pages/accounting/profit/ProfitAllYear.vue')

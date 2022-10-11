@@ -34,12 +34,11 @@
 <script setup>
 import {ref, watch} from 'vue'
 import {isRequired} from 'src/modules/form-validation'
-import moment from 'moment-jalaali'
 import {useQuasar} from 'quasar'
 import {cloneDeep} from 'lodash'
+import moment from 'moment-jalaali'
+// import {gregorianDateToPersian} from 'src/modules/string-tools'
 
-
-const q = useQuasar()
 
 const emits = defineEmits(['update:modelValue'])
 const props = defineProps({
@@ -48,8 +47,11 @@ const props = defineProps({
   label: {type: String, required: false, default: 'date'},
 })
 
+const q = useQuasar()
 
 const date = ref(null)
+// const date = ref<Nullable<string>>(null)
+
 // watch(() => props.modelValue, (newVal, oldVal) => {
 //   console.log('first val  ', newVal, oldVal)
 //   let n = newVal
@@ -68,7 +70,7 @@ watch(date, (val) => {
   if (val && q.lang.isoName === 'fa') {
     payload = moment(val, 'jYYYY/jMM/jDD').format('YYYY-MM-DD')
   }
-  console.log('emit date  ', payload)
+  console.log('emit date:', payload)
   emits('update:modelValue', payload)
 })
 
@@ -76,4 +78,9 @@ if (q.lang.isoName === 'fa') {
   date.value = moment(props.modelValue, 'YYYY/MM/DD').format('jYYYY/jMM/jDD')
 } else
   date.value = cloneDeep(props.modelValue)
+
+// if (q.lang.isoName === 'fa') {
+//   date.value = gregorianDateToPersian(props.modelValue as string)
+// } else
+//   date.value = cloneDeep(props.modelValue) as string
 </script>

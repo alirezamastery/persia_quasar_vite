@@ -5,7 +5,9 @@ import useRobotStore from './robot'
 import {routerInstance} from 'src/router'
 import {axiosInstance} from 'src/boot/axios'
 import {broadcastInstance} from 'src/boot/broadcast'
-import {UserProfile} from 'src/typings/types'
+import {UserProfile} from 'src/types/general'
+import {StorageKeys} from 'src/utils'
+
 
 const storeID = 'user'
 
@@ -28,7 +30,7 @@ export const useUserStore = defineStore({
     isAuthenticated(): boolean {
       if (this.user !== null) return true
       else {
-        const user = LocalStorage.getItem('user') as Nullable<string>
+        const user = LocalStorage.getItem(StorageKeys.USER) as Nullable<string>
         if (user) {
           this.user = user
           return true
@@ -40,14 +42,14 @@ export const useUserStore = defineStore({
   actions: {
     Login(user: string) {
       this.user = user
-      LocalStorage.set('user', user)
+      LocalStorage.set(StorageKeys.USER, user)
       const wsStore = useWebsocketStore()
       wsStore.HandleTokenUpdate()
     },
     Logout() {
       console.log('logout')
       this.user = null
-      LocalStorage.clear()
+      this.ClearLocalStorage()
       delete axiosInstance.defaults.headers['Authorization']
       broadcastInstance.sendBroadcastMessage('LOGOUT', {})
       broadcastInstance.teardown()
@@ -57,6 +59,15 @@ export const useUserStore = defineStore({
       robotStore.$reset()
       this.$reset()
       routerInstance.push({name: 'Login'})
+    },
+    ClearLocalStorage() {
+      try {
+        LocalStorage.remove(StorageKeys.USER)
+        LocalStorage.remove(StorageKeys.ACCESS_TOKEN)
+        LocalStorage.remove(StorageKeys.REFRESH_TOKEN)
+      } catch {
+        LocalStorage.clear()
+      }
     },
     SetProfile(payload: UserProfile) {
       this.profile = payload

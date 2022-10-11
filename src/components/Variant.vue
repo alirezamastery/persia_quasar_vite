@@ -194,13 +194,13 @@
 
 <script setup lang="ts">
 import {ref, computed, watch, PropType} from 'vue'
-import {formatIntNumber, removeCommas} from 'src/modules/number-tools'
+import {formatAsCommaSeparated, removeCommas} from 'src/modules/number-tools'
 import {notifyMessage} from 'src/modules/notif'
 import {useI18n} from 'vue-i18n'
 import {visualizeVariantSelector} from '../utils'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {VariantDk} from 'src/typings/types'
+import {VariantDk} from 'src/types/types'
 
 
 const {t} = useI18n()
@@ -239,9 +239,9 @@ const showBtnAtlas = computed(() => {
   return initialPriceMin.value !== priceMin || initialStopLoss.value !== stopLoss
 })
 
-watch(newPrice, (newVal) => newPrice.value = formatIntNumber(newVal))
-watch(newPriceMin, (newVal) => newPriceMin.value = formatIntNumber(newVal))
-watch(newStopLoss, (newVal) => newStopLoss.value = formatIntNumber(newVal))
+watch(newPrice, (newVal) => newPrice.value = formatAsCommaSeparated(newVal))
+watch(newPriceMin, (newVal) => newPriceMin.value = formatAsCommaSeparated(newVal))
+watch(newStopLoss, (newVal) => newStopLoss.value = formatAsCommaSeparated(newVal))
 watch(() => props.variant, () => {
   setInitialValues()
 })
@@ -250,13 +250,13 @@ setInitialValues()
 
 function setInitialValues() {
   initialPriceMin.value = props.variant['price_min'].toString()
-  newPriceMin.value = formatIntNumber(props.variant['price_min'].toString())
+  newPriceMin.value = formatAsCommaSeparated(props.variant['price_min'].toString())
   initialPrice.value = props.variant.dk.price.selling_price.toString()
   initialStock.value = props.variant.dk.stock.seller_stock.toString()
   initialStopLoss.value = props.variant['stop_loss'].toString()
-  newPrice.value = formatIntNumber(props.variant.dk.price.selling_price.toString())
+  newPrice.value = formatAsCommaSeparated(props.variant.dk.price.selling_price.toString())
   newStock.value = props.variant.dk.stock.seller_stock.toString()
-  newStopLoss.value = formatIntNumber(props.variant['stop_loss'].toString())
+  newStopLoss.value = formatAsCommaSeparated(props.variant['stop_loss'].toString())
   robotActiveStatus.value = props.variant.is_active
   digiActiveStatus.value = props.variant.dk.is_active
 }

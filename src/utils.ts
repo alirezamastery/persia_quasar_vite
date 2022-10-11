@@ -1,4 +1,15 @@
-import {VariantSelector} from 'src/typings/types'
+import {VariantSelector} from 'src/types/network/response/products/variant'
+
+
+export enum StorageKeys {
+  ACCESS_TOKEN = 'ACCESS_TOKEN',
+  REFRESH_TOKEN = 'REFRESH_TOKEN',
+  USER = 'USER',
+  IS_DARK = 'IS_DARK',
+  REMEMBER_ME = 'REMEMBER_ME',
+  MOBILE = 'MOBILE'
+}
+
 
 export const logger = (...msg: string[]): void => {
   let txt = ''
@@ -10,8 +21,8 @@ export const logger = (...msg: string[]): void => {
 
 
 export interface VisualizeSelectorClasses {
-  'background-color'?: string | null,
-  color?: string
+  'background-color'?: Nullable<string>,
+  color?: Nullable<string>
 }
 
 export function visualizeVariantSelector(selector: VariantSelector): VisualizeSelectorClasses {
