@@ -19,8 +19,6 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
     listViewRoute: string,
     itemTypeTranslate: string,
     itemRepr: ComputedRef<string>,
-    // formInit: (info: ResponseType) => void,
-    // getRequestData: () => RequestType,
     responseToForm: (r: ResponseType) => FormType,
     formToRequest: (f: FormType) => RequestType,
 ) {
@@ -33,8 +31,8 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
   const editingItemId = computed(() => itemId)
   const formTitle = computed(() => {
     if (itemId !== null)
-      return `${t('general.change')} ${t(itemTypeTranslate)}`
-    return t('general.createANew').replace('{0}', t(itemTypeTranslate))
+      return `${t('general.change')} ${t(itemTypeTranslate)} ${itemRepr.value}`
+    return t('general.createANew', {item: t(itemTypeTranslate)})
   })
 
   if (itemId !== null) {
@@ -44,7 +42,6 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
     axiosInstance.get<ResponseType>(url)
         .then(res => {
           console.log('item details', res)
-          // formInit(res.data) // handle ManyToMany relations data in "formInit" method
           form.value = responseToForm(res.data)
           showForm.value = true
         })
@@ -53,7 +50,6 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
   }
 
   function handleFormSubmit() {
-    // const data = getRequestData()
     const data = formToRequest(form.value)
     console.log('save payload', data)
     let url = apiRoot

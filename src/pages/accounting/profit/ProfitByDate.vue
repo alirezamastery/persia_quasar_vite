@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-pa-sm q-ma-md">
+  <q-card :class="$q.screen.gt.sm ? 'q-ma-md q-pa-sm' : 'no-shadow no-border-radius'">
     <q-card-section>
       <div class="text-h5">{{ $t('acc.profitInMonth') }}</div>
     </q-card-section>

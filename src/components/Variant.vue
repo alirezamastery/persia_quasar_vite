@@ -200,14 +200,14 @@ import {useI18n} from 'vue-i18n'
 import {visualizeVariantSelector} from '../utils'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {VariantDk} from 'src/types/types'
+import {VariantDkResponse} from 'src/types/network/response/products/variant'
 
 
 const {t} = useI18n()
 
 const props = defineProps({
   variant: {
-    type: Object as PropType<VariantDk>,
+    type: Object as PropType<VariantDkResponse>,
     required: true,
   },
 })

@@ -30,7 +30,7 @@ import {broadcastInstance} from 'src/boot/broadcast'
 import {firebaseSetup} from 'src/modules/push-notif-setup'
 import {logger, StorageKeys} from 'src/utils'
 import Header from 'src/components/layout/header/Header.vue'
-import Sidebar from 'src/components/layout/Sidebar.vue'
+import Sidebar from 'src/components/layout/sidebar/Sidebar.vue'
 import Banners from 'src/components/layout/Banners.vue'
 
 const q = useQuasar()

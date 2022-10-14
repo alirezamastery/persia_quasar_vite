@@ -1,5 +1,5 @@
 <template>
-  <div class="q-ma-lg">
+  <div :class="$q.screen.gt.sm ? 'q-ma-lg' : 'q-ma-none'">
 
     <Header
       :title="title"
@@ -9,7 +9,10 @@
 
     <div class="row no-wrap-md">
 
-      <q-card class="col-xs-12 col-md">
+      <q-card
+        class="col-xs-12 col-md"
+        :class="$q.screen.gt.sm ? '' : 'border-radius-inherit no-shadow'"
+      >
 
         <TableHeader
           v-if="!hideSearch"

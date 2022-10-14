@@ -1,10 +1,10 @@
 <template>
 
   <q-header
-    :class="q.dark.isActive ? 'bg-grey-10 text-white' : 'bg-white text-black'"
-    elevated
-    :height-hint="56"
     class="flex items-center"
+    :class="headerClassObj"
+    :height-hint="56"
+    :elevated="$q.screen.gt.sm"
   >
 
     <CallRequest/>
@@ -28,7 +28,11 @@
       <q-space v-if="q.screen.gt.sm"/>
       <q-space/>
 
-      <q-btn-group rounded unelevated>
+      <q-btn-group
+        v-if="$q.screen.gt.sm"
+        rounded
+        unelevated
+      >
         <ThemeToggle/>
         <q-btn
           v-if="isAuthenticated"
@@ -48,17 +52,19 @@
 import {computed} from 'vue'
 import {useQuasar} from 'quasar'
 import useUserStore from 'src/stores/user'
-import {generalState} from 'src/components/layout/composables'
+import {generalState} from 'components/layout/sidebar/composables'
 import ThemeToggle from './ThemeToggle.vue'
 import RobotStatus from './RobotStatus.vue'
 import CallRequest from './CallRequest.vue'
 
-
 const q = useQuasar()
-
 const userStore = useUserStore()
-
 const isAuthenticated = computed(() => userStore.isAuthenticated)
+
+const headerClassObj = computed(() => ({
+  'bg-grey-10 text-white': q.dark.isActive,
+  'bg-white text-black': !q.dark.isActive && q.screen.gt.sm,
+}))
 
 function toggleLeftDrawer() {
   generalState.sideOpen = !generalState.sideOpen

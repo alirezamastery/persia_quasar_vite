@@ -1,8 +1,9 @@
 <template>
   <q-card
     class="col-xs-12 col-md-3 col-lg-3 col-xl-2 q-my-xs-md q-my-md-none q-mx-md-sm"
+    :class="$q.screen.gt.sm ? '' : 'border-radius-inherit no-shadow'"
     style="height: fit-content"
-    bordered
+    :bordered="$q.screen.gt.sm"
   >
     <div
       class="flex row justify-between q-pa-sm bg-soft"

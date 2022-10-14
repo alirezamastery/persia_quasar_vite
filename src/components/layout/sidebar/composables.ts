@@ -1,5 +1,6 @@
 import {ref, reactive} from 'vue'
-import routesObj from '../../router/routes'
+import routesObj from 'src/router/routes'
+import {RouteRecordName} from 'vue-router'
 
 export const sidebarOpen = ref(true)
 
@@ -8,18 +9,18 @@ export const generalState = reactive({
 })
 
 export interface SideMenuRoute {
-  routeName: string
+  routeName?: RouteRecordName
   titleI18n: string
-  permissions: string[]
+  permissions: any
   icon: string
 }
 
 function getRoute(route: string): SideMenuRoute {
   return {
     routeName: routesObj[route].name,
-    titleI18n: routesObj[route].meta?.titleI18n,
+    titleI18n: routesObj[route].meta?.titleI18n as string,
     permissions: routesObj[route].meta?.permission || [],
-    icon: routesObj[route].meta?.icon,
+    icon: routesObj[route].meta?.icon as string,
   }
 }
 

@@ -7,10 +7,11 @@ export const removeCommas = (val: Nullable<string>): string => {
   return String(str).replace(/,/g, '')
 }
 
-export const formatAsCommaSeparated = (val: string | number): string => {
+export const formatAsCommaSeparated = (val: string | number | null): string => {
   if (typeof val === 'number') {
     return addThousandSeparators(val)
-  }
+  } else if (val === null)
+    return '0'
   const commaRemoved = removeCommas(val)
   return addThousandSeparators(commaRemoved)
 }

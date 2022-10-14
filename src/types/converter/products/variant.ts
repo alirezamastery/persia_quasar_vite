@@ -33,6 +33,7 @@ export function variantResponseToForm(res: VariantResponse): VariantAddEditForm 
     productId: res.product.id,
     actualProductId: res.actual_product.id,
     variantSelectorId: res.selector.id,
+    productTitle: res.product.title
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="fit q-pa-sm">
+  <div class="fit" :class="$q.screen.gt.sm ? 'q-pa-sm' : 'q-pa-sm'">
 
     <div class="text-h6 q-ma-md">{{ formTitle }}</div>
 

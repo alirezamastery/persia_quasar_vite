@@ -115,9 +115,10 @@ const form = ref<VariantAddEditForm>({
   dkpc: null,
   priceMin: null,
   isActive: true,
+  productTitle: ''
 })
 const itemRepr = computed(() => {
-  return form.value.dkpc ? form.value.dkpc.toString() : ''
+  return form.value.productTitle ? form.value.productTitle.toString() : ''
 })
 
 watch(() => form.value.priceMin, (newVal) => {

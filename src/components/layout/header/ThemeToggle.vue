@@ -10,7 +10,7 @@
   <q-btn
     v-else
     text-color="black"
-    icon="nightlight_round"
+    icon="fa fa-moon"
     class="bg-transparent"
     @click="handleThemeToggle"
     flat

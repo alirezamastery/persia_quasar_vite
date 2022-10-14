@@ -1,6 +1,9 @@
 <template>
   <div class="row items-center justify-between q-pa-sm">
-    <div class="col-12 col-md-1 col-lg-1 text-no-wrap">
+    <div
+      class="col-12 col-md-1 col-lg-1 text-no-wrap"
+      :class="$q.screen.gt.sm ? '' : 'q-my-md'"
+    >
       {{ countDisplay }}
     </div>
     <div class="col-12 col-md-6 col-lg-8 col-xl-9 flex justify-center">
@@ -16,7 +19,7 @@
     </div>
     <div
       class="col-4 col-md-5 col-lg-3 col-xl-2 flex"
-      :class="[q.screen.gt.sm ? 'justify-end' : '']"
+      :class="[q.screen.gt.sm ? 'justify-end' : 'q-mt-lg']"
     >
       <q-select
         v-model="pageSizeValue"

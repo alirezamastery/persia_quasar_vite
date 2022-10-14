@@ -5,23 +5,10 @@
     bordered
     elevated
   >
+    <UserInfo v-if="$q.screen.gt.sm" @height-change="handleUserIngoHeightChange"/>
+    <UserInfoMobile v-else @height-change="handleUserIngoHeightChange"/>
     <q-list>
-      <!--      <q-item-label header></q-item-label>-->
-      <q-item header class="q-px-md" clickable :to="{name: 'Profile'}">
-        <q-item-section avatar>
-          <q-avatar>
-            <img v-if="profile.avatar" :src="userAvatar" alt="">
-            <img v-else :src="$image('/src/assets/svg/user-blank.svg')" alt="">
-          </q-avatar>
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label>{{ user }}</q-item-label>
-          <q-item-label caption lines="1">{{ fullName }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-scroll-area style="height: calc(100vh - 56px)">
+      <q-scroll-area :style="scrollStyle">
         <template
           v-for="(item, i) in menuItems"
           :key="i"
@@ -33,7 +20,7 @@
             dense-toggle
             default-opened
             :header-style="{ fontSize: '1.1rem' }"
-            :header-class="$q.dark.isActive ? 'bg-grey-10 text-light-blue-14' : 'bg-grey-2 text-blue'"
+            :header-class="$q.dark.isActive ? 'bg-grey-10 text-cyan-14' : 'bg-grey-2 text-cyan'"
           >
             <q-item
               v-for="(subItem, j) in item.children"
@@ -42,7 +29,7 @@
               :inset-level="0.3"
               clickable
               v-ripple
-              :active-class="$q.dark.isActive ? 'bg-blue-grey-10 text-blue' : 'bg-blue-1 text-blue'"
+              :active-class="$q.dark.isActive ? 'bg-blue-grey-10 text-cyan' : 'bg-blue-1 text-cyan'"
             >
               <q-item-section v-if="subItem.icon" avatar>
                 <q-icon :name="subItem.icon" :size="$q.screen.gt.sm ? 'xs' : 'sm'"/>
@@ -60,29 +47,23 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
-import useUserStore from 'src/stores/user'
-import {axiosInstance} from 'src/boot/axios'
-import urls from 'src/urls'
+import {ref} from 'vue'
 import {useRouter} from 'vue-router'
+import useUserStore from 'stores/user'
 import {generalState, menuItems} from './composables'
+import {axiosInstance} from 'boot/axios'
+import urls from 'src/urls'
+import UserInfo from './UserInfo.vue'
+import UserInfoMobile from './UserInfoMobile.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
-
-const user = computed(() => userStore.user)
-const profile = computed(() => userStore.profile)
-const userAvatar = computed(() => userStore.profile.avatar)
-const fullName = computed(() => {
-  const firstName = userStore.profile.first_name || ''
-  const lastName = userStore.profile.last_name || ''
-  return firstName + ' ' + lastName
-})
+const scrollStyle = ref('')
 
 if (userStore.isAuthenticated) {
   axiosInstance.get(urls.userProfile)
     .then(res => {
-      console.log('profile:' , res)
+      console.log('profile:', res)
       userStore.SetProfile(res.data)
     })
     .catch(err => {
@@ -91,8 +72,8 @@ if (userStore.isAuthenticated) {
     })
 }
 
+function handleUserIngoHeightChange(newHeight: number) {
+  scrollStyle.value = `height: calc(100vh - ${newHeight + 1}px)`
+  console.log('scroll h:', scrollStyle.value)
+}
 </script>
-
-<style scoped>
-
-</style>

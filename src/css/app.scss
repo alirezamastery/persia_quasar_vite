@@ -74,6 +74,14 @@ body.body--light {
   display: none !important;
 }
 
+.q-toggle.truthy-black .q-toggle__inner--truthy .q-toggle__thumb .q-icon {
+  color: #000 !important;
+}
+
+.bg-tel-blue {
+  background-color: #74b4e0;
+}
+
 //.q-field--with-bottom {
 //  padding-bottom: unset !important;
 //}

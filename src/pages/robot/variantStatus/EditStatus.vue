@@ -1,5 +1,11 @@
 <template>
-  <div class="q-ma-md q-pa-sm">
+  <div
+    :class="{
+    'bg-white': isMobileLightMode,
+    'q-pa-xl': $q.screen.gt.sm,
+    'q-pa-lg': !$q.screen.gt.sm
+  }"
+  >
 
     <div class="text-h5 q-mb-sm">{{ $t('products.brands') }}</div>
     <div class="row q-col-gutter-sm">
@@ -33,7 +39,7 @@
           <q-btn
             size="md"
             class="full-width full-height"
-            :class="selectedBtnClass(actual.id === selectedIds.actualProduct, $q.dark.isActive)"
+            :class="selectedBtnClass(actual.id === selectedIds.actualProduct)"
             @click="handleActualProductSelect(actual.id)"
             :glossy="actual.id === selectedIds.actualProduct"
             :outline="actual.id !== selectedIds.actualProduct"
@@ -106,11 +112,12 @@ import urls from 'src/urls'
 import {
   ActualProduct,
   Brand,
-  Variant as VariantObj,
-  VariantDk,
+  VariantResponse,
   VariantSelector,
-} from 'src/types/types'
+} from 'src/types/network/response/products/variant'
+import {VariantDkResponse} from 'src/types/network/response/products/variant'
 import Variant from 'src/components/Variant.vue'
+import {isMobileLightMode} from 'src/utils'
 
 
 export interface SelectedIdHierarchy {
@@ -123,8 +130,8 @@ export interface SelectedIdHierarchy {
 const brands = ref<Brand[]>([])
 const actualProducts = ref<ActualProduct[]>([])
 const relatedSelectors = ref<VariantSelector[]>([])
-const variants = ref<VariantObj[]>([])
-const variant = ref<Nullable<VariantDk>>(null)
+const variants = ref<VariantResponse[]>([])
+const variant = ref<Nullable<VariantDkResponse>>(null)
 const selectedIds = ref({
   brand: null,
   actualProduct: null,
@@ -180,7 +187,7 @@ function handleRelatedSelectorSelect(selectorId: number) {
   selectedIds.value.selector = selectorId
   selectedIds.value.variant = null
   const url = `${urls.robotVariantsFilter}?actual_product_id=${selectedIds.value.actualProduct}&selector_id=${selectorId}`
-  axiosInstance.get<VariantObj[]>(url)
+  axiosInstance.get<VariantResponse[]>(url)
     .then(async (res) => {
       console.log('variants:', res.data)
       variants.value = res.data
@@ -199,7 +206,7 @@ function handleRelatedSelectorSelect(selectorId: number) {
 function handleVariantSelect(dkpc: number) {
   selectedIds.value.variant = dkpc
   const url = urls.variantDigiDataDKPC + dkpc + '/'
-  axiosInstance.get<VariantDk>(url)
+  axiosInstance.get<VariantDkResponse>(url)
     .then(async (res) => {
       console.log('handleVariantSelect', res.data)
       variant.value = null
@@ -215,7 +222,7 @@ function handleVariantSelect(dkpc: number) {
 
 function selectedBtnClass(isSelected: boolean): string {
   if (isSelected) {
-    return 'bg-green text-white'
+    return 'bg-teal text-white'
   }
   return ''
 }

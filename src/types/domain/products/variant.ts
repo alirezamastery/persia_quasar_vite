@@ -14,6 +14,7 @@ export interface VariantAddEditForm {
   productId: number | null,
   actualProductId: number | null,
   variantSelectorId: number | null,
+  productTitle: string | null,
 }
 
 export interface VariantBulkFormItem {

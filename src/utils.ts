@@ -1,4 +1,6 @@
+import {computed} from 'vue'
 import {VariantSelector} from 'src/types/network/response/products/variant'
+import {LocalStorage, Dark, Screen} from 'quasar'
 
 
 export enum StorageKeys {
@@ -10,6 +12,8 @@ export enum StorageKeys {
   MOBILE = 'MOBILE'
 }
 
+export const isMobileLightMode = computed(() => !Dark.isActive && !Screen.gt.sm)
+
 
 export const logger = (...msg: string[]): void => {
   let txt = ''
@@ -17,6 +21,11 @@ export const logger = (...msg: string[]): void => {
     txt += ' ' + item
   })
   console.log('PERSIA-LOG |', txt)
+}
+
+export function handleThemeToggle() {
+  Dark.toggle()
+  LocalStorage.set(StorageKeys.IS_DARK, Dark.isActive)
 }
 
 
