@@ -1,8 +1,8 @@
 <template>
   <q-toggle
     :model-value="robotIsOn"
-    class="truthy-black"
-    color="orange"
+    :class="isMobileLightMode ? '' : 'truthy-black'"
+    :color="isMobileLightMode ? 'black' : 'orange'"
     unchecked-icon="power_settings_new"
     checked-icon="bolt"
     size="xl"
@@ -12,25 +12,23 @@
   <q-spinner-gears
     size="lg"
     v-if="robotRunning"
-    color="orange"
+    :color="isMobileLightMode ? 'black' : 'orange'"
   />
   <GearsMotionless v-else/>
 </template>
 
 <script setup lang="ts">
 import {computed} from 'vue'
-import {useQuasar} from 'quasar'
 import useWebsocketStore from 'src/stores/websocket'
 import useRobotStore from 'src/stores/robot'
 import GearsMotionless from 'src/components/static/GearsMotionless.vue'
+import {isMobileLightMode} from 'src/utils'
 
-const q = useQuasar()
 const wsStore = useWebsocketStore()
 const robotStore = useRobotStore()
 
 const robotRunning = computed(() => robotStore.robotRunning)
 const robotIsOn = computed(() => robotStore.robotIsOn)
-const lightMobile = computed(() => !q.dark.isActive && !q.screen.gt.sm)
 
 function updateRobotStatus(event: Event) {
   console.log('event:', event)

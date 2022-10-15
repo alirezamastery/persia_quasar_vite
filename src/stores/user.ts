@@ -5,15 +5,17 @@ import useRobotStore from './robot'
 import {routerInstance} from 'src/router'
 import {axiosInstance} from 'src/boot/axios'
 import {broadcastInstance} from 'src/boot/broadcast'
-import {UserProfile} from 'src/types/general'
 import {StorageKeys} from 'src/utils'
+import {UserProfileResponse} from 'src/types/network/response/profile/user-profile'
+import {UserProfileDomain} from 'src/types/domain/profile/user-profile'
+import {userProfileResponseToDomain} from 'src/types/converter/profile/user-profile'
 
 
 const storeID = 'user'
 
 export interface UserStoreState {
   user: Nullable<string>,
-  profile: UserProfile
+  profile: UserProfileDomain
 }
 
 export const useUserStore = defineStore({
@@ -21,8 +23,8 @@ export const useUserStore = defineStore({
   state: () => ({
     user: null,
     profile: {
-      first_name: null,
-      last_name: null,
+      firstName: '',
+      lastName: '',
       avatar: null,
     },
   } as UserStoreState),
@@ -40,13 +42,13 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    Login(user: string) {
+    Login(user: string): void {
       this.user = user
       LocalStorage.set(StorageKeys.USER, user)
       const wsStore = useWebsocketStore()
       wsStore.HandleTokenUpdate()
     },
-    Logout() {
+    Logout(): void {
       console.log('logout')
       this.user = null
       this.ClearLocalStorage()
@@ -60,7 +62,7 @@ export const useUserStore = defineStore({
       this.$reset()
       routerInstance.push({name: 'Login'})
     },
-    ClearLocalStorage() {
+    ClearLocalStorage(): void {
       try {
         LocalStorage.remove(StorageKeys.USER)
         LocalStorage.remove(StorageKeys.ACCESS_TOKEN)
@@ -69,12 +71,8 @@ export const useUserStore = defineStore({
         LocalStorage.clear()
       }
     },
-    SetProfile(payload: UserProfile) {
-      this.profile = payload
-      let property: keyof typeof payload
-      for (property in payload) {
-        this.profile[property] = payload[property]
-      }
+    SetProfile(payload: UserProfileResponse): void {
+      this.profile = userProfileResponseToDomain(payload)
     },
   },
 })

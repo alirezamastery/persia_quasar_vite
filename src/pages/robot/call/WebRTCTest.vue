@@ -22,7 +22,7 @@
 
             <q-item-section>
               <q-item-label lines="1">
-                {{ user.profile.first_name }} {{ user.profile.last_name }}
+                {{ user.profile.firstName }} {{ user.profile.lastName }}
               </q-item-label>
               <q-item-label caption lines="1">
                 {{ user.mobile }}

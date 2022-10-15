@@ -1,10 +1,10 @@
 <template>
-  <div class="column items-center">
+  <div class="col items-center">
     <div
       class="row w-100"
-      :class="$q.screen.gt.sm ? 'justify-start' : 'justify-center'"
+      :class="$q.screen.gt.xs ? 'justify-start' : 'justify-center'"
     >
-      <div class="col-xs-6 col-sm-3 col-md-4">
+      <div class="col-xs-6 col-sm-4 col-lg-2">
         <div class="user-avatar">
           <img
             v-if="avatarUrl"
@@ -84,7 +84,7 @@
       </q-card-section>
       <q-card-section class="cropper-custom__cropper-wrapper">
         <Cropper
-          ref="cropper"
+          ref="cropperElement"
           :src="cropperImageObjectURL"
           :stencil-component="CircleStencil"
           :stencil-props="{aspectRatio: 1, resizable: true}"
@@ -107,26 +107,26 @@
   </q-dialog>
 </template>
 
-<script setup>
-import {onMounted, ref} from 'vue'
+<script setup lang="ts">
+import {ref, computed} from 'vue'
+import {useI18n} from 'vue-i18n'
 import {Cropper, CircleStencil} from 'vue-advanced-cropper'
 import useUserStore from 'src/stores/user'
 import {cloneDeep} from 'lodash'
 import {notifyMessage} from 'src/modules/notif'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
+import {UserProfileResponse} from 'src/types/network/response/profile/user-profile'
 
 
+const {t} = useI18n()
 const validExtensions = ['png', 'jpg', 'jpeg', 'JPG', 'JPEG']
 const userStore = useUserStore()
-const cropper = ref(null)
+const cropperElement = ref<Nullable<typeof Cropper>>(null)
 const showCropperDialog = ref(false)
-const cropperImageObjectURL = ref(null)
-const avatarUrl = ref('')
+const cropperImageObjectURL = ref('')
+const avatarUrl = computed(() => userStore.profile.avatar)
 
-onMounted(() => {
-  avatarUrl.value = userStore.profile.avatar
-})
 
 function onAvatarChangeAttempt() {
   const imageInput = document.createElement('input')
@@ -135,11 +135,13 @@ function onAvatarChangeAttempt() {
   imageInput.click()
 }
 
-function openImageSelectDialog(event) {
+function openImageSelectDialog(event: Event) {
   console.log('openImageSelectDialog', event)
-  const file = event.target.files[0]
+  const target = event.target as HTMLInputElement
+  const files = target.files as FileList
+  const file = files[0]
   const extension = file.name.split('.').pop()
-  if (!validExtensions.includes(extension)) {
+  if (extension === undefined || !validExtensions.includes(extension)) {
     notifyMessage('warning', t('general.snack.fileFormatError'))
     return
   }
@@ -148,40 +150,36 @@ function openImageSelectDialog(event) {
   console.log('imgURL', cropperImageObjectURL.value)
 }
 
-function handleImageDelete() {
+async function handleImageDelete() {
   const data = {
     avatar: null,
   }
-  axiosInstance.patch(urls.userProfile, data)
-    .then(res => {
-      console.log('delete response:', res)
-      avatarUrl.value = null
-      userStore.SetProfile(cloneDeep(res.data))
-    })
-    .catch(err => console.log('delete error:', err))
+  try {
+    const res = await axiosInstance.patch<UserProfileResponse>(urls.userProfile, data)
+    console.log('delete response:', res)
+    userStore.SetProfile(cloneDeep(res.data))
+  } catch (err) {
+    console.log('delete error:', err)
+  }
 }
 
-function handleCropperSubmit() {
+async function handleCropperSubmit() {
   showCropperDialog.value = false
-  const {canvas} = cropper.value.getResult()
-  avatarUrl.value = canvas
-  avatarUrl.value.avatar = avatarUrl.value.toDataURL()
-  console.log('handleCropperSubmit | canvas', avatarUrl.value)
+  const {canvas} = cropperElement.value!.getResult()
   const formData = new FormData()
-  avatarUrl.value.toBlob(blob => {
-    formData.append('avatar', blob, 'avatar.png')
-    axiosInstance.patch(urls.userProfile, formData, {
+  const blob = await new Promise(resolve => canvas.toBlob(resolve)) as Blob
+  formData.append('avatar', blob, 'avatar.png')
+  try {
+    const res = await axiosInstance.patch<UserProfileResponse>(urls.userProfile, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    }).then(res => {
-      console.log('form patch response:', res)
-      avatarUrl.value = res.data.avatar
-      userStore.SetProfile(res.data)
-    }).catch(err => {
-      console.log('file upload error', err)
-      notifyMessage('negative', t('general.snack.connectionError'))
     })
-  })
+    console.log('form patch response:', res)
+    userStore.SetProfile(res.data)
+  } catch (err) {
+    console.log('file upload error', err)
+    notifyMessage('negative', t('general.snack.connectionError'))
+  }
 }
 </script>

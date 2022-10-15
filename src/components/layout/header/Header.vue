@@ -5,6 +5,7 @@
     :class="headerClassObj"
     :height-hint="56"
     :elevated="$q.screen.gt.sm"
+    id="layout-header"
   >
 
     <CallRequest/>

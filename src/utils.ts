@@ -14,6 +14,7 @@ export enum StorageKeys {
 
 export const isMobileLightMode = computed(() => !Dark.isActive && !Screen.gt.sm)
 
+export const persianMonth = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
 
 export const logger = (...msg: string[]): void => {
   let txt = ''

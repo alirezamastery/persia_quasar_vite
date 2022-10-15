@@ -5,15 +5,17 @@
         {{ $t('general.routes.profile') }}
       </div>
     </q-card-section>
+
+    <q-card-section class="row">
+      <AvatarCropper/>
+    </q-card-section>
+
     <q-card-section>
       <q-form class="q-gutter-md" @submit.prevent="handleFormSubmit">
-
-        <AvatarCropper/>
-
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 col-xl-2">
             <q-input
-              v-model="form.first_name"
+              v-model="form.firstName"
               :label="$t('general.firstName')"
               filled
             />
@@ -22,7 +24,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 col-xl-2">
             <q-input
-              v-model="form.last_name"
+              v-model="form.lastName"
               :label="$t('general.lastName')"
               filled
             />
@@ -54,42 +56,41 @@
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import useUserStore from 'src/stores/user'
 import {notifyMessage} from 'src/modules/notif'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
+import {userProfileFormToRequest} from 'src/types/converter/profile/user-profile'
+import {UserProfileForm} from 'src/types/domain/profile/user-profile'
 import AvatarCropper from 'src/components/profile/AvatarCropper.vue'
+
 
 const {t} = useI18n()
 const userStore = useUserStore()
 
-const form = ref({
-  first_name: null,
-  last_name: null,
+const form = ref<UserProfileForm>({
+  firstName: '',
+  lastName: '',
 })
 
 onMounted(() => {
-  form.value.first_name = userStore.profile.first_name
-  form.value.last_name = userStore.profile.last_name
+  form.value.firstName = userStore.profile.firstName
+  form.value.lastName = userStore.profile.lastName
 })
 
-function handleFormSubmit() {
-  const data = {
-    'first_name': form.value.first_name,
-    'last_name': form.value.last_name,
+async function handleFormSubmit() {
+  const data = userProfileFormToRequest(form.value)
+  try {
+    const res = await axiosInstance.patch(urls.userProfile, data)
+    console.log('without avatar change response:', res)
+    userStore.SetProfile(res.data)
+    notifyMessage('info', t('general.snack.saveSuccess'))
+  } catch (err) {
+    console.log('profile patch error', err)
   }
-  axiosInstance.patch(urls.userProfile, data)
-    .then(res => {
-      console.log('without avatar change response:', res)
-      userStore.SetProfile(res.data)
-      notifyMessage('info', t('general.snack.saveSuccess'))
-    })
-    .catch(err => {
-      console.log('simple patch error', err)
-    })
 }
 </script>
 

@@ -33,8 +33,8 @@ const user = computed(() => userStore.user)
 const profile = computed(() => userStore.profile)
 const userAvatar = computed(() => userStore.profile.avatar)
 const fullName = computed(() => {
-  const firstName = userStore.profile.first_name || ''
-  const lastName = userStore.profile.last_name || ''
+  const firstName = userStore.profile.firstName || ''
+  const lastName = userStore.profile.lastName || ''
   return firstName + ' ' + lastName
 })
 
