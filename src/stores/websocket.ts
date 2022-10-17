@@ -1,17 +1,19 @@
 import {defineStore} from 'pinia'
 import {LocalStorage, uid} from 'quasar'
 import useRobotStore from './robot'
-import {
-  WebsocketErrorResponse,
-  WebsocketFetchResponse,
-  WebsocketRobotStatusResponse,
-  WebsocketRobotStopResponse,
-} from 'src/types/websocket'
 import {StorageKeys} from 'src/utils'
+import {
+  ResponseTypes,
+  WebsocketResponse,
+  FetchData,
+  RobotRunningData,
+  ToggleRobotData,
+} from 'src/types/websocket/response'
+import {WebsocketCommands} from 'src/types/websocket/request'
 
 
 const websocketServerURL = process.env.WEBSOCKET_BASE as string
-const WS_RECONNECT_INTERVAL = 1000
+const WS_RECONNECT_INTERVAL = 2000
 
 export interface WebsocketStoreState {
   WS: WebSocket | null,
@@ -20,9 +22,9 @@ export interface WebsocketStoreState {
   sentCommands: { [index: string]: unknown },
 }
 
-// export type WebsocketMessageHandler = { [index: string]: (res: WebsocketBaseResponse) => void }
-export type WebsocketMessageHandler = {
-  [key: string]: (res: any) => void
+export interface WebsocketCommand {
+  command: number
+  payload?: unknown
 }
 
 export const useWebsocketStore = defineStore({
@@ -45,16 +47,6 @@ export const useWebsocketStore = defineStore({
       if (this.WS === null) throw Error('Websocket instance is null')
 
       const robotStore = useRobotStore()
-      // const webrtcStore = useWebRTCStore()
-
-      const MESSAGE_HANDLERS: WebsocketMessageHandler = {
-        'error': (res: WebsocketErrorResponse) => console.error(res.data),
-        'fetch_response': (res: WebsocketFetchResponse) => robotStore.HandleFetch(res),
-        'robot_status': (res: WebsocketRobotStatusResponse) => robotStore.HandleRobotStatus(res),
-        'robot_stopped': (res: WebsocketRobotStopResponse) => robotStore.HandleRobotStop(res),
-        // 'webrtc_signal': response => webrtcStore.handleWebRTCSignal(response),
-      }
-
 
       this.WS.onopen = async () => {
         console.log('%cws opened', 'color: green;')
@@ -67,24 +59,40 @@ export const useWebsocketStore = defineStore({
 
       this.WS.onmessage = ev => {
         const response = JSON.parse(ev.data)
-        const msgType = response.type
+        const responseType = response.type
         const msgData = response.data
         const reqKey = response.req_key
-        console.info('%c onmessage - type:', 'color: yellow;', msgType, reqKey)
+        console.info('%c onmessage - type:', 'color: yellow;', responseType, reqKey)
         console.info('%c onmessage - data:', 'color: yellow;', msgData)
 
         // If the response was not for a command sent from this device, do nothing
-        const passThroughMsgTypes = ['robot_stopped']
+        const passThroughMsgTypes = [ResponseTypes.TOGGLE_ROBOT]
         if (
             !!reqKey
-            && !passThroughMsgTypes.includes(msgType)
+            && !passThroughMsgTypes.includes(responseType)
             && !this.sentCommands.hasOwnProperty(reqKey)
         ) {
           console.warn('no sent command with this req key')
           return
         }
 
-        MESSAGE_HANDLERS[msgType](response)
+        switch (responseType) {
+          case ResponseTypes.ERROR:
+            console.error('WS error type:', response.data)
+            break
+          case ResponseTypes.FETCH_RESPONSE:
+            robotStore.HandleFetch(response as WebsocketResponse<FetchData>)
+            break
+          case ResponseTypes.TOGGLE_ROBOT:
+            robotStore.HandleRobotStop(response as WebsocketResponse<ToggleRobotData>)
+            break
+          case ResponseTypes.ROBOT_RUNNING:
+            robotStore.HandleRobotStatus(response as WebsocketResponse<RobotRunningData>)
+            break
+          default:
+            console.error('WS response did not have a proper type')
+            break
+        }
       }
 
       this.WS.onclose = ev => {
@@ -123,7 +131,7 @@ export const useWebsocketStore = defineStore({
       this.isWSOpen = true
 
       this.SendCommandToWS({
-        command: 1, // robot data fetch command
+        command: WebsocketCommands.FETCH, // robot data fetch command
       })
 
       const queueCopy = []
@@ -137,11 +145,11 @@ export const useWebsocketStore = defineStore({
       }
     },
 
-    SendCommandToWS(payload: unknown) {
+    SendCommandToWS(command: WebsocketCommand) {
       if (this.isWSOpen)
-        this.sendToWS(payload)
+        this.sendToWS(command)
       else
-        this.wsMsgQueue.push(payload)
+        this.wsMsgQueue.push(command)
     },
 
     sendToWS(request: any) {

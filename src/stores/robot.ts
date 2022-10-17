@@ -1,9 +1,5 @@
 import {defineStore} from 'pinia'
-import {
-  WebsocketFetchResponse,
-  WebsocketRobotStatusResponse,
-  WebsocketRobotStopResponse
-} from 'src/types/websocket'
+import {FetchData, RobotRunningData, ToggleRobotData, WebsocketResponse} from 'src/types/websocket/response'
 
 
 export interface RobotStoreState {
@@ -19,17 +15,17 @@ export const useRobotStore = defineStore({
   } as RobotStoreState),
   getters: {},
   actions: {
-    HandleFetch(response: WebsocketFetchResponse) {
+    HandleFetch(response: WebsocketResponse<FetchData>) {
       console.log('HandleRobotFetch | response:', response)
       const data = response['data']
-      this.robotRunning = data['robot_running']
       this.robotIsOn = data['robot_is_on']
+      this.robotRunning = data['robot_running']
     },
-    HandleRobotStatus(response: WebsocketRobotStatusResponse) {
+    HandleRobotStatus(response: WebsocketResponse<RobotRunningData>) {
       console.log('HandleRobotStatus | response:', response)
       this.robotRunning = response['data']['robot_running']
     },
-    HandleRobotStop(response: WebsocketRobotStopResponse) {
+    HandleRobotStop(response: WebsocketResponse<ToggleRobotData>) {
       console.log('HandleRobotStop | response:', response)
       this.robotIsOn = response['data']['robot_is_on']
     },
