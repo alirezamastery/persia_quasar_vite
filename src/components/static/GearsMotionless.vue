@@ -1,5 +1,5 @@
 <template>
-  <svg class="q-spinner" width="38px" height="38px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"
+  <svg class="q-spinner" :width="btnPixels" :height="btnPixels" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"
        xmlns="http://www.w3.org/2000/svg">
     <g transform="translate(-20,-20)">
       <path
@@ -16,10 +16,23 @@
   </svg>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'GearsMotionless',
+<script setup lang="ts">
+import {ref, watch} from 'vue'
+
+const props = defineProps({
+  size: {type: String, default: 'md'},
+})
+const btnPixels = ref(32)
+const sizeMap: Record<string, number> = {
+  'md': 32,
+  'lg': 38,
 }
+btnPixels.value = sizeMap[props.size]
+
+watch(() => props.size, newVal => {
+  console.log('llllllllllll', newVal)
+  btnPixels.value = sizeMap[newVal]
+})
 </script>
 
 <style scoped>

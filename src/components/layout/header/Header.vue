@@ -3,7 +3,6 @@
   <q-header
     class="flex items-center"
     :class="headerClassObj"
-    :height-hint="56"
     :elevated="$q.screen.gt.sm"
     id="layout-header"
   >
@@ -20,20 +19,21 @@
         @click="toggleLeftDrawer"
       />
 
-      <q-toolbar-title v-if="q.screen.gt.sm">
-        {{ $t('general.siteHeader') }}
-      </q-toolbar-title>
+      <q-space v-if="$q.screen.gt.sm"/>
+      <q-space/>
+
+      <RobotStatus/>
 
       <q-space/>
-      <RobotStatus/>
-      <q-space v-if="q.screen.gt.sm"/>
-      <q-space/>
+
+      <Calendar v-if="$q.screen.gt.sm"/>
 
       <q-btn-group
         v-if="$q.screen.gt.sm"
-        rounded
         unelevated
+        class="bordered"
       >
+        <UserInfoDesktop/>
         <ThemeToggle/>
         <q-btn
           v-if="isAuthenticated"
@@ -41,8 +41,7 @@
           @click="$router.push({name: 'Logout'})"
           icon="power_settings_new"
           flat
-        >
-        </q-btn>
+        />
       </q-btn-group>
 
     </q-toolbar>
@@ -57,6 +56,8 @@ import {generalState} from 'components/layout/sidebar/composables'
 import ThemeToggle from './ThemeToggle.vue'
 import RobotStatus from './RobotStatus.vue'
 import CallRequest from './CallRequest.vue'
+import UserInfoDesktop from './UserInfoDesktop.vue'
+import Calendar from './Calendar.vue'
 
 const q = useQuasar()
 const userStore = useUserStore()

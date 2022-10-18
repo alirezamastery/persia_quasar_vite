@@ -4,8 +4,9 @@
     show-if-above
     bordered
     elevated
+    style="overflow: hidden"
   >
-    <UserInfo v-if="$q.screen.gt.sm" @height-change="handleUserIngoHeightChange"/>
+    <BannerDesktop v-if="$q.screen.gt.sm" @height-change="handleUserIngoHeightChange"/>
     <UserInfoMobile v-else @height-change="handleUserIngoHeightChange"/>
     <q-list>
       <q-scroll-area :style="scrollStyle">
@@ -53,7 +54,7 @@ import useUserStore from 'stores/user'
 import {generalState, menuItems} from './composables'
 import {axiosInstance} from 'boot/axios'
 import urls from 'src/urls'
-import UserInfo from './UserInfo.vue'
+import BannerDesktop from './BannerDesktop.vue'
 import UserInfoMobile from './UserInfoMobile.vue'
 
 const userStore = useUserStore()

@@ -5,7 +5,7 @@
     :color="isMobileLightMode ? 'black' : 'orange'"
     unchecked-icon="power_settings_new"
     checked-icon="bolt"
-    size="xl"
+    :size="$q.screen.gt.sm ? 'lg' : 'xl'"
     @update:model-value="updateRobotStatus"
   >
   </q-toggle>
@@ -14,7 +14,7 @@
     v-if="robotRunning"
     :color="isMobileLightMode ? 'black' : 'orange'"
   />
-  <GearsMotionless v-else/>
+  <GearsMotionless v-else size="lg"/>
 </template>
 
 <script setup lang="ts">

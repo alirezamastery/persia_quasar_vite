@@ -2,7 +2,7 @@
   <div
     :class="{
     'bg-white': isMobileLightMode,
-    'q-pa-xl': $q.screen.gt.sm,
+    'q-px-xl q-py-lg': $q.screen.gt.sm,
     'q-pa-lg': !$q.screen.gt.sm
   }"
   >
