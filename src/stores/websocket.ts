@@ -12,28 +12,34 @@ import {
 import {WebsocketCommands} from 'src/types/websocket/request'
 
 
-const websocketServerURL = process.env.WEBSOCKET_BASE as string
-const WS_RECONNECT_INTERVAL = 2000
-
-export interface WebsocketStoreState {
-  WS: WebSocket | null,
-  isWSOpen: boolean,
-  wsMsgQueue: unknown[],
-  sentCommands: { [index: string]: unknown },
-}
-
-export interface WebsocketCommand {
+export interface WebsocketRequest {
   command: number
   payload?: unknown
 }
+
+export interface WebsocketMessage {
+  command: number
+  req_key: string
+  payload?: unknown
+}
+
+export interface WebsocketStoreState {
+  WS: WebSocket | null,
+  isConnected: boolean,
+  requestQueue: WebsocketRequest[],
+  sentMessages: { [key: string]: WebsocketMessage },
+}
+
+const websocketServerURL = process.env.WEBSOCKET_BASE as string
+const WS_RECONNECT_INTERVAL = 2000
 
 export const useWebsocketStore = defineStore({
   id: 'websocket',
   state: () => ({
     WS: null,
-    isWSOpen: false,
-    wsMsgQueue: [],
-    sentCommands: {},
+    isConnected: false,
+    requestQueue: [],
+    sentMessages: {},
   } as WebsocketStoreState),
   getters: {},
   actions: {
@@ -70,7 +76,7 @@ export const useWebsocketStore = defineStore({
         if (
             !!reqKey
             && !passThroughMsgTypes.includes(responseType)
-            && !this.sentCommands.hasOwnProperty(reqKey)
+            && !this.sentMessages.hasOwnProperty(reqKey)
         ) {
           console.warn('no sent command with this req key')
           return
@@ -84,10 +90,10 @@ export const useWebsocketStore = defineStore({
             robotStore.HandleFetch(response as WebsocketResponse<FetchData>)
             break
           case ResponseTypes.TOGGLE_ROBOT:
-            robotStore.HandleRobotStop(response as WebsocketResponse<ToggleRobotData>)
+            robotStore.HandleToggleRobot(response as WebsocketResponse<ToggleRobotData>)
             break
           case ResponseTypes.ROBOT_RUNNING:
-            robotStore.HandleRobotStatus(response as WebsocketResponse<RobotRunningData>)
+            robotStore.HandleRobotRunningStatus(response as WebsocketResponse<RobotRunningData>)
             break
           default:
             console.error('WS response did not have a proper type')
@@ -128,35 +134,39 @@ export const useWebsocketStore = defineStore({
     },
 
     HandleWSIsOpen() {
-      this.isWSOpen = true
+      this.isConnected = true
 
       this.SendCommandToWS({
         command: WebsocketCommands.FETCH, // robot data fetch command
       })
 
       const queueCopy = []
-      for (const msg of this.wsMsgQueue) {
+      for (const msg of this.requestQueue) {
         queueCopy.push(msg)
       }
       for (const msg of queueCopy) {
         this.sendToWS(msg)
-        const index = this.wsMsgQueue.indexOf(msg)
-        this.wsMsgQueue.splice(index, 1)
+        const index = this.requestQueue.indexOf(msg)
+        this.requestQueue.splice(index, 1)
       }
     },
 
-    SendCommandToWS(command: WebsocketCommand) {
-      if (this.isWSOpen)
+    SendCommandToWS(command: WebsocketRequest) {
+      if (this.isConnected)
         this.sendToWS(command)
       else
-        this.wsMsgQueue.push(command)
+        this.requestQueue.push(command)
     },
 
-    sendToWS(request: any) {
-      request['req_key'] = uid()
+    sendToWS(command: WebsocketRequest) {
+      const msg: WebsocketMessage = {
+        command: command.command,
+        req_key: uid(),
+        payload: command.payload,
+      }
       if (this.WS === null) throw Error('Websocket instance is null')
-      this.WS.send(JSON.stringify(request))
-      this.sentCommands[request['req_key']] = request['payload']
+      this.WS.send(JSON.stringify(msg))
+      this.sentMessages[msg['req_key']] = msg
     },
 
   },

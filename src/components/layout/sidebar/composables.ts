@@ -11,7 +11,7 @@ export const generalState = reactive({
 export interface SideMenuRoute {
   routeName?: RouteRecordName
   titleI18n: string
-  permissions: any
+  permissions: string[]
   icon: string
 }
 
@@ -19,7 +19,7 @@ function getRoute(route: string): SideMenuRoute {
   return {
     routeName: routesObj[route].name,
     titleI18n: routesObj[route].meta?.titleI18n as string,
-    permissions: routesObj[route].meta?.permission || [],
+    permissions: routesObj[route].meta?.permission as string[] || [],
     icon: routesObj[route].meta?.icon as string,
   }
 }

@@ -21,11 +21,11 @@ export const useRobotStore = defineStore({
       this.robotIsOn = data['robot_is_on']
       this.robotRunning = data['robot_running']
     },
-    HandleRobotStatus(response: WebsocketResponse<RobotRunningData>) {
+    HandleRobotRunningStatus(response: WebsocketResponse<RobotRunningData>) {
       console.log('HandleRobotStatus | response:', response)
       this.robotRunning = response['data']['robot_running']
     },
-    HandleRobotStop(response: WebsocketResponse<ToggleRobotData>) {
+    HandleToggleRobot(response: WebsocketResponse<ToggleRobotData>) {
       console.log('HandleRobotStop | response:', response)
       this.robotIsOn = response['data']['robot_is_on']
     },

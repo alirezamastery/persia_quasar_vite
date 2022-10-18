@@ -5,10 +5,10 @@ export enum ResponseTypes {
   ROBOT_RUNNING = 'robot_running',
 }
 
-export interface WebsocketResponse<DayaType> {
+export interface WebsocketResponse<DataType> {
   type: string
   req_key: string
-  data: DayaType
+  data: DataType
 }
 
 export interface FetchData {
