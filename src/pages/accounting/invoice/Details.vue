@@ -35,7 +35,9 @@ import {useRoute} from 'vue-router'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 import {InvoiceResponse} from 'src/types/network/response/accounting/invoice'
-import {InvoiceDetailItem, InvoiceDetailsResponse} from 'src/types/network/response/accounting/invoice-details'
+import {InvoiceDetailsResponse} from 'src/types/network/response/accounting/invoice-details'
+import {InvoiceDetailItemDomain} from 'src/types/domain/accounting/invoice'
+import {invoiceDetailResponseToDomain} from 'src/types/converter/accounting/invoice'
 
 defineProps({
   invoiceId: Number,
@@ -45,10 +47,11 @@ const {t} = useI18n()
 const route = useRoute()
 
 const invoice = ref<InvoiceResponse | null>(null)
-const items = ref<InvoiceDetailItem[]>([])
+const items = ref<InvoiceDetailItemDomain[]>([])
 const totalCount = ref(0)
 const columns = [
-  {name: 'name', label: t('general.name'), field: 'name', align: 'left'},
+  {name: 'rowNumber', label: t('general.row'), field: 'rowNumber', align: 'left'},
+  {name: 'title', label: t('general.name'), field: 'title', align: 'left'},
   {name: 'count', label: t('general.count'), field: 'count', align: 'left'},
 ]
 const pagination = ref({
@@ -64,7 +67,8 @@ const detailsUrl = urls.invoices + route.params.id + '/get_details/'
 axiosInstance.get<InvoiceDetailsResponse>(detailsUrl)
   .then(res => {
     console.log('invoice details:', res.data)
-    items.value = res.data.items
-    totalCount.value = res.data.total_count
+    const data = invoiceDetailResponseToDomain(res.data)
+    items.value = data.items
+    totalCount.value = data.totalCount
   })
 </script>

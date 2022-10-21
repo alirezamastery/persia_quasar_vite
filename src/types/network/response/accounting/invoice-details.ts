@@ -1,9 +1,11 @@
 export interface InvoiceDetailsResponse {
   total_count: number
-  items: InvoiceDetailItem[]
+  items: InvoiceDetailItemResponse[]
 }
 
-export interface InvoiceDetailItem {
-  name: string
+export interface InvoiceDetailItemResponse {
+  row_number: number
+  actual_product_id: number
+  title: string
   count: number
 }
