@@ -256,6 +256,17 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
+  // ********** Toggle Variant Status **********
+  toggleVariantStatus: {
+    path: '/robot/toggle-variant-status',
+    name: 'toggleVariantStatus',
+    component: views.ToggleVariantStatus,
+    meta: {
+      titleI18n: 'general.routes.toggleVariantStatus',
+      icon: 'fa fa-toggle-on',
+      requiresAuth: true,
+    },
+  },
 
   // #################### Accounting ####################
   // ********** Invoice List **********

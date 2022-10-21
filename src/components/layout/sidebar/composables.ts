@@ -46,6 +46,7 @@ export const menuItems: Array<SidebarMenuList> = [
       // getRoute('productTypeSelectorList'),
       // getRoute('productTypeSelectorValueList'),
       getRoute('variantList'),
+      getRoute('toggleVariantStatus'),
     ],
   },
   {

@@ -35,7 +35,8 @@
     "variantStatus": "وضعیت تنوع",
     "variantStatusDKPC": "وضعیت تنوع با dkpc",
     "inactiveVariants": "تنوع های غیر فعال",
-    "profile": "پروفایل"
+    "profile": "پروفایل",
+    "toggleVariantStatus": "تغییر وضعیت تنوع"
   },
   "siteHeader": "پرشیا اطلس",
   "all": "همه",
@@ -88,6 +89,7 @@
   "month": "ماه",
   "persianDate": "سال",
   "active": "فعال",
+  "inActive": "غیر فعال",
   "name": "نام",
   "family": "نام خانوادگی",
   "fullName": "نام کامل",
@@ -100,6 +102,7 @@
   "select": "انتخاب",
   "doSelect": "انتخاب کنید",
   "status": "وضعیت",
+  "changeStatusTo": "تغییر وضعیت به",
   "unit": "واحد",
   "type": "نوع",
   "filter": "فیلتر",

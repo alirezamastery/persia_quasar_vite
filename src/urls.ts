@@ -14,6 +14,7 @@ export const urls = {
   variantSelectors: 'products/variant-selectors/',
   variants: 'products/variants/',
   variantBulkCreate: 'products/variants/bulk-create/',
+  toggleVariantStatus: 'products/variants/toggle-status/',
   brandsAll: 'products/brands-all/',
   actualProductByBrand: 'products/actual-product-by-brand/{0}/',
   inactiveVariants: 'products/inactive-variants/',

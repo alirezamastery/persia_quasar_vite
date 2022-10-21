@@ -32,6 +32,7 @@ export const digiCredentials = () => import('pages/robot/DigiCredentials.vue')
 export const scrapeInvoice = () => import('pages/robot/ScrapeInvoice.vue')
 export const inactiveVariants = () => import('pages/robot/InactiveVariants.vue')
 export const WebRTCTest = () => import('pages/robot/WebRTCTest.vue')
+export const ToggleVariantStatus = () => import('pages/robot/ToggleVariantStatus.vue')
 
 
 // Accounting
