@@ -55,7 +55,7 @@ function fetchPersiaData() {
   for (const item of digiItems.value) {
     query += `&dkpc[]=${item.id}`
   }
-  const url = urls.variants + 'get_by_list/' + query
+  const url = urls.variants + 'get-by-dkpc-list/' + query
   axiosInstance.get<VariantResponse[]>(url)
     .then(res => {
       console.log('persia data:', res)

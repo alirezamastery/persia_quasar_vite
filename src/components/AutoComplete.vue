@@ -74,7 +74,7 @@ const props = defineProps({
   rules: {type: Array, required: false, default: () => ([])},
   errors: {type: String, required: false, default: ''},
   listQueryParam: {type: String, required: false, default: 'ids[]'},
-  listApi: {type: String, required: false, default: 'get_by_list/'},
+  listApi: {type: String, required: false, default: 'get-by-dkpc-list/'},
 })
 
 const emits = defineEmits(['update', 'update:modelValue', 'new-selection'])
