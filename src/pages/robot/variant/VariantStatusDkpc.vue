@@ -34,13 +34,13 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import Variant from 'src/components/Variant.vue'
-import {VariantDk} from 'src/types/types'
+import Variant from 'components/Variant.vue'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
+import {VariantDkResponse} from 'src/types/network/response/products/variant'
 
 const dkpc = ref('')
-const variant = ref<VariantDk | null>(null)
+const variant = ref<VariantDkResponse | null>(null)
 const notFound = ref(false)
 
 function handleSubmit() {

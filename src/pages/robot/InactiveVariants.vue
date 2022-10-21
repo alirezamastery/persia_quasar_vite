@@ -12,8 +12,8 @@
           </div>
         </div>
         <template
-            v-for="variant in variants"
-            :key="variant.id"
+          v-for="variant in variants"
+          :key="variant.id"
         >
           <Variant :variant="variant"/>
           <div class="q-my-lg"></div>
@@ -26,29 +26,29 @@
 <script setup lang="ts">
 import {ref} from 'vue'
 import {cloneDeep} from 'lodash'
-import Variant from 'src/components/Variant.vue'
-import {axiosInstance} from 'src/boot/axios'
+import Variant from 'components/Variant.vue'
+import {axiosInstance} from 'boot/axios'
 import urls from 'src/urls'
 import {
-  Variant as VariantObj,
-  VariantDk,
-  VariantDigikala,
-  InactiveVariantsResponse,
-} from 'src/types/types'
+  VariantResponse,
+  VariantDkResponse,
+  InactiveVariantsResponse
+} from 'src/types/network/response/products/variant'
+import {VariantDigikalaResponse} from 'src/types/network/response/products/variant-digikala'
 
 
-const digiItems = ref<VariantDigikala[]>([])
+const digiItems = ref<VariantDigikalaResponse[]>([])
 const totalCount = ref(0)
-const variants = ref<VariantDk[]>([])
+const variants = ref<VariantDkResponse[]>([])
 const loaded = ref(false)
 
 axiosInstance.get<InactiveVariantsResponse>(urls.inactiveVariants)
-    .then(res => {
-      console.log('inactive variants:', res)
-      digiItems.value = res.data.items
-      totalCount.value = res.data.total_count
-      fetchPersiaData()
-    })
+  .then(res => {
+    console.log('inactive variants:', res)
+    digiItems.value = res.data.items
+    totalCount.value = res.data.total_count
+    fetchPersiaData()
+  })
 
 function fetchPersiaData() {
   let query = '?'
@@ -56,20 +56,20 @@ function fetchPersiaData() {
     query += `&dkpc[]=${item.id}`
   }
   const url = urls.variants + 'get_by_list/' + query
-  axiosInstance.get<VariantObj[]>(url)
-      .then(res => {
-        console.log('persia data:', res)
-        constructData(res.data)
-      })
+  axiosInstance.get<VariantResponse[]>(url)
+    .then(res => {
+      console.log('persia data:', res)
+      constructData(res.data)
+    })
 }
 
-function constructData(resData: VariantObj[]) {
+function constructData(resData: VariantResponse[]) {
   const data = cloneDeep(resData)
   const result = []
   for (const variant of data) {
     for (const digiItem of digiItems.value) {
       if (digiItem.id === variant.dkpc) {
-        const temp = cloneDeep(variant) as VariantDk
+        const temp = cloneDeep(variant) as VariantDkResponse
         temp['dk'] = digiItem
         result.push(temp)
       }

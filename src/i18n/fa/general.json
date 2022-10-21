@@ -8,8 +8,8 @@
     "noItemToCopy": "هیچ موردی برای کپی وجود ندارد",
     "serverError": "خطا در برقراری ارتباط با سرور",
     "fieldIsRequired": "این فیلد الزامی است",
-    "positiveNumber":"این مقدار باید عدد مثبت باشد",
-    "positiveNaturalNumber":"این مقدار باید بزرگتر از صفر باشد"
+    "positiveNumber": "این مقدار باید عدد مثبت باشد",
+    "positiveNaturalNumber": "این مقدار باید بزرگتر از صفر باشد"
   },
   "routes": {
     "aboutUs": "درباره ما",

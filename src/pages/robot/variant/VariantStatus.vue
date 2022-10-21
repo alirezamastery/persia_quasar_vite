@@ -107,7 +107,8 @@
 <script setup lang="ts">
 import {ref, nextTick} from 'vue'
 import {visualizeVariantSelector} from 'src/utils'
-import {axiosInstance} from 'src/boot/axios'
+import {axiosInstance} from 'boot/axios'
+import {isMobileLightMode} from 'src/utils'
 import urls from 'src/urls'
 import {
   ActualProduct,
@@ -116,8 +117,7 @@ import {
   VariantSelector,
 } from 'src/types/network/response/products/variant'
 import {VariantDkResponse} from 'src/types/network/response/products/variant'
-import Variant from 'src/components/Variant.vue'
-import {isMobileLightMode} from 'src/utils'
+import Variant from 'components/Variant.vue'
 
 
 export interface SelectedIdHierarchy {
@@ -186,7 +186,7 @@ function handleActualProductSelect(id: number) {
 function handleRelatedSelectorSelect(selectorId: number) {
   selectedIds.value.selector = selectorId
   selectedIds.value.variant = null
-  const url = `${urls.robotVariantsFilter}?actual_product_id=${selectedIds.value.actualProduct}&selector_id=${selectorId}`
+  const url = `${urls.variants}?actual_product_id=${selectedIds.value.actualProduct}&selector_id=${selectorId}`
   axiosInstance.get<VariantResponse[]>(url)
     .then(async (res) => {
       console.log('variants:', res.data)

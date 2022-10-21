@@ -16,12 +16,10 @@ export const urls = {
   variantBulkCreate: 'products/variants/bulk-create/',
   brandsAll: 'products/brands-all/',
   actualProductByBrand: 'products/actual-product-by-brand/{0}/',
-  robotVariantsFilter: 'products/robot-variants/',
   inactiveVariants: 'products/inactive-variants/',
 
   robotStatus: 'products/robot-status/',
   updateVariantData: 'products/update-variant-data/',
-  updateBrandStatus: 'products/update-brand-status/',
   invoiceExcel: 'products/invoice-excel/',
   digiCreds: 'products/digi-creds/',
   celeryTest: 'products/celery-task-test/',
