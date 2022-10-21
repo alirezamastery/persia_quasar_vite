@@ -1,31 +1,33 @@
 <template>
-  <q-card class="q-pa-sm q-ma-lg" style="max-width: 600px">
-    <q-card-section v-if="invoice">
-      <div class="row">
-        <div class="col">
-          <span>{{ $t('general.fromDate') + ':' }}</span>
-          {{ invoice['start_date_persian'] }}
+  <div class="row " :class="$q.screen.gt.sm ? 'q-pa-sm q-ma-lg' : 'q-pt-sm'">
+    <q-card class="col col-lg-8 col-xl-4">
+      <q-card-section v-if="invoice">
+        <div class="row">
+          <div class="col">
+            <span>{{ $t('general.fromDate') + ':' }}</span>
+            {{ invoice['start_date_persian'] }}
+          </div>
+          <div class="col">
+            <span>{{ $t('general.untilDate') + ':' }}</span>
+            {{ invoice['end_date_persian'] }}
+          </div>
         </div>
-        <div class="col">
-          <span>{{ $t('general.untilDate') + ':' }}</span>
-          {{ invoice['end_date_persian'] }}
+      </q-card-section>
+      <q-card-section>
+        <div>
+          <span class="text-h6">{{ `${$t('acc.totalCount')}: ${totalCount}` }}</span>
         </div>
-      </div>
-    </q-card-section>
-    <q-card-section>
-      <div>
-        <span class="text-h6">{{ `${$t('acc.totalCount')}: ${totalCount}` }}</span>
-      </div>
-    </q-card-section>
-    <q-table
-      :rows="items"
-      :columns="columns"
-      :pagination="pagination"
-      row-key="id"
-      hide-bottom
-    >
-    </q-table>
-  </q-card>
+      </q-card-section>
+      <q-table
+        :rows="items"
+        :columns="columns"
+        :pagination="pagination"
+        row-key="id"
+        hide-bottom
+      >
+      </q-table>
+    </q-card>
+  </div>
 </template>
 
 <script setup lang="ts">
