@@ -144,6 +144,10 @@ function stopChecking() {
 }
 
 async function handleActualProductSelect() {
+  if (!form.value.actualProductId) {
+    form.value.variantSelectors = []
+    return
+  }
   const url = urls.actualProductsRelatedSelectors.replace('{0}', String(form.value.actualProductId))
   const res = await axiosInstance.get<VariantSelector[]>(url)
   console.log('related selectors:', res.data)
