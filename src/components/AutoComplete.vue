@@ -6,15 +6,15 @@
     :options="items"
     :multiple="selectMultiple"
     :autocomplete="objUniqueId"
-    use-input
-    clearable
-    use-chips
     :loading="loading"
-    @filter="handleSearchInput"
-    @virtual-scroll="onScroll"
     :error-message="errors"
     :error="errors?.length > 0"
     :rules="rules"
+    use-input
+    clearable
+    use-chips
+    @virtual-scroll="onScroll"
+    @filter="handleSearchInput"
   >
     <template v-slot:option="scope">
       <q-item v-bind="scope.itemProps">
@@ -82,6 +82,24 @@ const selectedValue = ref(null)
 const nextPage = ref('')
 let searchPhrase = ''
 
+/**
+ * it might be necessary to split this into 2 components if the
+ * logic for single and multiple selection gets more complicated
+ */
+watch(selectedValue, (newValue) => {
+  console.log('AutoComplete | watch selectedValue | new selected value:', newValue)
+  let emitVal
+  if (Array.isArray(selectedValue.value)) {
+    emitVal = newValue.map(item => item[props.objUniqueId])
+  } else if (newValue !== null && typeof newValue === 'object') {
+    emitVal = newValue[props.objUniqueId]
+  } else {
+    emitVal = newValue
+  }
+  console.log('AutoComplete | watch selectedValue | emit value:', emitVal)
+  emits('update:modelValue', emitVal)
+})
+
 
 function onScroll({index, to, ref}) {
   const lastIndex = items.value.length - 1
@@ -139,7 +157,6 @@ function handleSearchInput(val, update, abort) {
   )
 }
 
-
 /**
  * if we are in an Edit view (we have primary key(s)), get the data from
  * the server to display in the input field as chips
@@ -167,34 +184,17 @@ function getInitialDataToDisplay(modelVal) {
   }
 }
 
-/**
- * it might be necessary to split this into 2 components if the
- * logic for single and multiple selection gets more complicated
- */
-watch(selectedValue, (newValue) => {
-  console.log('AutoComplete | watch selectedValue | new selected value:', newValue)
-  let emitVal
-  if (Array.isArray(selectedValue.value)) {
-    emitVal = newValue.map(item => item[props.objUniqueId])
-  } else if (newValue !== null && typeof newValue === 'object') {
-    emitVal = newValue[props.objUniqueId]
-  } else {
-    emitVal = newValue
-  }
-  console.log('AutoComplete | watch selectedValue | emit value:', emitVal)
-  emits('update:modelValue', emitVal)
-})
 
 console.log('AutoComplete | ---------------------------------------------------')
 console.log('AutoComplete | start with modelValue from props:', props.modelValue)
-// if this is true it means we are in an Edit view
-if (
-  (Array.isArray(props.modelValue) && props.modelValue.length > 0)
-  || typeof props.modelValue === 'string'
+const propHasValue = (Array.isArray(props.modelValue) && props.modelValue.length > 0)
+  || (typeof props.modelValue === 'string' && props.modelValue !== '')
   || typeof props.modelValue === 'number'
-)
+// If propHasValue is true, it means we are in an Edit view and should display the existing item
+if (propHasValue)
   getInitialDataToDisplay(props.modelValue)
 
+// Populate the dropdown list
 axiosInstance.get(props.api)
   .then(res => {
     items.value = res.data.items
