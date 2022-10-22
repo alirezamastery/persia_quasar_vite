@@ -32,6 +32,7 @@
             :obj-repr-field="'title'"
             :api="urls.variantSelectorTypes"
             :rules="[isRequired]"
+            outlined
           />
         </div>
       </div>

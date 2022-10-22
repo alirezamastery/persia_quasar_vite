@@ -21,6 +21,7 @@
             :obj-repr-field="'title'"
             :api="urls.costTypes"
             :rules="[isRequired]"
+            outlined
           />
         </div>
       </div>

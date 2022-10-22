@@ -17,7 +17,7 @@
             :api="urls.actualProducts"
             :rules="[isRequired]"
             :list-api="'get-by-id-list'"
-            :outlined="true"
+            outlined
           />
         </div>
       </div>
@@ -33,6 +33,7 @@
             :rules="[isRequired]"
             :list-api="'get-by-id-list'"
             select-multiple
+            outlined
           />
         </div>
       </div>

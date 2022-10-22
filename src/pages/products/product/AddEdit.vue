@@ -52,6 +52,7 @@
             :obj-repr-field="'title'"
             :api="urls.productTypes"
             :rules="[isRequired]"
+            outlined
           />
         </div>
       </div>

@@ -21,6 +21,7 @@
             :query-param="'search'"
             :api="urls.products"
             :rules="[isRequired]"
+            outlined
           />
         </div>
       </div>
@@ -34,6 +35,7 @@
             :obj-repr-field="'title'"
             :api="urls.actualProducts"
             :rules="[isRequired]"
+            outlined
           />
         </div>
       </div>
@@ -47,6 +49,7 @@
             :obj-repr-field="'value'"
             :api="urls.variantSelectors"
             :rules="[isRequired]"
+            outlined
           />
         </div>
       </div>
