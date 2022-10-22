@@ -8,7 +8,6 @@
     :autocomplete="objUniqueId"
     use-input
     clearable
-    filled
     use-chips
     :loading="loading"
     @filter="handleSearchInput"
@@ -17,7 +16,6 @@
     :error="errors?.length > 0"
     :rules="rules"
   >
-    <!--    :rules="[val => (isRequired || !!val) || $t('general.error.fieldIsRequired')]"-->
     <template v-slot:option="scope">
       <q-item v-bind="scope.itemProps">
         <q-item-section>
@@ -58,7 +56,6 @@
 
 <script setup>
 import {ref, watch} from 'vue'
-import {isEqual} from 'lodash'
 import {axiosInstance} from 'src/boot/axios'
 
 const props = defineProps({
@@ -83,52 +80,52 @@ const loading = ref(false)
 const items = ref([])
 const selectedValue = ref(null)
 const nextPage = ref('')
+let searchPhrase = ''
 
 
 function onScroll({index, to, ref}) {
   const lastIndex = items.value.length - 1
-  console.log('AutoComplete | onScroll lastIndex:', lastIndex, 'to:', to, 'index:', index)
+  console.log('AutoComplete | onScroll | came into view:', index)
+  console.log('AutoComplete | onScroll | last rendered:', to)
+  console.log('AutoComplete | onScroll | last index:', lastIndex)
 
-  if (loading.value !== true && !!nextPage.value && to === index) {
-    console.log('AutoComplete | onScroll get data')
+  if (loading.value === false && !!nextPage.value && index === lastIndex) {
+    console.log('AutoComplete | onScroll | getting data')
 
     loading.value = true
 
     axiosInstance.get(nextPage.value)
       .then(res => {
-        console.log('AutoComplete | onScroll response:', res)
-        // for (const item of res.data.items) {
-        //   items.value.push(item) // must use ".value.push" to add to ref array
-        // }
+        console.log('AutoComplete | onScroll | response:', res)
         items.value.push(...res.data.items)
-        console.log(items.value)
-        console.log('length items:' , items.value.length)
+        console.log('AutoComplete | onScroll | items value:', items.value)
+        console.log('AutoComplete | onScroll | items length:', items.value.length)
         nextPage.value = res.data.next
-        ref.refresh()
+        ref.refresh(-1)
       })
       .catch(err => {
-        console.log('AutoComplete | onScroll error:', err)
+        console.log('AutoComplete | onScroll | error:', err)
       })
       .finally(() => loading.value = false)
   }
 }
 
 function handleSearchInput(val, update, abort) {
-  // console.log('handleSearchInput', val)
+  console.log('handleSearchInput | phrase:', val)
   update(
     () => {
-      if(!val) return
+      if (searchPhrase === val) return
+      searchPhrase = val
       loading.value = true
       const url = `${props.api}?${props.queryParam}=${val}`
-      console.log('url', url)
       axiosInstance.get(url)
         .then(res => {
-          console.log('AutoComplete | handleSearchInput response:', res)
+          console.log('AutoComplete | handleSearchInput | response:', res)
           items.value = res.data.items
           nextPage.value = res.data.next
         })
         .catch(err => {
-          console.log('AutoComplete | handleSearchInput error:', err)
+          console.log('AutoComplete | handleSearchInput | error:', err)
         })
         .finally(() => loading.value = false)
     },
@@ -144,33 +141,16 @@ function handleSearchInput(val, update, abort) {
 
 
 /**
- * because this component only works with id or array of ids, we have to
- * get the related object of each id from the server so we can display
- * its title (or whatever the __repr__ is) to the user
- */
-watch(() => props.modelValue, (newVal, oldVal) => {
-  console.log('AutoComplete | watch modelValue', newVal)
-  if (newVal === null || newVal === undefined) return
-  if (Array.isArray(newVal)) {
-    // console.log('newVal.length', newVal.length, 'isEqual', isEqual(newVal, oldVal))
-    if (newVal.length > 0 && !isEqual(newVal, oldVal))
-      getInitialDataToDisplay(newVal)
-  } else if (newVal !== oldVal) {
-    getInitialDataToDisplay(newVal)
-  }
-})
-
-/**
  * if we are in an Edit view (we have primary key(s)), get the data from
  * the server to display in the input field as chips
  */
 function getInitialDataToDisplay(modelVal) {
-  console.log('AutoComplete | modelVal', modelVal)
+  console.log('AutoComplete | getInitialDataToDisplay | modelVal', modelVal)
   if (!modelVal) return
   if (typeof modelVal === 'string' || typeof modelVal === 'number') {
     axiosInstance.get(props.api + modelVal)
       .then(res => {
-        console.log('AutoComplete | initial model value', res)
+        console.log('AutoComplete | getInitialDataToDisplay | got initial data:', res)
         selectedValue.value = res.data
       })
   } else {
@@ -179,10 +159,9 @@ function getInitialDataToDisplay(modelVal) {
       query += `&${props.listQueryParam}=${id}`
     }
     const url = props.api + props.listApi + query
-    // console.log('url:', url)
     axiosInstance.get(url)
       .then(res => {
-        console.log('AutoComplete | initial data to populate', res)
+        console.log('AutoComplete | getInitialDataToDisplay | got initial data [list]:', res)
         selectedValue.value = res.data
       })
   }
@@ -193,19 +172,27 @@ function getInitialDataToDisplay(modelVal) {
  * logic for single and multiple selection gets more complicated
  */
 watch(selectedValue, (newValue) => {
-  console.log('auto complete newValue:',newValue)
+  console.log('AutoComplete | watch selectedValue | new selected value:', newValue)
+  let emitVal
   if (Array.isArray(selectedValue.value)) {
-    const data = newValue.map(item => item[props.objUniqueId])
-    // console.log('emit payload', data)
-    emits('update:modelValue', data)
-  } else if (newValue !== null && typeof newValue === 'object')
-    emits('update:modelValue', newValue[props.objUniqueId])
-  else
-    emits('update:modelValue', newValue)
+    emitVal = newValue.map(item => item[props.objUniqueId])
+  } else if (newValue !== null && typeof newValue === 'object') {
+    emitVal = newValue[props.objUniqueId]
+  } else {
+    emitVal = newValue
+  }
+  console.log('AutoComplete | watch selectedValue | emit value:', emitVal)
+  emits('update:modelValue', emitVal)
 })
 
-console.log('AutoComplete | auto complete initial modelValue:', props.modelValue)
-if (props.modelValue) // if this is true it means we are in an Edit view
+console.log('AutoComplete | ---------------------------------------------------')
+console.log('AutoComplete | start with modelValue from props:', props.modelValue)
+// if this is true it means we are in an Edit view
+if (
+  (Array.isArray(props.modelValue) && props.modelValue.length > 0)
+  || typeof props.modelValue === 'string'
+  || typeof props.modelValue === 'number'
+)
   getInitialDataToDisplay(props.modelValue)
 
 axiosInstance.get(props.api)
