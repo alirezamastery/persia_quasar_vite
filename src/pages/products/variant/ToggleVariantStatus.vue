@@ -18,23 +18,42 @@
             :rules="[isRequired]"
             :list-api="'get-by-id-list'"
             outlined
+            @update:model-value="handleActualProductSelect"
           />
         </div>
       </div>
 
       <div class="row">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
-          <AutoComplete
-            v-model="form.selectorIds"
+          <q-select
+            v-model="form.variantSelectors"
+            :options="selectorChoices"
+            :disable="form.actualProductId === null"
             :label="$t('products.selectors')"
-            :query-param="'search'"
-            :obj-repr-field="'value'"
-            :api="urls.variantSelectors"
             :rules="[isRequired]"
-            :list-api="'get-by-id-list'"
-            select-multiple
+            multiple
+            use-chips
+            clearable
             outlined
-          />
+          >
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt['value'] }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+
+            <template v-slot:selected-item="scope">
+              <q-chip
+                removable
+                @remove="scope.removeAtIndex(scope.index)"
+                :tabindex="scope.tabindex"
+              >
+                {{ scope.opt['value'] }}
+              </q-chip>
+            </template>
+          </q-select>
         </div>
       </div>
 
@@ -51,13 +70,14 @@
             outlined
           >
             <template v-slot:selected-item="scope">
-              {{ scope.opt ? $t('general.active') : $t('general.inActive')}}
+              {{ scope.opt ? $t('general.active') : $t('general.inActive') }}
             </template>
           </q-select>
         </div>
       </div>
 
       <q-btn
+        v-show="!isWorking"
         class="q-mt-lg"
         size="md"
         type="submit"
@@ -83,16 +103,17 @@
 
 <script setup lang="ts">
 import {onBeforeUnmount, ref} from 'vue'
-import {isRequired} from 'src/modules/form-validation'
-import urls from 'src/urls'
-import AutoComplete from 'components/AutoComplete.vue'
-import {ToggleVariantStatusForm} from 'src/types/domain/products/toggle-variant-status'
-import {variantStatusFormToRequest} from 'src/types/converter/products/toggle-variant-status'
-import {axiosInstance} from 'boot/axios'
-import {ToggleVariantStatusResponse} from 'src/types/network/response/products/toggle-variant-status'
 import {useI18n} from 'vue-i18n'
-import {TaskStatus} from 'src/types/network/response/task'
 import {notifyMessage} from 'src/modules/notif'
+import {isRequired} from 'src/modules/form-validation'
+import {axiosInstance} from 'boot/axios'
+import urls from 'src/urls'
+import {variantStatusFormToRequest} from 'src/types/converter/products/toggle-variant-status'
+import {ToggleVariantStatusResponse} from 'src/types/network/response/products/toggle-variant-status'
+import {TaskStatus} from 'src/types/network/response/task'
+import {ToggleVariantStatusForm} from 'src/types/domain/products/toggle-variant-status'
+import {VariantSelector} from 'src/types/network/response/products/variant'
+import AutoComplete from 'components/AutoComplete.vue'
 
 const {t} = useI18n()
 
@@ -102,12 +123,14 @@ const statusOptions = [
 ]
 const form = ref<ToggleVariantStatusForm>({
   actualProductId: null,
-  selectorIds: [],
+  variantSelectors: null,
   isActive: null,
 })
+const selectorChoices = ref<VariantSelector[]>([])
 const taskId = ref<Nullable<string>>(null)
 const taskState = ref<TaskStatus>(null)
 const taskDone = ref(false)
+const isWorking = ref(false)
 
 const stateInterval = ref<Nullable<number>>(null)
 
@@ -120,9 +143,19 @@ function stopChecking() {
   window.clearInterval(stateInterval.value!)
 }
 
+async function handleActualProductSelect() {
+  const url = urls.actualProductsRelatedSelectors.replace('{0}', String(form.value.actualProductId))
+  const res = await axiosInstance.get<VariantSelector[]>(url)
+  console.log('related selectors:', res.data)
+  selectorChoices.value = res.data
+}
+
 async function handleSubmit() {
+  taskDone.value = false
+  isWorking.value = true
+  console.log('form', form.value)
   const data = variantStatusFormToRequest(form.value)
-  console.log('fom', data)
+  console.log('data', data)
   try {
     const res = await axiosInstance.post<ToggleVariantStatusResponse>(urls.toggleVariantStatus, data)
     console.log('res:', res.data)
@@ -146,9 +179,9 @@ function handleTaskStatus() {
           stopChecking()
           taskDone.value = true
           taskId.value = null
+          isWorking.value = false
           if (taskState.value === 'SUCCESS') {
             notifyMessage('positive', t('general.alert.operationSuccess'))
-            stopChecking()
           }
         }
       })
