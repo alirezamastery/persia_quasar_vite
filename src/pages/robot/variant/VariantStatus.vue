@@ -169,7 +169,7 @@ function handleActualProductSelect(id: number) {
   selectedIds.value.actualProduct = id
   selectedIds.value.selector = null
   selectedIds.value.variant = null
-  const url = urls.actualProducts + `${id}/related_selectors/`
+  const url = urls.actualProductsRelatedSelectors.replace('{0}', String(id))
   console.log('url:', url)
   axiosInstance.get<VariantSelector[]>(url)
     .then(async (res) => {

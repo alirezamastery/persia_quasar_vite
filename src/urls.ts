@@ -6,6 +6,7 @@ export const urls = {
 
   brands: 'products/brands/',
   actualProducts: 'products/actual-products/',
+  actualProductsRelatedSelectors: 'products/actual-products/{0}/related-selectors/',
   variantDigiData: 'products/variant-digi-data/',
   variantDigiDataDKPC: 'products/variant-digi-data-dkpc/',
   products: 'products/products/',
