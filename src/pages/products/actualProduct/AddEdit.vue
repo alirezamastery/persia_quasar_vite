@@ -43,6 +43,7 @@
             v-model="form.priceStep"
             :options="priceStepOptions"
             :label="$t('general.priceStepRial')"
+            emit-value
             filled
           />
         </div>
