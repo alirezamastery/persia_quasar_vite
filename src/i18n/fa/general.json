@@ -140,7 +140,7 @@
     "saveSuccessGeneral": "{type} با موفقیت ثبت شد",
     "updateSuccess": "تغییرات {type} \"{item}\" با موفقیت ثبت شد",
     "deleteSuccess": "{type} \"{item}\" با موفقیت حذف شد",
-    "operationSuccess": "عملیت موفق بود"
+    "operationSuccess": "عملیات موفق بود"
   },
   "snack": {
     "saveError": "خطا در ثبت",
