@@ -10,7 +10,7 @@
     >
     </div>
     <div class="col-4 offset-4">
-      <q-img src="~assets/desktop-logo.svg" tstyle="border-radius: 0.2rem"/>
+      <q-img src="~assets/desktop-logo.svg"/>
     </div>
   </div>
 </template>
@@ -57,7 +57,7 @@ function handleResize() {
 .desktop-logo-bg-dark {
   /*background: radial-gradient(circle, rgb(208, 27, 27) 0%, rgb(49, 10, 10) 100%);*/
   /*background: radial-gradient(circle, rgb(183, 183, 183) 0%, rgb(38, 38, 38) 100%);*/
-  background: linear-gradient(190deg, rgba(182,182,182,1) 0%, rgba(83,83,83,1) 100%);
+  background: linear-gradient(190deg, rgba(182, 182, 182, 1) 0%, rgba(83, 83, 83, 1) 100%);
 }
 
 .desktop-logo-bg-light {
