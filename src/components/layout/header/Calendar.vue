@@ -25,7 +25,7 @@ import {onMounted, ref} from 'vue'
 const date = new Date()
 const dateDisplay = Intl.DateTimeFormat(
   'fa-IR-u-nu-latn',
-  {month: 'short', day: '2-digit'},
+  {month: 'short', day: 'numeric'},
 ).format(date)
 
 const time = Intl.DateTimeFormat(
