@@ -24,6 +24,7 @@ import useRobotStore from 'src/stores/robot'
 import GearsMotionless from 'src/components/static/GearsMotionless.vue'
 import {isMobileLightMode} from 'src/utils'
 import {WebsocketCommands} from 'src/types/websocket/request'
+import {ToggleRobot} from 'src/types/websocket/payloads/ToggleRobot'
 
 const wsStore = useWebsocketStore()
 const robotStore = useRobotStore()
@@ -31,9 +32,9 @@ const robotStore = useRobotStore()
 const robotRunning = computed(() => robotStore.robotRunning)
 const robotIsOn = computed(() => robotStore.robotIsOn)
 
-function updateRobotStatus(event: Event) {
+function updateRobotStatus(event: boolean) {
   console.log('event:', event)
-  wsStore.SendCommandToWS({
+  wsStore.SendCommandToWS<ToggleRobot>({
     command: WebsocketCommands.TOGGLE_ROBOT,
     payload: {
       robot_is_on: event,

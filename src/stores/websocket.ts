@@ -9,13 +9,8 @@ import {
   RobotRunningData,
   ToggleRobotData,
 } from 'src/types/websocket/response'
-import {WebsocketCommands} from 'src/types/websocket/request'
+import {WebsocketCommands, WebsocketRequest} from 'src/types/websocket/request'
 
-
-export interface WebsocketRequest {
-  command: number
-  payload?: unknown
-}
 
 export interface WebsocketMessage {
   command: number
@@ -26,7 +21,7 @@ export interface WebsocketMessage {
 export interface WebsocketStoreState {
   WS: WebSocket | null,
   isConnected: boolean,
-  requestQueue: WebsocketRequest[],
+  requestQueue: WebsocketRequest<unknown>[],
   sentMessages: { [key: string]: WebsocketMessage },
 }
 
@@ -151,18 +146,18 @@ export const useWebsocketStore = defineStore({
       }
     },
 
-    SendCommandToWS(command: WebsocketRequest) {
+    SendCommandToWS<Payload>(req: WebsocketRequest<Payload>) {
       if (this.isConnected)
-        this.sendToWS(command)
+        this.sendToWS(req)
       else
-        this.requestQueue.push(command)
+        this.requestQueue.push(req)
     },
 
-    sendToWS(command: WebsocketRequest) {
+    sendToWS<Payload>(req: WebsocketRequest<Payload>) {
       const msg: WebsocketMessage = {
-        command: command.command,
+        command: req.command,
         req_key: uid(),
-        payload: command.payload,
+        payload: req.payload,
       }
       if (this.WS === null) throw Error('Websocket instance is null')
       this.WS.send(JSON.stringify(msg))
