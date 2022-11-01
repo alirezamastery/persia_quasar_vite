@@ -3,6 +3,7 @@ export enum ResponseTypes {
   FETCH_RESPONSE = 'fetch_response',
   TOGGLE_ROBOT = 'toggle_robot',
   ROBOT_RUNNING = 'robot_running',
+  WEBRTC_SIGNAL = 'webrtc_signal',
 }
 
 export interface WebsocketResponse<DataType> {

@@ -10,6 +10,8 @@ import {
   ToggleRobotData,
 } from 'src/types/websocket/response'
 import {WebsocketCommands, WebsocketRequest} from 'src/types/websocket/request'
+import useWebRTCStore from 'stores/webrtc'
+import {WebRTCSignal} from 'src/types/websocket/payloads/WebRTCSignal'
 
 
 export interface WebsocketMessage {
@@ -48,6 +50,7 @@ export const useWebsocketStore = defineStore({
       if (this.WS === null) throw Error('Websocket instance is null')
 
       const robotStore = useRobotStore()
+      const webrtcStore = useWebRTCStore()
 
       this.WS.onopen = async () => {
         console.log('%cws opened', 'color: green;')
@@ -89,6 +92,9 @@ export const useWebsocketStore = defineStore({
             break
           case ResponseTypes.ROBOT_RUNNING:
             robotStore.HandleRobotRunningStatus(response as WebsocketResponse<RobotRunningData>)
+            break
+          case ResponseTypes.WEBRTC_SIGNAL:
+            webrtcStore.HandleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
             break
           default:
             console.error('WS response did not have a proper type')

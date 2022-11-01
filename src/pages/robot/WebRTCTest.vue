@@ -33,7 +33,7 @@
               <q-btn
                 color="green"
                 icon="call"
-                :disable="wsStore.hasCallInvite"
+                :disable="webrtcStore.hasCallInvite"
                 @click="inviteToCall(user)"
               />
             </q-item-section>
@@ -48,10 +48,10 @@
         class="col-xs-10 col-sm-8 col-md-5 col-lg-3"
         id="camera-container"
       >
-        <div>
-          <q-img :src="callee.profile.avatar" alt=""/>
+        <div v-if="callee">
+          <q-img v-if="callee.profile.avatar" :src="callee.profile.avatar" alt=""/>
         </div>
-        <audio id="received_video" autoplay></audio>
+        <audio id="received_audio" autoplay></audio>
         <q-btn
           id="hangup-button"
           @click="hangUpCall"
@@ -82,40 +82,47 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, computed} from 'vue'
-// import adapter from 'webrtc-adapter'
 import useUserStore from 'src/stores/user'
-import useWebsocketStore from 'src/stores/websocket'
+import useWebRTCStore from 'stores/webrtc'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
+import {UserResponse} from 'src/types/network/response/auth/user'
+import {UserDomain} from 'src/types/domain/auth/user'
+import {userResponseToDomain} from 'src/types/converter/profile/user-profile'
 
 
-const wsStore = useWebsocketStore()
+const webrtcStore = useWebRTCStore()
 const userStore = useUserStore()
 
-const users = ref([])
+const users = ref<UserDomain[]>([])
 
 const userMobile = computed(() => userStore.user)
-const callConnected = computed(() => wsStore.myPeerConnection !== null)
-const callee = computed(() => wsStore.callee)
+const callConnected = computed(() => webrtcStore.myPeerConnection !== null)
+const callee = computed(() => webrtcStore.callee)
 
 
 // console.log('adapter.browserDetails.browser:', adapter.browserDetails.browser)
 
-function inviteToCall(targetUser) {
+function inviteToCall(targetUser: UserDomain) {
   console.log('targetUser:', targetUser)
-  wsStore.inviteToCall(targetUser)
+  webrtcStore.InviteToCall(targetUser)
 }
 
 function hangUpCall() {
-  wsStore.hangUpCall()
+  webrtcStore.hangUpCall()
 }
 
-axiosInstance.get(urls.users)
+axiosInstance.get<UserResponse[]>(urls.users)
   .then(res => {
-    console.log('res: ', res.data.items)
-    users.value = res.data.items
+    console.log('res users: ', res.data)
+    const usersDomain: UserDomain[] = []
+    for (const user of res.data) {
+      usersDomain.push(userResponseToDomain(user))
+    }
+    console.log('users domain:', usersDomain)
+    users.value = usersDomain
   })
 
 </script>

@@ -49,9 +49,9 @@
 </template>
 
 <script setup>
-import useWebsocketStore from 'src/stores/websocket'
+import useWebRTCStore from 'stores/webrtc'
 
-const wsStore = useWebsocketStore()
+const wsStore = useWebRTCStore()
 
 </script>
 

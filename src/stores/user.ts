@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {LocalStorage} from 'quasar'
 import useWebsocketStore from './websocket'
 import useRobotStore from './robot'
+import useWebRTCStore from 'stores/webrtc'
 import {routerInstance} from 'src/router'
 import {axiosInstance} from 'src/boot/axios'
 import {broadcastInstance} from 'src/boot/broadcast'
@@ -9,6 +10,7 @@ import {StorageKeys} from 'src/utils'
 import {UserProfileResponse} from 'src/types/network/response/profile/user-profile'
 import {UserProfileDomain} from 'src/types/domain/profile/user-profile'
 import {userProfileResponseToDomain} from 'src/types/converter/profile/user-profile'
+import webrtc from 'stores/webrtc'
 
 
 const storeID = 'user'
@@ -59,6 +61,8 @@ export const useUserStore = defineStore({
       wsStore.HandleLogout()
       const robotStore = useRobotStore()
       robotStore.$reset()
+      const webrtcStore = useWebRTCStore()
+      webrtcStore.$reset()
       this.$reset()
       routerInstance.push({name: 'Login'})
     },
