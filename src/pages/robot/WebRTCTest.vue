@@ -51,7 +51,7 @@
         <div v-if="callee">
           <q-img v-if="callee.profile.avatar" :src="callee.profile.avatar" alt=""/>
         </div>
-        <audio id="received_audio" autoplay></audio>
+        <audio :id="AUDIO_ELEMENT_ID" autoplay></audio>
         <q-btn
           id="hangup-button"
           @click="hangUpCall"
@@ -86,6 +86,7 @@
 import {ref, computed} from 'vue'
 import useUserStore from 'src/stores/user'
 import useWebRTCStore from 'stores/webrtc'
+import {AUDIO_ELEMENT_ID} from 'stores/webrtc'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 import {UserResponse} from 'src/types/network/response/auth/user'
@@ -111,7 +112,7 @@ function inviteToCall(targetUser: UserDomain) {
 }
 
 function hangUpCall() {
-  webrtcStore.hangUpCall()
+  webrtcStore.HangUpCall()
 }
 
 axiosInstance.get<UserResponse[]>(urls.users)

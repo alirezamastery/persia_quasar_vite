@@ -12,7 +12,7 @@
           icon="call"
           color="green"
           stretch
-          @click="wsStore.handleCallOffer"
+          @click="wsStore.HandleCallOffer"
         />
         <q-space v-if="$q.screen.lt.lg"/>
       </template>
@@ -40,7 +40,7 @@
         icon="phone_disabled"
         color="red"
         stretch
-        @click="wsStore.rejectCall"
+        @click="wsStore.RejectCall"
       />
       <q-space v-if="$q.screen.gt.md && !wsStore.myPeerConnection"/>
 

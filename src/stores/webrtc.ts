@@ -2,9 +2,13 @@ import {defineStore} from 'pinia'
 import useWebsocketStore from 'stores/websocket'
 import useUserStore from 'stores/user'
 import {
-  WebRTCSignalAnswer, WebRTCSignalCandidate,
+  WebRTCSignal,
+  WebRTCSignalAnswer,
+  WebRTCSignalCandidate,
   WebRTCSignalHangUp,
-  WebRTCSignalOffer, WebRTCSignalReject, WebRTCSignal,
+  WebRTCSignalOffer,
+  WebRTCSignalReject,
+  WebRTCSignalTypes,
 } from 'src/types/websocket/payloads/WebRTCSignal'
 import {WebsocketRequest} from 'src/types/websocket/request'
 import {WebsocketResponse} from 'src/types/websocket/response'
@@ -20,12 +24,12 @@ export interface WebrtcStoreState {
   },
   callee: Nullable<UserDomain>
   caller: Nullable<string>
-  callOfferData: Nullable<RTCSessionDescriptionInit> | any
+  callOfferData: Nullable<WebRTCSignalOffer>
   hasCallInvite: boolean
   iceCandidateMsgQueue: RTCIceCandidate[]
 }
 
-const AUDIO_ELEMENT_ID = 'call-received-audio'
+export const AUDIO_ELEMENT_ID = 'voice-call-audio'
 
 export const useWebRTCStore = defineStore({
   id: 'webrtc',
@@ -47,19 +51,19 @@ export const useWebRTCStore = defineStore({
     HandleWebRTCSignal(response: WebsocketResponse<WebRTCSignal>) {
       const signalType = response.data.type
       switch (signalType) {
-        case 'offer':
+        case WebRTCSignalTypes.OFFER:
           this.handleCallInvite(response as WebsocketResponse<WebRTCSignalOffer>)
           break
-        case 'answer':
+        case WebRTCSignalTypes.ANSWER:
           this.handleCallAnswer(response as WebsocketResponse<WebRTCSignalAnswer>)
           break
-        case 'reject':
+        case WebRTCSignalTypes.REJECT:
           this.handleCallReject(response as WebsocketResponse<WebRTCSignalReject>)
           break
-        case 'candidate':
+        case WebRTCSignalTypes.ICE_CANDIDATE:
           this.handleNewICECandidateMsg(response as WebsocketResponse<WebRTCSignalCandidate>)
           break
-        case 'hang-up':
+        case WebRTCSignalTypes.HANG_UP:
           this.handleCallHangUp()
           break
       }
@@ -73,7 +77,7 @@ export const useWebRTCStore = defineStore({
       } else {
         this.targetUsername = targetUser.mobile
         this.callee = targetUser
-        this.CreatePeerConnection()
+        this.createPeerConnection()
 
         console.log('InviteToCall | navigator.mediaDevices:', navigator.mediaDevices)
         // checkPermissions()
@@ -97,7 +101,7 @@ export const useWebRTCStore = defineStore({
       this.callOfferData = response.data
     },
 
-    CreatePeerConnection() {
+    createPeerConnection() {
       const audioElement = document.createElement('audio')
       audioElement.id = AUDIO_ELEMENT_ID
       document.body.appendChild(audioElement)
@@ -112,7 +116,7 @@ export const useWebRTCStore = defineStore({
           },
         ],
       })
-      console.log('CreatePeerConnection | myPeerConnection:', this.myPeerConnection)
+      console.log('createPeerConnection | myPeerConnection:', this.myPeerConnection)
 
       this.myPeerConnection.onicecandidate = this.handleICECandidateEvent
       this.myPeerConnection.ontrack = this.handleTrackEvent
@@ -127,7 +131,7 @@ export const useWebRTCStore = defineStore({
       console.log('handleICECandidateEvent | event:', event)
       if (event.candidate) {
         const payload: WebRTCSignalCandidate = {
-          type: 'candidate',
+          type: WebRTCSignalTypes.ICE_CANDIDATE,
           target: this.targetUsername!,
           candidate: event.candidate,
         }
@@ -154,7 +158,7 @@ export const useWebRTCStore = defineStore({
 
     handleTrackEvent(event: RTCTrackEvent) {
       console.log('handleTrackEvent | event:', event)
-      const audioEl = document.getElementById('received_audio') as HTMLAudioElement
+      const audioEl = document.getElementById(AUDIO_ELEMENT_ID) as HTMLAudioElement
       audioEl.srcObject = event.streams[0]
     },
 
@@ -171,7 +175,7 @@ export const useWebRTCStore = defineStore({
             wsStore.SendCommandToWS<WebRTCSignalOffer>({
               command: 3,
               payload: {
-                type: 'offer',
+                type: WebRTCSignalTypes.OFFER,
                 name: userStore.user!,
                 target: this.targetUsername!,
                 sdp: this.myPeerConnection!.localDescription!,
@@ -230,21 +234,17 @@ export const useWebRTCStore = defineStore({
     },
 
 
-    handleCallOffer(response: any) {
-      console.log('***************************************************************************')
-      console.log('HandleWebRTCOffer | response:', response)
+    HandleCallOffer() {
+      console.log('HandleWebRTCOffer | ******************************************************************')
 
       // checkPermissions()
 
-      // const data = response.data
       if (this.callOfferData === null) throw Error('callOfferData is null')
-      const data = this.callOfferData
       let localStream: MediaStream
+      this.targetUsername = this.callOfferData.name
 
-      this.targetUsername = data.name
-      this.CreatePeerConnection()
+      this.createPeerConnection()
 
-      // const desc = new RTCSessionDescription(data.sdp)
       const desc = new RTCSessionDescription(this.callOfferData.sdp)
 
       this.myPeerConnection!.setRemoteDescription(desc).then(() => {
@@ -253,7 +253,6 @@ export const useWebRTCStore = defineStore({
           .then((stream) => {
             console.log('handleVideoOfferMsg | got user stream:', stream)
             localStream = stream
-            // document.getElementById('local_video').srcObject = localStream
 
             localStream.getTracks().forEach(track => {
               console.log('track of stream:', track)
@@ -274,7 +273,7 @@ export const useWebRTCStore = defineStore({
             const payload: WebsocketRequest<WebRTCSignalAnswer> = {
               command: 3,
               payload: {
-                type: 'answer',
+                type: WebRTCSignalTypes.ANSWER,
                 name: userStore.user!,
                 target: this.targetUsername!,
                 sdp: this.myPeerConnection!.localDescription!,
@@ -301,13 +300,13 @@ export const useWebRTCStore = defineStore({
           .catch(err => console.log('handleVideoAnswerMsg error:', err))
     },
 
-    rejectCall() {
+    RejectCall() {
       console.log('reject call')
       const wsStore = useWebsocketStore()
       wsStore.SendCommandToWS<WebRTCSignalReject>({
         command: 3,
         payload: {
-          type: 'reject',
+          type: WebRTCSignalTypes.REJECT,
           target: this.callOfferData!.name,
         },
       })
@@ -321,15 +320,15 @@ export const useWebRTCStore = defineStore({
       this.terminateCall()
     },
 
-    hangUpCall() {
-      console.log('hangUpCall')
+    HangUpCall() {
+      console.log('HangUpCall')
 
       const userStore = useUserStore()
       const wsStore = useWebsocketStore()
       wsStore.SendCommandToWS<WebRTCSignalHangUp>({
         command: 3,
         payload: {
-          type: 'hang-up',
+          type: WebRTCSignalTypes.HANG_UP,
           name: userStore.user!,
           target: this.targetUsername!,
         },
@@ -365,7 +364,6 @@ export const useWebRTCStore = defineStore({
     terminateCall() {
       console.log('closeVideoCall')
       console.log('closeVideoCall | myPeerConnection:', this.myPeerConnection)
-      // const remoteAudio = document.getElementById('video')
       this.hasCallInvite = false
 
       if (this.myPeerConnection) {
@@ -378,21 +376,18 @@ export const useWebRTCStore = defineStore({
         this.myPeerConnection.onicegatheringstatechange = null
         this.myPeerConnection.onnegotiationneeded = null
 
-        // if (remoteAudio.srcObject) {
-        //   remoteAudio.srcObject.getTracks().forEach(track => track.stop())
-        // }
-        // if (localVideo.srcObject) {
-        //   localVideo.srcObject.getTracks().forEach(track => track.stop())
-        // }
-
         this.myPeerConnection.close()
         this.myPeerConnection = null
       }
 
-      const remoteAudio = document.getElementById(AUDIO_ELEMENT_ID)
+      const remoteAudio = document.getElementById(AUDIO_ELEMENT_ID) as HTMLAudioElement
       if (remoteAudio) {
-        remoteAudio.removeAttribute('src')
+        if (remoteAudio.srcObject) {
+          const stream = remoteAudio.srcObject as MediaStream
+          stream.getTracks().forEach(track => track.stop())
+        }
         remoteAudio.removeAttribute('srcObject')
+        remoteAudio.removeAttribute('src')
       }
 
       this.targetUsername = null
