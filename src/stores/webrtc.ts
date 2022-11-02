@@ -191,7 +191,7 @@ export const useWebRTCStore = defineStore({
 
       if (this.myPeerConnection) {
         this.myPeerConnection.addIceCandidate(candidate)
-            .catch(err => console.log('handleNewICECandidateMsg | error:', err))
+            .catch(err => console.error('handleNewICECandidateMsg | error:', err))
       } else {
         this.iceCandidateMsgQueue.push(candidate)
       }
@@ -226,7 +226,7 @@ export const useWebRTCStore = defineStore({
               },
             })
           })
-          .catch(err => console.log('handleNegotiationNeededEvent error:', err))
+          .catch(err => console.error('handleNegotiationNeededEvent error:', err))
     },
 
     handleRemoveTrackEvent(event: Event) {
@@ -273,8 +273,9 @@ export const useWebRTCStore = defineStore({
     checkIceMsgQueue() {
       for (const candidate of this.iceCandidateMsgQueue) {
         this.myPeerConnection!.addIceCandidate(candidate)
-            .catch(err => console.log('handleNewICECandidateMsg | error:', err))
+            .catch(err => console.error('handleNewICECandidateMsg | error:', err))
       }
+      this.iceCandidateMsgQueue = []
     },
 
 
@@ -334,12 +335,12 @@ export const useWebRTCStore = defineStore({
     },
 
     handleCallAnswer(response: WebsocketResponse<WebRTCSignalAnswer>) {
-      console.log('*** handleVideoAnswerMsg | data:', response.data)
+      console.log('****** handleCallAnswer | data:', response.data)
       // Configure the remote description, which is the SDP payload
       // in our "answer" message.
       const desc = new RTCSessionDescription(response.data.sdp)
       this.myPeerConnection!.setRemoteDescription(desc)
-          .catch(err => console.log('handleVideoAnswerMsg error:', err))
+          .catch(err => console.error('handleCallAnswer error:', err))
 
       this.callConnected = true
       this.waitingForAnswer = false
