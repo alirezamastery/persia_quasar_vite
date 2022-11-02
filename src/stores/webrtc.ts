@@ -1,6 +1,9 @@
 import {defineStore} from 'pinia'
+import {Notify, QNotifyUpdateOptions} from 'quasar'
 import useWebsocketStore from 'stores/websocket'
 import useUserStore from 'stores/user'
+import {notifyMessage} from 'src/modules/notif'
+import {i18n} from 'boot/i18n'
 import {
   WebRTCSignal,
   WebRTCSignalAnswer,
@@ -13,37 +16,44 @@ import {
 import {WebsocketRequest} from 'src/types/websocket/request'
 import {WebsocketResponse} from 'src/types/websocket/response'
 import {UserDomain} from 'src/types/domain/auth/user'
+import waitToneUrl from 'src/assets/sound/call-waiting.mp3'
 
 
 export interface WebrtcStoreState {
-  myPeerConnection: Nullable<RTCPeerConnection>
-  targetUsername: Nullable<string>
+
+  waitingForAnswer: boolean
+  callConnected: boolean
+  hasCallInvite: boolean
+  hangUpSignal: boolean
+  targetUser: Nullable<UserDomain>
   mediaConstraints: {
     audio: boolean,
     video: boolean,
   },
-  callee: Nullable<UserDomain>
-  caller: Nullable<string>
+  myPeerConnection: Nullable<RTCPeerConnection>
+  callNotifDismiss: Nullable<(props?: QNotifyUpdateOptions) => void>
   callOfferData: Nullable<WebRTCSignalOffer>
-  hasCallInvite: boolean
   iceCandidateMsgQueue: RTCIceCandidate[]
 }
 
-export const AUDIO_ELEMENT_ID = 'voice-call-audio'
+export const CALL_AUDIO_ELEMENT_ID = 'voice-call-audio'
+export const WAIT_AUDIO_ELEMENT_ID = 'waiting-tone-audio'
 
 export const useWebRTCStore = defineStore({
   id: 'webrtc',
   state: () => ({
-    myPeerConnection: null,
-    targetUsername: null,
+    waitingForAnswer: false,
+    callConnected: false,
+    hasCallInvite: false,
+    hangUpSignal: false,
+    targetUser: null,
     mediaConstraints: {
       audio: true,
       video: false,
     },
-    callee: null,
-    caller: null,
+    myPeerConnection: null,
+    callNotifDismiss: null,
     callOfferData: null,
-    hasCallInvite: false,
     iceCandidateMsgQueue: [],
   } as WebrtcStoreState),
   getters: {},
@@ -75,21 +85,22 @@ export const useWebRTCStore = defineStore({
       if (this.myPeerConnection !== null) {
         alert('You can\'t start a call because you already have one open!')
       } else {
-        this.targetUsername = targetUser.mobile
-        this.callee = targetUser
+        this.targetUser = targetUser
         this.createPeerConnection()
 
         console.log('InviteToCall | navigator.mediaDevices:', navigator.mediaDevices)
         // checkPermissions()
+        this.waitingForAnswer = true
 
         navigator.mediaDevices.getUserMedia(this.mediaConstraints)
-            .then((localStream) => {
+            .then(async (localStream) => {
               console.log(`InviteToCall | got user media: ${localStream}`)
               localStream.getTracks().forEach(track => {
                 console.log('InviteToCall | track of stream:', track)
                 if (this.myPeerConnection === null) throw Error('myPeerConnection is null')
                 this.myPeerConnection.addTrack(track, localStream)
               })
+              await this._AddWaitTone()
             })
             .catch(this.handleGetUserMediaError)
       }
@@ -97,13 +108,43 @@ export const useWebRTCStore = defineStore({
 
     handleCallInvite(response: WebsocketResponse<WebRTCSignalOffer>) {
       this.hasCallInvite = true
-      this.caller = response.data.name
+      this.targetUser = response.data.caller
       this.callOfferData = response.data
+
+      const {t} = i18n.global
+      let callerDisplayName = response.data.caller.mobile
+      if (this.targetUser.profile.firstName)
+        callerDisplayName += ` ${this.targetUser.profile.firstName}`
+      if (this.targetUser.profile.lastName)
+        callerDisplayName += ` ${this.targetUser.profile.lastName}`
+      this.callNotifDismiss = Notify.create({
+        type: 'on-going',
+        message: t('general.snack.callOfferFrom', {caller: callerDisplayName}),
+        position: 'top',
+        timeout: 0,
+        classes: 'call-notif',
+        actions: [
+          {
+            label: t('general.rejectCall'),
+            icon: 'phone_disabled',
+            color: 'red',
+            flat: false,
+            handler: this.RejectCall,
+          },
+          {
+            label: t('general.acceptCall'),
+            iconRight: 'phone',
+            color: 'green',
+            flat: false,
+            handler: this.AcceptCallOffer,
+          },
+        ],
+      })
     },
 
     createPeerConnection() {
       const audioElement = document.createElement('audio')
-      audioElement.id = AUDIO_ELEMENT_ID
+      audioElement.id = CALL_AUDIO_ELEMENT_ID
       document.body.appendChild(audioElement)
 
       this.myPeerConnection = new RTCPeerConnection({
@@ -132,7 +173,7 @@ export const useWebRTCStore = defineStore({
       if (event.candidate) {
         const payload: WebRTCSignalCandidate = {
           type: WebRTCSignalTypes.ICE_CANDIDATE,
-          target: this.targetUsername!,
+          target: this.targetUser!.mobile,
           candidate: event.candidate,
         }
         console.log('handleICECandidateEvent | payload:', payload)
@@ -158,7 +199,7 @@ export const useWebRTCStore = defineStore({
 
     handleTrackEvent(event: RTCTrackEvent) {
       console.log('handleTrackEvent | event:', event)
-      const audioEl = document.getElementById(AUDIO_ELEMENT_ID) as HTMLAudioElement
+      const audioEl = document.getElementById(CALL_AUDIO_ELEMENT_ID) as HTMLAudioElement
       audioEl.srcObject = event.streams[0]
     },
 
@@ -176,8 +217,11 @@ export const useWebRTCStore = defineStore({
               command: 3,
               payload: {
                 type: WebRTCSignalTypes.OFFER,
-                name: userStore.user!,
-                target: this.targetUsername!,
+                caller: {
+                  mobile: userStore.mobile!,
+                  profile: userStore.profile,
+                },
+                target: this.targetUser!.mobile,
                 sdp: this.myPeerConnection!.localDescription!,
               },
             })
@@ -234,14 +278,14 @@ export const useWebRTCStore = defineStore({
     },
 
 
-    HandleCallOffer() {
-      console.log('HandleWebRTCOffer | ******************************************************************')
+    AcceptCallOffer() {
+      console.log('AcceptCallOffer | *******************************************')
 
       // checkPermissions()
 
       if (this.callOfferData === null) throw Error('callOfferData is null')
       let localStream: MediaStream
-      this.targetUsername = this.callOfferData.name
+      this.targetUser = this.callOfferData.caller
 
       this.createPeerConnection()
 
@@ -260,44 +304,46 @@ export const useWebRTCStore = defineStore({
             })
           })
           .then(() => {
-            console.log('handleVideoOfferMsg | creating answer')
+            console.log('AcceptCallOffer | creating answer')
             return this.myPeerConnection!.createAnswer()
           })
           .then((answer) => {
-            console.log('handleVideoOfferMsg | answer:', answer)
+            console.log('AcceptCallOffer | answer:', answer)
             return this.myPeerConnection!.setLocalDescription(answer)
           })
           .then(() => {
-            console.log('send answer (localDescription):', this.myPeerConnection!.localDescription)
+            console.log('AcceptCallOffer | send answer (localDescription):', this.myPeerConnection!.localDescription)
             const userStore = useUserStore()
             const payload: WebsocketRequest<WebRTCSignalAnswer> = {
               command: 3,
               payload: {
                 type: WebRTCSignalTypes.ANSWER,
                 name: userStore.user!,
-                target: this.targetUsername!,
+                target: this.targetUser!.mobile,
                 sdp: this.myPeerConnection!.localDescription!,
               },
             }
-            console.log('handleVideoOfferMsg | answer payload:', payload)
+            console.log('AcceptCallOffer | answer payload:', payload)
             const wsStore = useWebsocketStore()
             wsStore.SendCommandToWS<WebRTCSignalAnswer>(payload)
           })
           .catch(this.handleGetUserMediaError)
 
       this.checkIceMsgQueue()
-
+      this.callConnected = true
     },
 
     handleCallAnswer(response: WebsocketResponse<WebRTCSignalAnswer>) {
       console.log('*** handleVideoAnswerMsg | data:', response.data)
-
       // Configure the remote description, which is the SDP payload
       // in our "answer" message.
-
       const desc = new RTCSessionDescription(response.data.sdp)
       this.myPeerConnection!.setRemoteDescription(desc)
           .catch(err => console.log('handleVideoAnswerMsg error:', err))
+
+      this.callConnected = true
+      this.waitingForAnswer = false
+      this._RemoveWaitTone()
     },
 
     RejectCall() {
@@ -307,7 +353,7 @@ export const useWebRTCStore = defineStore({
         command: 3,
         payload: {
           type: WebRTCSignalTypes.REJECT,
-          target: this.callOfferData!.name,
+          target: this.callOfferData!.caller.mobile,
         },
       })
 
@@ -317,12 +363,19 @@ export const useWebRTCStore = defineStore({
 
     handleCallReject(response: WebsocketResponse<WebRTCSignalReject>) {
       console.log('call rejected:', response)
+      this.waitingForAnswer = false
       this.terminateCall()
+      const {t} = i18n.global
+      notifyMessage(
+          'warning',
+          t('general.callRejected'),
+      )
+      this._RemoveWaitTone()
     },
 
     HangUpCall() {
       console.log('HangUpCall')
-
+      this.waitingForAnswer = false
       const userStore = useUserStore()
       const wsStore = useWebsocketStore()
       wsStore.SendCommandToWS<WebRTCSignalHangUp>({
@@ -330,7 +383,7 @@ export const useWebRTCStore = defineStore({
         payload: {
           type: WebRTCSignalTypes.HANG_UP,
           name: userStore.user!,
-          target: this.targetUsername!,
+          target: this.targetUser!.mobile,
         },
       })
 
@@ -339,11 +392,14 @@ export const useWebRTCStore = defineStore({
 
     handleCallHangUp() {
       console.log('*** Received hang up notification from other peer')
-
+      this.hangUpSignal = true
+      if (this.callNotifDismiss !== null)
+        this.callNotifDismiss()
       this.terminateCall()
     },
 
     handleGetUserMediaError(e: Error) {
+      this.waitingForAnswer = false
       console.log('error:', e.name, e.message)
       switch (e.name) {
         case 'NotFoundError':
@@ -361,10 +417,28 @@ export const useWebRTCStore = defineStore({
       this.terminateCall()
     },
 
+    async _AddWaitTone() {
+      const waitTone = document.createElement('audio')
+      document.body.appendChild(waitTone)
+      waitTone.id = WAIT_AUDIO_ELEMENT_ID
+      console.log('mp3 tone src:', waitToneUrl)
+      waitTone.src = waitToneUrl
+      waitTone.loop = true
+      await waitTone.play()
+    },
+
+    _RemoveWaitTone() {
+      const waitTone = document.getElementById(WAIT_AUDIO_ELEMENT_ID) as HTMLAudioElement
+      if (waitTone) {
+        waitTone.pause()
+        document.body.removeChild(waitTone)
+      }
+    },
+
     terminateCall() {
-      console.log('closeVideoCall')
-      console.log('closeVideoCall | myPeerConnection:', this.myPeerConnection)
+      console.log('terminateCall | myPeerConnection:', this.myPeerConnection)
       this.hasCallInvite = false
+      this.callConnected = false
 
       if (this.myPeerConnection) {
         this.myPeerConnection.ontrack = null
@@ -380,7 +454,7 @@ export const useWebRTCStore = defineStore({
         this.myPeerConnection = null
       }
 
-      const remoteAudio = document.getElementById(AUDIO_ELEMENT_ID) as HTMLAudioElement
+      const remoteAudio = document.getElementById(CALL_AUDIO_ELEMENT_ID) as HTMLAudioElement
       if (remoteAudio) {
         if (remoteAudio.srcObject) {
           const stream = remoteAudio.srcObject as MediaStream
@@ -390,7 +464,11 @@ export const useWebRTCStore = defineStore({
         remoteAudio.removeAttribute('src')
       }
 
-      this.targetUsername = null
+      this._RemoveWaitTone()
+
+      this.targetUser = null
+      this.iceCandidateMsgQueue = []
+      this.callOfferData = null
     },
   },
 

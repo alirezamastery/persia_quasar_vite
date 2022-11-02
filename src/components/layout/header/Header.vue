@@ -7,7 +7,7 @@
     id="layout-header"
   >
 
-    <CallRequest/>
+    <VoiceCall/>
 
     <q-toolbar>
       <q-btn
@@ -55,7 +55,7 @@ import useUserStore from 'src/stores/user'
 import {generalState} from 'components/layout/sidebar/composables'
 import ThemeToggle from './ThemeToggle.vue'
 import RobotStatus from './RobotStatus.vue'
-import CallRequest from './CallRequest.vue'
+import VoiceCall from './VoiceCall.vue'
 import UserInfoDesktop from './UserInfoDesktop.vue'
 import Calendar from './Calendar.vue'
 

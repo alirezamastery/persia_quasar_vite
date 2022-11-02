@@ -133,6 +133,9 @@
   "lastName": "نام خانوادگی",
   "quantity": "تعداد",
   "call": "تماس",
+  "callRejected": "تماس رد شد",
+  "acceptCall": "اتصال",
+  "rejectCall": "رد تماس",
   "users": "کاربرها",
   "seeInDk": "در دیجیکالا",
   "alert": {
@@ -149,7 +152,8 @@
     "fileFormatError": "فرمت فایل مورد قبول نیست",
     "enterStockPLease": "لطفا تعداد موجودی را وارد کنید",
     "duplicateDkpc": "مقدارهای dkpc نباید تکراری باشد",
-    "duplicateSelector": "مقدار انتخابگرها نباید تکراری باشد"
+    "duplicateSelector": "مقدار انتخابگرها نباید تکراری باشد",
+    "callOfferFrom": "تماس دریافتی: {caller}"
   },
   "Q": {
     "deleteConfirm": "آیا مطمئن هستید که میخواهید {type} \"{item}\" را حذف کنید؟",

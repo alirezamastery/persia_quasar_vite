@@ -31,8 +31,13 @@ export const editVariantStatusDKPC = () => import('pages/robot/variant/VariantSt
 export const digiCredentials = () => import('pages/robot/DigiCredentials.vue')
 export const scrapeInvoice = () => import('pages/robot/ScrapeInvoice.vue')
 export const inactiveVariants = () => import('pages/robot/InactiveVariants.vue')
-export const WebRTCTest = () => import('pages/robot/WebRTCTest.vue')
 export const ToggleVariantStatus = () => import('pages/products/variant/ToggleVariantStatus.vue')
+
+
+// Voice Call
+export const ContactList = () => import('pages/voice_call/ContactList.vue')
+export const CallWaiting = () => import('pages/voice_call/CallWaiting.vue')
+export const CallConnected = () => import('pages/voice_call/CallConnected.vue')
 
 
 // Accounting

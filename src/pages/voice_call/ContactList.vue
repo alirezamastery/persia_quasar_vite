@@ -1,17 +1,17 @@
 <template>
-  <div class="q-ma-md q-pa-sm">
-
+  <div
+    class="q-ma-md q-pa-sm"
+  >
     <div class="row">
-
+      <!--      <q-img :src="imgUrl" height="50" width="50"/>-->
       <q-list
-        v-show="!callConnected"
-        class="col-xs-12 col-sm-8 col-md-6 col-lg-3"
+        class="col-xs-12 col-md-6 col-lg-3"
         bordered
       >
         <q-item-label header>{{ $t('general.users') }}</q-item-label>
         <template
           v-for="(user, i) in users.filter(u => u.mobile !== userMobile)"
-          :key="user.id"
+          :key="user.mobile"
         >
           <q-item>
             <q-item-section avatar>
@@ -33,7 +33,7 @@
               <q-btn
                 color="green"
                 icon="call"
-                :disable="webrtcStore.hasCallInvite"
+                :disable="!canCall"
                 @click="inviteToCall(user)"
               />
             </q-item-section>
@@ -42,77 +42,45 @@
           <q-separator v-if="i > 0" inset="item"/>
         </template>
       </q-list>
-
-      <div
-        v-if="callConnected"
-        class="col-xs-10 col-sm-8 col-md-5 col-lg-3"
-        id="camera-container"
-      >
-        <div v-if="callee">
-          <q-img v-if="callee.profile.avatar" :src="callee.profile.avatar" alt=""/>
-        </div>
-        <audio :id="AUDIO_ELEMENT_ID" autoplay></audio>
-        <q-btn
-          id="hangup-button"
-          @click="hangUpCall"
-          color="red"
-          class="full-width"
-        >
-          <q-icon name="phone_disabled"/>
-        </q-btn>
-      </div>
-
     </div>
   </div>
-
-  <!--    <div class="flexChild" id="camera-container">-->
-  <!--      <div class="camera-box">-->
-  <!--        <video id="local_video" autoplay muted></video>-->
-  <!--        <video id="received_video" autoplay></video>-->
-  <!--        <q-btn-->
-  <!--          v-show="callConnected"-->
-  <!--          id="hangup-button"-->
-  <!--          @click="hangUpCall"-->
-  <!--          color="red"-->
-  <!--        >-->
-  <!--          <q-icon name="phone_disabled"/>-->
-  <!--        </q-btn>-->
-  <!--      </div>-->
-  <!--    </div>-->
-
 </template>
 
 <script setup lang="ts">
-import {ref, computed} from 'vue'
-import useUserStore from 'src/stores/user'
+import {ref, computed, watch} from 'vue'
+import {useRouter} from 'vue-router'
+import useUserStore from 'stores/user'
 import useWebRTCStore from 'stores/webrtc'
-import {AUDIO_ELEMENT_ID} from 'stores/webrtc'
-import {axiosInstance} from 'src/boot/axios'
+import {axiosInstance} from 'boot/axios'
 import urls from 'src/urls'
+import {userResponseToDomain} from 'src/types/converter/profile/user-profile'
 import {UserResponse} from 'src/types/network/response/auth/user'
 import {UserDomain} from 'src/types/domain/auth/user'
-import {userResponseToDomain} from 'src/types/converter/profile/user-profile'
 
 
+const router = useRouter()
 const webrtcStore = useWebRTCStore()
 const userStore = useUserStore()
 
 const users = ref<UserDomain[]>([])
 
 const userMobile = computed(() => userStore.user)
-const callConnected = computed(() => webrtcStore.myPeerConnection !== null)
-const callee = computed(() => webrtcStore.callee)
+const canCall = computed(() => {
+  return !webrtcStore.waitingForAnswer
+    && !webrtcStore.hasCallInvite
+    && !webrtcStore.callConnected
+})
+const waitingForAnswer = computed(() => webrtcStore.waitingForAnswer)
 
-
-// console.log('adapter.browserDetails.browser:', adapter.browserDetails.browser)
+watch(waitingForAnswer, () => router.push({name: 'CallWaiting'}))
+watch(() => webrtcStore.callConnected, (newVal) => {
+  if (newVal)
+    router.push({name: 'CallConnected'})
+})
 
 function inviteToCall(targetUser: UserDomain) {
   console.log('targetUser:', targetUser)
   webrtcStore.InviteToCall(targetUser)
-}
-
-function hangUpCall() {
-  webrtcStore.HangUpCall()
 }
 
 axiosInstance.get<UserResponse[]>(urls.users)
@@ -127,7 +95,3 @@ axiosInstance.get<UserResponse[]>(urls.users)
   })
 
 </script>
-
-<style scoped>
-
-</style>

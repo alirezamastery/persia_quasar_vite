@@ -10,13 +10,13 @@ import {StorageKeys} from 'src/utils'
 import {UserProfileResponse} from 'src/types/network/response/profile/user-profile'
 import {UserProfileDomain} from 'src/types/domain/profile/user-profile'
 import {userProfileResponseToDomain} from 'src/types/converter/profile/user-profile'
-import webrtc from 'stores/webrtc'
 
 
 const storeID = 'user'
 
 export interface UserStoreState {
   user: Nullable<string>,
+  mobile: Nullable<string>
   profile: UserProfileDomain
 }
 
@@ -24,6 +24,7 @@ export const useUserStore = defineStore({
   id: storeID,
   state: () => ({
     user: null,
+    mobile: null,
     profile: {
       firstName: '',
       lastName: '',
@@ -37,6 +38,7 @@ export const useUserStore = defineStore({
         const user = LocalStorage.getItem(StorageKeys.USER) as Nullable<string>
         if (user) {
           this.user = user
+          this.mobile = user
           return true
         }
         return false
@@ -52,7 +54,6 @@ export const useUserStore = defineStore({
     },
     Logout(): void {
       console.log('logout')
-      this.user = null
       this.ClearLocalStorage()
       delete axiosInstance.defaults.headers['Authorization']
       broadcastInstance.sendBroadcastMessage('LOGOUT', {})
@@ -63,6 +64,7 @@ export const useUserStore = defineStore({
       robotStore.$reset()
       const webrtcStore = useWebRTCStore()
       webrtcStore.$reset()
+      webrtcStore.terminateCall()
       this.$reset()
       routerInstance.push({name: 'Login'})
     },

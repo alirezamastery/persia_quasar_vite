@@ -245,14 +245,32 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  // ********** WebRTC Test **********
-  WebRTCTest: {
-    path: '/robot/call',
-    name: 'WebRTCTest',
-    component: views.WebRTCTest,
+  // ********** WebRTC Call **********
+  ContactList: {
+    path: '/call/contact-list',
+    name: 'ContactList',
+    component: views.ContactList,
     meta: {
       titleI18n: 'general.call',
       icon: 'call',
+      requiresAuth: true,
+    },
+  },
+  CallWaiting: {
+    path: '/call/waiting',
+    name: 'CallWaiting',
+    component: views.CallWaiting,
+    meta: {
+      titleI18n: 'general.call',
+      requiresAuth: true,
+    },
+  },
+  CallConnected: {
+    path: '/call/connected',
+    name: 'CallConnected',
+    component: views.CallConnected,
+    meta: {
+      titleI18n: 'general.call',
       requiresAuth: true,
     },
   },

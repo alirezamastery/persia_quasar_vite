@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {LocalStorage, uid} from 'quasar'
 import useRobotStore from './robot'
+import useWebRTCStore from 'stores/webrtc'
 import {StorageKeys} from 'src/utils'
 import {
   ResponseTypes,
@@ -10,7 +11,6 @@ import {
   ToggleRobotData,
 } from 'src/types/websocket/response'
 import {WebsocketCommands, WebsocketRequest} from 'src/types/websocket/request'
-import useWebRTCStore from 'stores/webrtc'
 import {WebRTCSignal} from 'src/types/websocket/payloads/WebRTCSignal'
 
 

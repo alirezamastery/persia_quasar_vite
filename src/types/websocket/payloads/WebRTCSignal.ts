@@ -1,3 +1,5 @@
+import {UserDomain} from 'src/types/domain/auth/user'
+
 export enum WebRTCSignalTypes {
   OFFER = 'offer',
   ANSWER = 'answer',
@@ -8,7 +10,7 @@ export enum WebRTCSignalTypes {
 
 export interface WebRTCSignalOffer {
   type: WebRTCSignalTypes.OFFER
-  name: string
+  caller: UserDomain
   target: string
   sdp: RTCSessionDescription
 }
@@ -38,7 +40,7 @@ export interface WebRTCSignalCandidate {
 }
 
 export type WebRTCSignal =
-    WebRTCSignalOffer
+    | WebRTCSignalOffer
     | WebRTCSignalHangUp
     | WebRTCSignalReject
     | WebRTCSignalAnswer

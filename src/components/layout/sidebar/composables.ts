@@ -60,7 +60,7 @@ export const menuItems: Array<SidebarMenuList> = [
       getRoute('inactiveVariants'),
       getRoute('digiCredentials'),
       getRoute('scrapeInvoice'),
-      getRoute('WebRTCTest'),
+      getRoute('ContactList'),
     ],
   },
   {
