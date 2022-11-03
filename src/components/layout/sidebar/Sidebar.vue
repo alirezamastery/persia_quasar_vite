@@ -65,7 +65,7 @@ if (userStore.isAuthenticated) {
   axiosInstance.get(urls.userProfile)
     .then(res => {
       console.log('profile:', res)
-      userStore.SetProfile(res.data)
+      userStore.setProfile(res.data)
     })
     .catch(err => {
       console.log(err)

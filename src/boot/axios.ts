@@ -63,7 +63,7 @@ axiosInstance.interceptors.response.use(
       error.response.status === 401 &&
       originalRequest.url === urls.refreshToken
     ) {
-      userStore.Logout()
+      userStore.logout()
       return Promise.reject(error)
     }
 
@@ -71,7 +71,7 @@ axiosInstance.interceptors.response.use(
       error.response.status === 403
       && originalRequest.url === urls.refreshToken
     ) {
-      userStore.Logout()
+      userStore.logout()
       return Promise.reject(error)
     }
 
@@ -105,15 +105,15 @@ axiosInstance.interceptors.response.use(
             })
             .catch(async (err) => {
               console.log('error in refresh token part: ', err)
-              userStore.Logout()
+              userStore.logout()
             })
         } else {
           console.log('Refresh token is expired', tokenParts, now)
-          userStore.Logout()
+          userStore.logout()
         }
       } else {
         console.log('in axiosInstance: Refresh token not available. refreshToken is: ', refreshToken)
-        userStore.Logout()
+        userStore.logout()
       }
     }
 

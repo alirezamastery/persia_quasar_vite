@@ -61,5 +61,5 @@ if (q.platform.is.android) {
   firebaseSetup()
 }
 
-broadcastInstance.addBroadcastCallback('LOGOUT', () => userStore.Logout())
+broadcastInstance.addBroadcastCallback('LOGOUT', () => userStore.logout())
 </script>

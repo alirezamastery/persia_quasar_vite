@@ -44,7 +44,7 @@ export default route(function (/* { store, ssrContext } */) {
     const isAuthenticated = userStore.isAuthenticated
     if (needsAuthentication) {
       if (!isAuthenticated && to.name !== 'Login') {
-        userStore.Logout() // Logout will push to Login
+        userStore.logout() // Logout will push to Login
         // next({name: 'Login'})
       } else {
         next()

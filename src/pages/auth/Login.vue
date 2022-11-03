@@ -112,7 +112,7 @@ function handleSubmit() {
       q.localStorage.set(StorageKeys.ACCESS_TOKEN, res.data.access)
       q.localStorage.set(StorageKeys.REFRESH_TOKEN, res.data.refresh)
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + res.data.access
-      userStore.Login(form.mobile)
+      userStore.login(form.mobile)
       router.push({name: 'Home'})
     })
     .catch(err => {

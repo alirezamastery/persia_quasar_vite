@@ -86,7 +86,7 @@ async function handleFormSubmit() {
   try {
     const res = await axiosInstance.patch(urls.userProfile, data)
     console.log('without avatar change response:', res)
-    userStore.SetProfile(res.data)
+    userStore.setProfile(res.data)
     notifyMessage('info', t('general.snack.saveSuccess'))
   } catch (err) {
     console.log('profile patch error', err)

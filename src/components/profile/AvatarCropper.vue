@@ -157,7 +157,7 @@ async function handleImageDelete() {
   try {
     const res = await axiosInstance.patch<UserProfileResponse>(urls.userProfile, data)
     console.log('delete response:', res)
-    userStore.SetProfile(cloneDeep(res.data))
+    userStore.setProfile(cloneDeep(res.data))
   } catch (err) {
     console.log('delete error:', err)
   }
@@ -176,7 +176,7 @@ async function handleCropperSubmit() {
       },
     })
     console.log('form patch response:', res)
-    userStore.SetProfile(res.data)
+    userStore.setProfile(res.data)
   } catch (err) {
     console.log('file upload error', err)
     notifyMessage('negative', t('general.snack.connectionError'))

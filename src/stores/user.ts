@@ -46,15 +46,15 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    Login(user: string): void {
+    login(user: string): void {
       this.user = user
       LocalStorage.set(StorageKeys.USER, user)
       const wsStore = useWebsocketStore()
       wsStore.handleTokenUpdate()
     },
-    Logout(): void {
+    logout(): void {
       console.log('logout')
-      this.ClearLocalStorage()
+      this.clearLocalStorage()
       delete axiosInstance.defaults.headers['Authorization']
       broadcastInstance.sendBroadcastMessage('LOGOUT', {})
       broadcastInstance.teardown()
@@ -68,7 +68,7 @@ export const useUserStore = defineStore({
       this.$reset()
       routerInstance.push({name: 'Login'})
     },
-    ClearLocalStorage(): void {
+    clearLocalStorage(): void {
       try {
         LocalStorage.remove(StorageKeys.USER)
         LocalStorage.remove(StorageKeys.ACCESS_TOKEN)
@@ -77,7 +77,7 @@ export const useUserStore = defineStore({
         LocalStorage.clear()
       }
     },
-    SetProfile(payload: UserProfileResponse): void {
+    setProfile(payload: UserProfileResponse): void {
       this.profile = userProfileResponseToDomain(payload)
     },
   },

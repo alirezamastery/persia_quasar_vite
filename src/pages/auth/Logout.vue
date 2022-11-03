@@ -27,6 +27,6 @@ function goBack() {
 }
 
 function logout(){
-  userStore.Logout()
+  userStore.logout()
 }
 </script>
