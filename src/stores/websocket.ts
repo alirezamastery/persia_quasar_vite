@@ -85,13 +85,13 @@ export const useWebsocketStore = defineStore({
             console.error('WS error type:', response.data)
             break
           case ResponseTypes.FETCH_RESPONSE:
-            robotStore.HandleFetch(response as WebsocketResponse<FetchData>)
+            robotStore.handleFetch(response as WebsocketResponse<FetchData>)
             break
           case ResponseTypes.TOGGLE_ROBOT:
-            robotStore.HandleToggleRobot(response as WebsocketResponse<ToggleRobotData>)
+            robotStore.handleToggleRobot(response as WebsocketResponse<ToggleRobotData>)
             break
           case ResponseTypes.ROBOT_RUNNING:
-            robotStore.HandleRobotRunningStatus(response as WebsocketResponse<RobotRunningData>)
+            robotStore.handleRobotRunningStatus(response as WebsocketResponse<RobotRunningData>)
             break
           case ResponseTypes.WEBRTC_SIGNAL:
             webrtcStore.handleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
