@@ -70,14 +70,14 @@ export default route(function (/* { store, ssrContext } */) {
 
   router.beforeEach((to, from, next) => {
     const generalStore = useGeneralStore()
-    generalStore.ClearHttpRequestQueue()
-    generalStore.ClearBanners()
+    generalStore.clearHttpRequestQueue()
+    generalStore.clearBanners()
     const pendingBanners = generalStore.pendingBanners
     for (const pendingBanner of pendingBanners) {
-      generalStore.AddBanner(pendingBanner)
+      generalStore.addBanner(pendingBanner)
       console.log('for', pendingBanner)
     }
-    generalStore.ClearPendingBanners()
+    generalStore.clearPendingBanners()
     next()
   })
 

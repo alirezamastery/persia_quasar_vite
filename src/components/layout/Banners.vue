@@ -15,7 +15,7 @@
           icon="close"
           round
           flat
-          @click="generalStore.DeleteBanner(banner)"
+          @click="generalStore.deleteBanner(banner)"
         />
       </template>
     </q-banner>

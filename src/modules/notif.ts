@@ -9,7 +9,7 @@ const errorActions = [
 
 export function addBanner(text: string, bgColor?: string, textColor?: string) {
   const generalStore = useGeneralStore()
-  generalStore.AddPendingBanner({
+  generalStore.addPendingBanner({
     text,
     bgColor: bgColor || 'green',
     textColor: textColor || 'white',

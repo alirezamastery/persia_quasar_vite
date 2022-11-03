@@ -28,35 +28,27 @@ export const useGeneralStore = defineStore({
     },
   },
   actions: {
-    IncrementHttpRequestQueue() {
-      this.httpRequestQueue++
-    },
-    DecrementHttpRequestQueue() {
-      this.httpRequestQueue--
-      if (this.httpRequestQueue < 0)
-        this.httpRequestQueue = 0
-    },
-    ClearHttpRequestQueue() {
+    clearHttpRequestQueue() {
       this.httpRequestQueue = 0
     },
-    AddPendingBanner(payload: GlobalBanner) {
+    addPendingBanner(payload: GlobalBanner) {
       this.pendingBanners.push(payload)
     },
-    ClearPendingBanners() {
+    clearPendingBanners() {
       this.pendingBanners = []
     },
-    AddBanner(banner: GlobalBanner) {
+    addBanner(banner: GlobalBanner) {
       this.banners.push(banner)
     },
-    DeleteBanner(banner: GlobalBanner) {
+    deleteBanner(banner: GlobalBanner) {
       const index = this.banners.findIndex(item => item.key === banner.key)
       if (index > -1)
         this.banners.splice(index, 1)
     },
-    ClearBanners() {
+    clearBanners() {
       this.banners = []
     },
-    ResetTableFilter() {
+    resetTableFilter() {
       this.tableFilterResetSignal = !this.tableFilterResetSignal
       console.log('this.tableFilterResetSignal', this.tableFilterResetSignal)
     },

@@ -158,7 +158,7 @@ function removeVariantInput(index: number) {
 }
 
 function validateVariants() {
-  generalStore.ClearBanners()
+  generalStore.clearBanners()
   const selectorIds = form.value.variants.map(variant => variant.variantSelectorId)
   if (form.value.variants.length !== new Set(selectorIds).size) {
     notifyMessage('negative', t('general.snack.duplicateSelector'))

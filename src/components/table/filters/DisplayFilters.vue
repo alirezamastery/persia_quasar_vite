@@ -70,6 +70,6 @@ watch(filterValues, (val) => {
 
 function resetFilters() {
   filterValues.value = {}
-  generalStore.ResetTableFilter()
+  generalStore.resetTableFilter()
 }
 </script>
