@@ -1,6 +1,6 @@
 import {RouteRecordRaw} from 'vue-router'
 import * as views from './chunks'
-import {RouteNames} from 'src/router/route-names'
+import RouteNames from 'src/router/route-names'
 
 
 const routesObj: { [index: string]: RouteRecordRaw } = {

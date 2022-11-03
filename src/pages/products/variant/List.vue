@@ -42,7 +42,7 @@
 import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
-import {RouteNames} from 'src/router/route-names'
+import RouteNames from 'src/router/route-names'
 
 const {t} = useI18n()
 const apiRoot = urls.variants

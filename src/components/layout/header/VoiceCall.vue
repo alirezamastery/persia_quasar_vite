@@ -1,5 +1,5 @@
 <template>
-  <q-slide-transition duration="150">
+  <q-slide-transition :duration="150">
     <div
       v-if="showCallBanner"
       class="q-pa-none flex full-width bg-green"
@@ -43,17 +43,10 @@
 </template>
 
 <script setup lang="ts">
-import useWebRTCStore from 'stores/webrtc'
 import {computed} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import webrtc from 'stores/webrtc'
+import useWebRTCStore from 'stores/webrtc'
 
-const route = useRoute()
-const router = useRouter()
 const webrtcStore = useWebRTCStore()
-const hideCallBannerRoutes = [
-  'ContactList', 'CallConnected', 'CallWaiting',
-]
 
 const targetUser = computed(() => webrtcStore.targetUser)
 const targetUserFullName = computed(() => {
