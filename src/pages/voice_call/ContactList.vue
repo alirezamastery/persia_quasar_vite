@@ -69,7 +69,7 @@ const canCall = computed(() => {
 
 function inviteToCall(targetUser: UserDomain) {
   console.log('targetUser:', targetUser)
-  webrtcStore.InviteToCall(targetUser)
+  webrtcStore.inviteToCall(targetUser)
 }
 
 axiosInstance.get<UserResponse[]>(urls.users)

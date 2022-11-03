@@ -112,17 +112,17 @@ onBeforeUnmount(() => {
 })
 
 function hangUpCall() {
-  webrtcStore.HangUpCall()
+  webrtcStore.hangUpCall()
 }
 
 function muteMicrophone() {
   microphoneMuted.value = !microphoneMuted.value
-  webrtcStore.ToggleMuteMicrophone()
+  webrtcStore.toggleMuteMicrophone()
 }
 
 function muteSpeaker() {
   speakerMuted.value = !speakerMuted.value
-  webrtcStore.ToggleMuteSpeaker()
+  webrtcStore.toggleMuteSpeaker()
 }
 
 function calculateAvailableHeight() {

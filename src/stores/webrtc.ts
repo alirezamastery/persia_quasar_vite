@@ -63,35 +63,35 @@ export const useWebRTCStore = defineStore({
   } as WebrtcStoreState),
   getters: {},
   actions: {
-    HandleWebRTCSignal(response: WebsocketResponse<WebRTCSignal>) {
+    handleWebRTCSignal(response: WebsocketResponse<WebRTCSignal>) {
       const signalType = response.data.type
       switch (signalType) {
         case WebRTCSignalTypes.OFFER:
-          this.handleCallInvite(response as WebsocketResponse<WebRTCSignalOffer>)
+          this._handleCallInvite(response as WebsocketResponse<WebRTCSignalOffer>)
           break
         case WebRTCSignalTypes.ANSWER:
-          this.handleCallAnswer(response as WebsocketResponse<WebRTCSignalAnswer>)
+          this._handleCallAnswer(response as WebsocketResponse<WebRTCSignalAnswer>)
           break
         case WebRTCSignalTypes.REJECT:
-          this.handleCallReject(response as WebsocketResponse<WebRTCSignalReject>)
+          this._handleCallReject(response as WebsocketResponse<WebRTCSignalReject>)
           break
         case WebRTCSignalTypes.ICE_CANDIDATE:
-          this.handleNewICECandidateMsg(response as WebsocketResponse<WebRTCSignalCandidate>)
+          this._handleNewICECandidateMsg(response as WebsocketResponse<WebRTCSignalCandidate>)
           break
         case WebRTCSignalTypes.HANG_UP:
-          this.handleCallHangUp()
+          this._handleCallHangUp()
           break
       }
     },
 
-    InviteToCall(targetUser: UserDomain) {
+    inviteToCall(targetUser: UserDomain) {
       console.log('InviteToCall | ***************************************************************************')
       console.log('InviteToCall | base url:', process.env.SERVER_BASE_URL)
       if (this.myPeerConnection !== null) {
         alert('You can\'t start a call because you already have one open!')
       } else {
         this.targetUser = targetUser
-        this.createPeerConnection()
+        this._createPeerConnection()
 
         console.log('InviteToCall | navigator.mediaDevices:', navigator.mediaDevices)
         // checkPermissions()
@@ -107,16 +107,16 @@ export const useWebRTCStore = defineStore({
                 this.myPeerConnection.addTrack(track, localStream)
               })
 
-              await this._AddWaitTone()
+              await this._addWaitTone()
 
               this.createCallDialog()
 
             })
-            .catch(this.handleGetUserMediaError)
+            .catch(this._handleGetUserMediaError)
       }
     },
 
-    handleCallInvite(response: WebsocketResponse<WebRTCSignalOffer>) {
+    _handleCallInvite(response: WebsocketResponse<WebRTCSignalOffer>) {
       this.hasCallInvite = true
       this.targetUser = response.data.caller
       this.callOfferData = response.data
@@ -139,20 +139,20 @@ export const useWebRTCStore = defineStore({
             icon: 'phone_disabled',
             color: 'red',
             flat: false,
-            handler: this.RejectCall,
+            handler: this.rejectCall,
           },
           {
             label: t('general.acceptCall'),
             iconRight: 'phone',
             color: 'green',
             flat: false,
-            handler: this.AcceptCallOffer,
+            handler: this._acceptCallOffer,
           },
         ],
       })
     },
 
-    createPeerConnection() {
+    _createPeerConnection() {
       const audioElement = document.createElement('audio')
       audioElement.id = CALL_AUDIO_ELEMENT_ID
       audioElement.autoplay = true // this line is very important!
@@ -168,26 +168,26 @@ export const useWebRTCStore = defineStore({
           },
         ],
       })
-      console.log('createPeerConnection | myPeerConnection:', this.myPeerConnection)
+      console.log('_createPeerConnection | myPeerConnection:', this.myPeerConnection)
 
-      this.myPeerConnection.onicecandidate = this.handleICECandidateEvent
-      this.myPeerConnection.ontrack = this.handleTrackEvent
-      this.myPeerConnection.onnegotiationneeded = this.handleNegotiationNeededEvent
-      // this.myPeerConnection.onremovetrack = this.handleRemoveTrackEvent
-      this.myPeerConnection.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent
-      this.myPeerConnection.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent
-      this.myPeerConnection.onsignalingstatechange = this.handleSignalingStateChangeEvent
+      this.myPeerConnection.onicecandidate = this._handleICECandidateEvent
+      this.myPeerConnection.ontrack = this._handleTrackEvent
+      this.myPeerConnection.onnegotiationneeded = this._handleNegotiationNeededEvent
+      // this.myPeerConnection.onremovetrack = this._handleRemoveTrackEvent
+      this.myPeerConnection.oniceconnectionstatechange = this._handleICEConnectionStateChangeEvent
+      this.myPeerConnection.onicegatheringstatechange = this._handleICEGatheringStateChangeEvent
+      this.myPeerConnection.onsignalingstatechange = this._handleSignalingStateChangeEvent
     },
 
-    handleICECandidateEvent(event: RTCPeerConnectionIceEvent) {
-      console.log('handleICECandidateEvent | event:', event)
+    _handleICECandidateEvent(event: RTCPeerConnectionIceEvent) {
+      console.log('_handleICECandidateEvent | event:', event)
       if (event.candidate) {
         const payload: WebRTCSignalCandidate = {
           type: WebRTCSignalTypes.ICE_CANDIDATE,
           target: this.targetUser!.mobile,
           candidate: event.candidate,
         }
-        console.log('handleICECandidateEvent | payload:', payload)
+        console.log('_handleICECandidateEvent | payload:', payload)
         const wsStore = useWebsocketStore()
         wsStore.SendCommandToWS<WebRTCSignalCandidate>({
           command: 3,
@@ -196,32 +196,32 @@ export const useWebRTCStore = defineStore({
       }
     },
 
-    handleNewICECandidateMsg(response: WebsocketResponse<WebRTCSignalCandidate>) {
-      console.log('handleNewICECandidateMsg | data:', response.data)
+    _handleNewICECandidateMsg(response: WebsocketResponse<WebRTCSignalCandidate>) {
+      console.log('_handleNewICECandidateMsg | data:', response.data)
       const candidate = new RTCIceCandidate(response.data.candidate)
 
       if (this.myPeerConnection) {
         this.myPeerConnection.addIceCandidate(candidate)
-            .catch(err => console.error('handleNewICECandidateMsg | error:', err))
+            .catch(err => console.error('_handleNewICECandidateMsg | error:', err))
       } else {
         this.iceCandidateMsgQueue.push(candidate)
       }
     },
 
-    handleTrackEvent(event: RTCTrackEvent) {
-      console.log('handleTrackEvent | event:', event)
+    _handleTrackEvent(event: RTCTrackEvent) {
+      console.log('_handleTrackEvent | event:', event)
       const audioEl = document.getElementById(CALL_AUDIO_ELEMENT_ID) as HTMLAudioElement
       audioEl.srcObject = event.streams[0]
     },
 
-    handleNegotiationNeededEvent() {
+    _handleNegotiationNeededEvent() {
       if (this.myPeerConnection === null) throw Error('myPeerConnection is null')
       this.myPeerConnection.createOffer().then((offer) => {
-            console.log('handleNegotiationNeededEvent | offer:', offer)
+            console.log('_handleNegotiationNeededEvent | offer:', offer)
             return this.myPeerConnection!.setLocalDescription(offer)
           })
           .then(() => {
-            console.log('handleNegotiationNeededEvent | send offer')
+            console.log('_handleNegotiationNeededEvent | send offer')
             const userStore = useUserStore()
             const wsStore = useWebsocketStore()
             wsStore.SendCommandToWS<WebRTCSignalOffer>({
@@ -237,23 +237,23 @@ export const useWebRTCStore = defineStore({
               },
             })
           })
-          .catch(err => console.error('handleNegotiationNeededEvent error:', err))
+          .catch(err => console.error('_handleNegotiationNeededEvent error:', err))
     },
 
-    handleRemoveTrackEvent(event: Event) {
-      console.log('handleRemoveTrackEvent | event:', event)
+    _handleRemoveTrackEvent(event: Event) {
+      console.log('_handleRemoveTrackEvent | event:', event)
       const audioEl = document.getElementById('received_video') as HTMLAudioElement
       const stream = audioEl.srcObject as MediaStream
       const trackList = stream.getTracks()
-      console.log('handleRemoveTrackEvent | trackList:', trackList)
+      console.log('_handleRemoveTrackEvent | trackList:', trackList)
 
       if (trackList.length === 0) {
         this.terminateCall()
       }
     },
 
-    handleICEConnectionStateChangeEvent(event: Event) {
-      console.log('handleICEConnectionStateChangeEvent | event:', event)
+    _handleICEConnectionStateChangeEvent(event: Event) {
+      console.log('_handleICEConnectionStateChangeEvent | event:', event)
 
       switch (this.myPeerConnection!.iceConnectionState) {
         case 'closed':
@@ -263,16 +263,16 @@ export const useWebRTCStore = defineStore({
       }
     },
 
-    handleICEGatheringStateChangeEvent(event: Event) {
-      console.log('handleICEGatheringStateChangeEvent | event:', event)
-      console.log('handleICEGatheringStateChangeEvent | state:', this.myPeerConnection!.iceGatheringState)
+    _handleICEGatheringStateChangeEvent(event: Event) {
+      console.log('_handleICEGatheringStateChangeEvent | event:', event)
+      console.log('_handleICEGatheringStateChangeEvent | state:', this.myPeerConnection!.iceGatheringState)
       // Our sample just logs information to console here,
       // but you can do whatever you need.
     },
 
-    handleSignalingStateChangeEvent(event: Event) {
-      console.log('handleSignalingStateChangeEvent | event:', event)
-      console.log('handleSignalingStateChangeEvent | signalingState:', this.myPeerConnection!.signalingState)
+    _handleSignalingStateChangeEvent(event: Event) {
+      console.log('_handleSignalingStateChangeEvent | event:', event)
+      console.log('_handleSignalingStateChangeEvent | signalingState:', this.myPeerConnection!.signalingState)
 
       switch (this.myPeerConnection!.signalingState) {
         case 'closed':
@@ -281,17 +281,17 @@ export const useWebRTCStore = defineStore({
       }
     },
 
-    checkIceMsgQueue() {
+    _checkIceMsgQueue() {
       for (const candidate of this.iceCandidateMsgQueue) {
         this.myPeerConnection!.addIceCandidate(candidate)
-            .catch(err => console.error('handleNewICECandidateMsg | error:', err))
+            .catch(err => console.error('_handleNewICECandidateMsg | error:', err))
       }
       this.iceCandidateMsgQueue = []
     },
 
 
-    AcceptCallOffer() {
-      console.log('AcceptCallOffer | *******************************************')
+    _acceptCallOffer() {
+      console.log('_acceptCallOffer | *******************************************')
 
       // checkPermissions()
 
@@ -299,7 +299,7 @@ export const useWebRTCStore = defineStore({
       let localStream: MediaStream
       this.targetUser = this.callOfferData.caller
 
-      this.createPeerConnection()
+      this._createPeerConnection()
 
       const desc = new RTCSessionDescription(this.callOfferData.sdp)
 
@@ -317,15 +317,15 @@ export const useWebRTCStore = defineStore({
             })
           })
           .then(() => {
-            console.log('AcceptCallOffer | creating answer')
+            console.log('_acceptCallOffer | creating answer')
             return this.myPeerConnection!.createAnswer()
           })
           .then((answer) => {
-            console.log('AcceptCallOffer | answer:', answer)
+            console.log('_acceptCallOffer | answer:', answer)
             return this.myPeerConnection!.setLocalDescription(answer)
           })
           .then(() => {
-            console.log('AcceptCallOffer | send answer (localDescription):', this.myPeerConnection!.localDescription)
+            console.log('_acceptCallOffer | send answer (localDescription):', this.myPeerConnection!.localDescription)
             const userStore = useUserStore()
             const payload: WebsocketRequest<WebRTCSignalAnswer> = {
               command: 3,
@@ -336,31 +336,31 @@ export const useWebRTCStore = defineStore({
                 sdp: this.myPeerConnection!.localDescription!,
               },
             }
-            console.log('AcceptCallOffer | answer payload:', payload)
+            console.log('_acceptCallOffer | answer payload:', payload)
             const wsStore = useWebsocketStore()
             wsStore.SendCommandToWS<WebRTCSignalAnswer>(payload)
             this.createCallDialog()
           })
-          .catch(this.handleGetUserMediaError)
+          .catch(this._handleGetUserMediaError)
 
-      this.checkIceMsgQueue()
+      this._checkIceMsgQueue()
       this.callConnected = true
     },
 
-    handleCallAnswer(response: WebsocketResponse<WebRTCSignalAnswer>) {
-      console.log('****** handleCallAnswer | data:', response.data)
+    _handleCallAnswer(response: WebsocketResponse<WebRTCSignalAnswer>) {
+      console.log('****** _handleCallAnswer | data:', response.data)
       // Configure the remote description, which is the SDP payload
       // in our "answer" message.
       const desc = new RTCSessionDescription(response.data.sdp)
       this.myPeerConnection!.setRemoteDescription(desc)
-          .catch(err => console.error('handleCallAnswer error:', err))
+          .catch(err => console.error('_handleCallAnswer error:', err))
 
       this.callConnected = true
       this.waitingForAnswer = false
-      this._RemoveWaitTone()
+      this._removeWaitTone()
     },
 
-    RejectCall() {
+    rejectCall() {
       console.log('reject call')
       const wsStore = useWebsocketStore()
       wsStore.SendCommandToWS<WebRTCSignalReject>({
@@ -375,7 +375,7 @@ export const useWebRTCStore = defineStore({
       this.hasCallInvite = false
     },
 
-    handleCallReject(response: WebsocketResponse<WebRTCSignalReject>) {
+    _handleCallReject(response: WebsocketResponse<WebRTCSignalReject>) {
       console.log('call rejected:', response)
       this.waitingForAnswer = false
       this.terminateCall()
@@ -386,7 +386,7 @@ export const useWebRTCStore = defineStore({
       )
     },
 
-    HangUpCall() {
+    hangUpCall() {
       console.log('HangUpCall')
       this.waitingForAnswer = false
       const userStore = useUserStore()
@@ -403,7 +403,7 @@ export const useWebRTCStore = defineStore({
       this.terminateCall()
     },
 
-    handleCallHangUp() {
+    _handleCallHangUp() {
       console.log('*** Received hang up notification from other peer')
       this.hangUpSignal = true
       if (this.callNotifDismiss !== null)
@@ -411,7 +411,7 @@ export const useWebRTCStore = defineStore({
       this.terminateCall()
     },
 
-    handleGetUserMediaError(e: Error) {
+    _handleGetUserMediaError(e: Error) {
       this.waitingForAnswer = false
       console.log('error:', e.name, e.message)
       switch (e.name) {
@@ -430,7 +430,7 @@ export const useWebRTCStore = defineStore({
       this.terminateCall()
     },
 
-    async _AddWaitTone() {
+    async _addWaitTone() {
       const waitTone = document.createElement('audio')
       document.body.appendChild(waitTone)
       waitTone.id = WAIT_AUDIO_ELEMENT_ID
@@ -439,7 +439,7 @@ export const useWebRTCStore = defineStore({
       await waitTone.play()
     },
 
-    _RemoveWaitTone() {
+    _removeWaitTone() {
       const waitTone = document.getElementById(WAIT_AUDIO_ELEMENT_ID) as HTMLAudioElement
       if (waitTone) {
         waitTone.pause()
@@ -460,7 +460,7 @@ export const useWebRTCStore = defineStore({
       }
     },
 
-    ToggleMuteMicrophone() {
+    toggleMuteMicrophone() {
       if (this.localStream) {
         const userAudio = this.localStream.getAudioTracks().find(track => track.kind === 'audio')
         if (userAudio)
@@ -468,7 +468,7 @@ export const useWebRTCStore = defineStore({
       }
     },
 
-    ToggleMuteSpeaker() {
+    toggleMuteSpeaker() {
       const audioEl = document.getElementById(CALL_AUDIO_ELEMENT_ID) as HTMLAudioElement
       audioEl.muted = !audioEl.muted
     },
@@ -505,7 +505,7 @@ export const useWebRTCStore = defineStore({
         document.body.removeChild(remoteAudio)
       }
 
-      this._RemoveWaitTone()
+      this._removeWaitTone()
 
       this.targetUser = null
       this.iceCandidateMsgQueue = []

@@ -35,7 +35,7 @@
         icon="phone_disabled"
         color="red"
         stretch
-        @click="webrtcStore.HangUpCall"
+        @click="webrtcStore.hangUpCall"
       />
 
     </div>

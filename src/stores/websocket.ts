@@ -94,7 +94,7 @@ export const useWebsocketStore = defineStore({
             robotStore.HandleRobotRunningStatus(response as WebsocketResponse<RobotRunningData>)
             break
           case ResponseTypes.WEBRTC_SIGNAL:
-            webrtcStore.HandleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
+            webrtcStore.handleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
             break
           default:
             console.error('WS response did not have a proper type')
