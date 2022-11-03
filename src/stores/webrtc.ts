@@ -463,6 +463,7 @@ export const useWebRTCStore = defineStore({
         }
         remoteAudio.removeAttribute('srcObject')
         remoteAudio.removeAttribute('src')
+        document.body.removeChild(remoteAudio)
       }
 
       this._RemoveWaitTone()
