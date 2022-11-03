@@ -48,6 +48,8 @@
   "create": "ایجاد",
   "bulkCreate": "ایجاد گروهی",
   "change": "تغییر",
+  "pwaUpdated": "محتوای جدید در دسترس است",
+  "refreshScreen": "بارگزاری مجدد",
   "number": "شماره",
   "row": "ردیف",
   "brands": "برندها",

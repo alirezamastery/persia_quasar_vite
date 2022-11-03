@@ -42,29 +42,29 @@
           <q-btn
             color="red"
             id="hangup-button"
-            class="shadow-7"
             size="lg"
             icon="phone_disabled"
             round
+            unelevated
             @click="hangUpCall"
           />
           <template v-if="callConnected">
             <q-btn
               id="mute-others-button"
               size="lg"
-              class="shadow-7"
-              :color="microphoneMuted ? 'black' : 'grey-7'"
+              :color="microphoneMuted ? 'black' : 'cyan-10'"
               :icon="microphoneMuted ? 'mic_off' : 'mic'"
               round
+              unelevated
               @click="muteMicrophone"
             />
             <q-btn
               id="mute-me-button"
               size="lg"
-              class="shadow-7"
-              :color="speakerMuted ? 'black' : 'grey-7'"
+              :color="speakerMuted ? 'black' : 'cyan-10'"
               :icon="speakerMuted ? 'volume_off' : 'volume_up'"
               round
+              unelevated
               @click="muteSpeaker"
             />
           </template>
