@@ -72,6 +72,7 @@ import {notifyMessage} from 'src/modules/notif'
 import {positiveNaturalNumber} from 'src/modules/form-validation'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
+import RouteNames from '../../router/route-names'
 
 
 const router = useRouter()
@@ -119,7 +120,7 @@ function handleTaskId() {
           taskId.value = null
           if (taskState.value === 'SUCCESS') {
             notifyMessage('positive', t('general.alert.operationSuccess'))
-            router.push({name: 'invoiceList'})
+            router.push({name: RouteNames.INVOICE_LIST})
           }
         }
       })

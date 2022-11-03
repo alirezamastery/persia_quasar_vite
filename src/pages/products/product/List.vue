@@ -31,11 +31,12 @@
 import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 const {t} = useI18n()
 const apiRoot = urls.products
-const editRoute = 'productEdit'
-const addRoute = 'productAdd'
+const editRoute = RouteNames.PRODUCT_EDIT
+const addRoute = RouteNames.PRODUCT_ADD
 const columns = [
   {name: 'title', label: t('general.title'), field: 'title', align: 'left'},
   {name: 'dkp', label: t('general.dkp'), field: 'dkp', align: 'left'},

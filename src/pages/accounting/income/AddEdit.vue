@@ -62,12 +62,13 @@ import {IncomeResponse} from 'src/types/network/response/accounting/income'
 import {IncomeForm} from 'src/types/domain/accounting/income'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import QDateInput from 'src/components/QDateInput.vue'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.incomes
-const listViewRoute = 'incomeList'
+const listViewRoute = RouteNames.INCOME_LIST
 const itemTypeTranslate = 'acc.income'
 const form = ref<IncomeForm>({
   amount: '',

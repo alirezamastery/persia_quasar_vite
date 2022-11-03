@@ -81,6 +81,7 @@ import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 import {LoginForm} from 'src/types/domain/auth/login'
 import {StorageKeys} from 'src/utils'
+import RouteNames from 'src/router/route-names'
 
 const q = useQuasar()
 const userStore = useUserStore()
@@ -113,7 +114,7 @@ function handleSubmit() {
       q.localStorage.set(StorageKeys.REFRESH_TOKEN, res.data.refresh)
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + res.data.access
       userStore.login(form.mobile)
-      router.push({name: 'Home'})
+      router.push({name: RouteNames.HOME})
     })
     .catch(err => {
       console.log('axios error:', err)

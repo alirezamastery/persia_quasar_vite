@@ -57,12 +57,13 @@ import {ProductTypeResponse} from 'src/types/network/response/products/product-t
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = route.params.id ? route.params.id.toString() : null
 const apiRoot = urls.productTypes
-const listViewRoute = 'productTypeList'
+const listViewRoute = RouteNames.PRODUCT_TYPE_LIST
 const itemTypeTranslate = 'products.productType'
 const form = ref<ProductTypeAddEditForm>({
   title: null,

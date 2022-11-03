@@ -10,6 +10,7 @@ import {StorageKeys} from 'src/utils'
 import {UserProfileResponse} from 'src/types/network/response/profile/user-profile'
 import {UserProfileDomain} from 'src/types/domain/profile/user-profile'
 import {userProfileResponseToDomain} from 'src/types/converter/profile/user-profile'
+import RouteNames from 'src/router/route-names'
 
 
 const storeID = 'user'
@@ -66,7 +67,7 @@ export const useUserStore = defineStore({
       webrtcStore.$reset()
       webrtcStore.terminateCall()
       this.$reset()
-      routerInstance.push({name: 'Login'})
+      routerInstance.push({name: RouteNames.LOGIN})
     },
     clearLocalStorage(): void {
       try {

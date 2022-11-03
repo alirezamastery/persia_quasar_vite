@@ -38,7 +38,7 @@
         <q-btn
           v-if="isAuthenticated"
           color="red"
-          @click="$router.push({name: 'Logout'})"
+          @click="$router.push({name: RouteNames.LOGOUT})"
           icon="power_settings_new"
           flat
         />
@@ -53,6 +53,7 @@ import {computed} from 'vue'
 import {useQuasar} from 'quasar'
 import useUserStore from 'src/stores/user'
 import {generalState} from 'components/layout/sidebar/composables'
+import RouteNames from 'src/router/route-names'
 import ThemeToggle from './ThemeToggle.vue'
 import RobotStatus from './RobotStatus.vue'
 import VoiceCall from './VoiceCall.vue'

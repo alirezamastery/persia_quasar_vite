@@ -77,12 +77,13 @@ import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import QDateInput from 'src/components/QDateInput.vue'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.costs
-const listViewRoute = 'costList'
+const listViewRoute = RouteNames.COST_LIST
 const itemTypeTranslate = 'acc.cost'
 const form = ref<CostForm>({
   costTypeId: null,

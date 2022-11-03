@@ -42,11 +42,12 @@
 import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
+import {RouteNames} from 'src/router/route-names'
 
 const {t} = useI18n()
 const apiRoot = urls.variants
-const editRoute = 'variantEdit'
-const addRoute = 'variantAdd'
+const editRoute = RouteNames.VARIANT_EDIT
+const addRoute = RouteNames.VARIANT_ADD
 const columns = [
   {name: 'product', label: t('products.product'), field: 'product', align: 'left'},
   {name: 'actualProduct', label: t('products.actualProduct'), field: 'actual_product', align: 'left'},
@@ -77,7 +78,7 @@ const filters = [
 ]
 
 const extraLinks = [
-  {routeName:'variantBulkCreate', title:t('general.bulkCreate')}
+  {routeName: RouteNames.VARIANT_BULK_CREATE, title: t('general.bulkCreate')},
 ]
 
 </script>

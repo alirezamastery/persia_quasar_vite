@@ -56,6 +56,7 @@ import {axiosInstance} from 'boot/axios'
 import urls from 'src/urls'
 import BannerDesktop from './BannerDesktop.vue'
 import UserInfoMobile from './UserInfoMobile.vue'
+import RouteNames from 'src/router/route-names'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -69,7 +70,7 @@ if (userStore.isAuthenticated) {
     })
     .catch(err => {
       console.log(err)
-      router.push({name: 'Login'})
+      router.push({name: RouteNames.LOGIN})
     })
 }
 

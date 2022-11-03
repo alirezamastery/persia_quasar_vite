@@ -68,6 +68,7 @@ import {useElementSize} from '@vueuse/core'
 import useUserStore from 'stores/user'
 import {handleThemeToggle} from 'src/utils'
 import {isMobileLightMode} from 'src/utils'
+import RouteNames from 'src/router/route-names'
 
 const emits = defineEmits(['height-change'])
 const router = useRouter()
@@ -83,7 +84,7 @@ const fullName = computed(() => {
 })
 
 async function handleAvatarClick() {
-  await router.push({name: 'Profile'})
+  await router.push({name: RouteNames.PROFILE})
 }
 
 const userInfoMobile = ref(null)

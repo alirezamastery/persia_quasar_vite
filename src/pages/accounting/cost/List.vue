@@ -44,13 +44,14 @@ import {useI18n} from 'vue-i18n'
 import {useQuasar} from 'quasar'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 const {t} = useI18n()
 const q = useQuasar()
 
 const apiRoot = urls.costs
-const editRoute = 'costEdit'
-const addRoute = 'costAdd'
+const editRoute = RouteNames.COST_EDIT
+const addRoute = RouteNames.COST_ADD
 const columns = [
   {name: 'type', label: t('general.type'), field: 'type', align: 'left', 'auto-width': true},
   {name: 'date', label: t('general.date'), field: 'date', 'auto-width': false},

@@ -124,6 +124,7 @@ import {routerInstance} from 'src/router'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 import {VariantBulkAddForm} from 'src/types/domain/products/variant'
+import RouteNames from 'src/router/route-names'
 
 
 const {t} = useI18n()
@@ -186,7 +187,7 @@ function handleFormSubmit() {
       .then(res => {
         console.log('save success', res.data)
         addBanner(t('general.alert.saveSuccessGeneral', {type: t('products.variant')}))
-        routerInstance.push({name: 'variantList'})
+        routerInstance.push({name: RouteNames.VARIANT_LIST})
       })
       .catch(err => console.log('bulk create error:', err))
 }

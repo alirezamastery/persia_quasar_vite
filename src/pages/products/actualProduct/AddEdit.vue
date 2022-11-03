@@ -69,12 +69,13 @@ import {ActualProductResponse} from 'src/types/network/response/products/actual-
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.actualProducts
-const listViewRoute = 'actualProductList'
+const listViewRoute = RouteNames.ACTUAL_PRODUCTS_LIST
 const itemTypeTranslate = 'products.actualProduct'
 const form = ref<ActualProductAddEditForm>({
   title: '',

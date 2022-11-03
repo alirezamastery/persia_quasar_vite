@@ -39,12 +39,13 @@ import {BrandAddEditForm} from 'src/types/domain/products/brand'
 import {BrandRequestPayload} from 'src/types/network/payload/products/brand'
 import {BrandResponse} from 'src/types/network/response/products/brand'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.brands
-const listViewRoute = 'brandList'
+const listViewRoute = RouteNames.BRAND_LIST
 const itemTypeTranslate = 'products.brand'
 const form = ref<BrandAddEditForm>({
   title: '',

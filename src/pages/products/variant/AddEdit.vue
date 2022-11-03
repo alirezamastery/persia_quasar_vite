@@ -104,12 +104,13 @@ import {VariantResponse} from 'src/types/network/response/products/variant'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.variants
-const listViewRoute = 'variantList'
+const listViewRoute = RouteNames.VARIANT_LIST
 const itemTypeTranslate = 'products.variant'
 const form = ref<VariantAddEditForm>({
   productId: null,

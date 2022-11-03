@@ -39,12 +39,13 @@ import {CostTypePayload} from 'src/types/network/payload/accounting/cost-type'
 import {CostTypeResponse} from 'src/types/network/response/accounting/cost-type'
 import {costTypeFormToPayload, costTypeResponseToForm} from 'src/types/converter/accounting/cost-type'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.costTypes
-const listViewRoute = 'costTypeList'
+const listViewRoute = RouteNames.COST_TYPE_LIST
 const itemTypeTranslate = 'acc.costType'
 const form = ref<CostTypeForm>({
   title: '',

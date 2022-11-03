@@ -74,12 +74,13 @@ import {ProductRequestPayload} from 'src/types/network/payload/products/product'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import AutoComplete from 'src/components/AutoComplete.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.products
-const listViewRoute = 'productList'
+const listViewRoute = RouteNames.PRODUCT_LIST
 const itemTypeTranslate = 'products.product'
 const form = ref<ProductAddEditForm>({
   title: '',

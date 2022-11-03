@@ -20,11 +20,12 @@
 import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
+import RouteNames from 'src/router/route-names'
 
 const {t} = useI18n()
 const apiRoot = urls.brands
-const editRoute = 'brandEdit'
-const addRoute = 'brandAdd'
+const editRoute = RouteNames.BRAND_EDIT
+const addRoute = RouteNames.BRAND_ADD
 const columns = [
   {name: 'title', label: t('general.title'), field: 'title', align: 'left'},
 ]

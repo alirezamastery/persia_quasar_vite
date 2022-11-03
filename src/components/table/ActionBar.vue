@@ -12,7 +12,7 @@
       <q-btn
         color="primary"
         class="q-mr-sm"
-        @click="$router.push({name:link.routeName})"
+        @click="$router.push({name: link.routeName})"
       >
         {{ link.title }}
       </q-btn>

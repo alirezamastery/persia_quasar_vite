@@ -37,12 +37,13 @@ import {notifyMessage} from 'src/modules/notif'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
 import {axiosInstance} from 'src/boot/axios'
+import RouteNames from '../../../router/route-names'
 
 const {t} = useI18n()
 
 const apiRoot = urls.actualProducts
-const editRoute = 'actualProductEdit'
-const addRoute = 'actualProductAdd'
+const editRoute = RouteNames.ACTUAL_PRODUCTS_EDIT
+const addRoute = RouteNames.ACTUAL_PRODUCTS_ADD
 const columns = [
   {name: 'title', label: t('general.title'), field: 'title', align: 'left'},
   {name: 'brand', label: t('products.brand'), field: 'brand', align: 'left'},

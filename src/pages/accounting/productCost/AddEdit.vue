@@ -64,12 +64,13 @@ import {ProductCostResponse} from 'src/types/network/response/accounting/product
 import {ProductCostForm} from 'src/types/domain/accounting/product-cost'
 import QDateInput from 'src/components/QDateInput.vue'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import RouteNames from 'src/router/route-names'
 
 
 const route = useRoute()
 const itemId = getItemIdFromRoute(route)
 const apiRoot = urls.productCosts
-const listViewRoute = 'productCostList'
+const listViewRoute = RouteNames.PRODUCT_COST_LIST
 const itemTypeTranslate = 'acc.productCost'
 const form = ref<ProductCostForm>({
   amount: '',

@@ -1,35 +1,32 @@
 import {RouteRecordRaw} from 'vue-router'
 import * as views from './chunks'
+import {RouteNames} from 'src/router/route-names'
 
 
 const routesObj: { [index: string]: RouteRecordRaw } = {
-  Home: {
+  [RouteNames.HOME]: {
     path: '/',
-    name: 'Home',
-    redirect: {name: 'editVariantStatus'},
+    redirect: {name: RouteNames.EDIT_VARIANT_STATUS},
     meta: {requiresAuth: true},
     // children: [{ path: '', component: () => import('pages/Index.vue') }],
   },
   // #################### Auth ####################
-  Login: {
+  [RouteNames.LOGIN]: {
     path: '/login',
-    name: 'Login',
     component: views.login,
     meta: {
       guest: true,
     },
   },
-  Logout: {
+  [RouteNames.LOGOUT]: {
     path: '/logout',
-    name: 'Logout',
     meta: {
       requiresAuth: true,
     },
     component: views.logout,
   },
-  Profile: {
+  [RouteNames.PROFILE]: {
     path: '/user/profile',
-    name: 'Profile',
     component: views.profile,
     meta: {
       requiresAuth: true,
@@ -37,142 +34,125 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
   },
   // #################### Products App ####################
   // ********** Actual Products **********
-  actualProductList: {
+  [RouteNames.ACTUAL_PRODUCTS_LIST]: {
     path: '/actual-products',
     component: views.actualProductsList,
-    name: 'actualProductList',
     meta: {
       titleI18n: 'general.routes.actualProducts',
       icon: 'view_in_ar',
       requiresAuth: true,
     },
   },
-  actualProductAdd: {
+  [RouteNames.ACTUAL_PRODUCTS_ADD]: {
     path: '/actual-products/add',
     component: views.actualProductAddEdit,
-    name: 'actualProductAdd',
     meta: {
       requiresAuth: true,
     },
   },
-  actualProductEdit: {
+  [RouteNames.ACTUAL_PRODUCTS_EDIT]: {
     path: '/actual-products/edit/:id',
     component: views.actualProductAddEdit,
-    name: 'actualProductEdit',
     props: true,
     meta: {
       requiresAuth: true,
     },
   },
   // ********** Brands **********
-  brandList: {
+  [RouteNames.BRAND_LIST]: {
     path: '/brands',
     component: views.brandList,
-    name: 'brandList',
     meta: {
       titleI18n: 'general.routes.brands',
       icon: 'fab fa-apple',
       requiresAuth: true,
     },
   },
-  brandAdd: {
+  [RouteNames.BRAND_ADD]: {
     path: '/brands/add',
     component: views.brandAddEdit,
-    name: 'brandAdd',
     props: true,
     meta: {
       requiresAuth: true,
     },
   },
-  brandEdit: {
+  [RouteNames.BRAND_EDIT]: {
     path: '/brands/edit/:id',
     component: views.brandAddEdit,
-    name: 'brandEdit',
     props: true,
     meta: {
       requiresAuth: true,
     },
   },
   // ********** Products **********
-  productList: {
+  [RouteNames.PRODUCT_LIST]: {
     path: '/products',
     component: views.productsList,
-    name: 'productList',
     meta: {
       titleI18n: 'general.routes.products',
       icon: 'fas fa-cubes',
       requiresAuth: true,
     },
   },
-  productAdd: {
+  [RouteNames.PRODUCT_ADD]: {
     path: '/products/add',
     component: views.productAddEdit,
-    name: 'productAdd',
     meta: {
       requiresAuth: true,
     },
   },
-  productEdit: {
+  [RouteNames.PRODUCT_EDIT]: {
     path: '/products/edit/:id',
     component: views.productAddEdit,
-    name: 'productEdit',
     props: true,
     meta: {
       requiresAuth: true,
     },
   },
   // ********** Product Types **********
-  productTypeList: {
+  [RouteNames.PRODUCT_TYPE_LIST]: {
     path: '/product-types',
     component: views.productTypesList,
-    name: 'productTypeList',
     meta: {
       titleI18n: 'general.routes.productTypes',
       icon: 'category',
       requiresAuth: true,
     },
   },
-  productTypeAdd: {
+  [RouteNames.PRODUCT_TYPE_ADD]: {
     path: '/product-types/add',
     component: views.productTypeAddEdit,
-    name: 'productTypeAdd',
     meta: {
       requiresAuth: true,
     },
   },
-  productTypeEdit: {
+  [RouteNames.PRODUCT_TYPE_EDIT]: {
     path: '/product-types/edit/:id',
     component: views.productTypeAddEdit,
-    name: 'productTypeEdit',
     props: true,
     meta: {
       requiresAuth: true,
     },
   },
-
-
   // ********** Variants **********
-  variantList: {
+  [RouteNames.VARIANT_LIST]: {
     path: '/variants',
     component: views.variantsList,
-    name: 'variantList',
     meta: {
       titleI18n: 'general.routes.variants',
       icon: 'account_tree',
       requiresAuth: true,
     },
   },
-  variantAdd: {
+  [RouteNames.VARIANT_ADD]: {
     path: '/variants/add',
-    name: 'variantAdd',
     component: views.variantAddEdit,
     meta: {
       requiresAuth: true,
     },
   },
-  variantEdit: {
+  [RouteNames.VARIANT_EDIT]: {
     path: '/variants/edit/:id?',
-    name: 'variantEdit',
     component: views.variantAddEdit,
     props: true,
     meta: {
@@ -181,7 +161,6 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
   },
   variantBulkCreate: {
     path: '/variants/bulk-create',
-    name: 'variantBulkCreate',
     component: views.variantBulkCreate,
     props: true,
     meta: {
@@ -191,9 +170,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
 
   // #################### Robot ####################
   // ********** Variant Status **********
-  editVariantStatus: {
+  [RouteNames.EDIT_VARIANT_STATUS]: {
     path: '/robot/variant-status',
-    name: 'editVariantStatus',
     component: views.editVariantStatus,
     meta: {
       titleI18n: 'general.routes.variantStatus',
@@ -202,9 +180,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Variant Status DKPC**********
-  editVariantStatusDKPC: {
+  [RouteNames.EDIT_VARIANT_STATUS_DKPC]: {
     path: '/robot/variant-status-dkpc',
-    name: 'editVariantStatusDKPC',
     component: views.editVariantStatusDKPC,
     meta: {
       titleI18n: 'general.routes.variantStatusDKPC',
@@ -213,9 +190,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Digi Credentials **********
-  digiCredentials: {
+  [RouteNames.DK_CREDENTIALS]: {
     path: '/robot/digi-creds',
-    name: 'digiCredentials',
     component: views.digiCredentials,
     meta: {
       titleI18n: 'general.routes.digiPassword',
@@ -224,9 +200,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Scrape Invoice **********
-  scrapeInvoice: {
+  [RouteNames.SCRAPE_INVOICE]: {
     path: '/robot/scrape-invoice',
-    name: 'scrapeInvoice',
     component: views.scrapeInvoice,
     meta: {
       titleI18n: 'general.routes.scrapeInvoice',
@@ -235,9 +210,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Inactive Variants **********
-  inactiveVariants: {
+  [RouteNames.INACTIVE_VARIANTS]: {
     path: '/robot/inactive-variants',
-    name: 'inactiveVariants',
     component: views.inactiveVariants,
     meta: {
       titleI18n: 'general.routes.inactiveVariants',
@@ -246,9 +220,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** WebRTC Call **********
-  ContactList: {
+  [RouteNames.CONTACT_LIST]: {
     path: '/call/contact-list',
-    name: 'ContactList',
     component: views.ContactList,
     meta: {
       titleI18n: 'general.call',
@@ -257,9 +230,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Toggle Variant Status **********
-  toggleVariantStatus: {
+  [RouteNames.TOGGLE_VARIANT_STATUS]: {
     path: '/robot/toggle-variant-status',
-    name: 'toggleVariantStatus',
     component: views.ToggleVariantStatus,
     meta: {
       titleI18n: 'general.routes.toggleVariantStatus',
@@ -270,9 +242,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
 
   // #################### Accounting ####################
   // ********** Invoice List **********
-  invoiceList: {
+  [RouteNames.INVOICE_LIST]: {
     path: '/accounting/invoices',
-    name: 'invoiceList',
     component: views.invoiceList,
     meta: {
       titleI18n: 'general.routes.invoices',
@@ -281,18 +252,16 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Invoice Details **********
-  invoiceDetails: {
+  [RouteNames.INVOICE_DETAILS]: {
     path: '/accounting/invoice/:id',
-    name: 'invoiceDetails',
     component: views.invoiceDetails,
     meta: {
       requiresAuth: true,
     },
   },
   // ********** Cost **********
-  costList: {
+  [RouteNames.COST_LIST]: {
     path: '/accounting/costs',
-    name: 'costList',
     component: views.costList,
     meta: {
       titleI18n: 'acc.costs',
@@ -300,17 +269,15 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  costAdd: {
+  [RouteNames.COST_ADD]: {
     path: '/accounting/costs/add',
-    name: 'costAdd',
     component: views.costAddEdit,
     meta: {
       requiresAuth: true,
     },
   },
-  costEdit: {
+  [RouteNames.COST_EDIT]: {
     path: '/accounting/costs/edit/:id?',
-    name: 'costEdit',
     component: views.costAddEdit,
     props: true,
     meta: {
@@ -318,9 +285,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Cost Type **********
-  costTypeList: {
+  [RouteNames.COST_TYPE_LIST]: {
     path: '/accounting/cost-types',
-    name: 'costTypeList',
     component: views.costTypeList,
     meta: {
       titleI18n: 'acc.costTypes',
@@ -328,17 +294,15 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  costTypeAdd: {
+  [RouteNames.COST_TYPE_ADD]: {
     path: '/accounting/costs-types/add',
-    name: 'costTypeAdd',
     component: views.costTypeAddEdit,
     meta: {
       requiresAuth: true,
     },
   },
-  costTypeEdit: {
+  [RouteNames.COST_TYPE_EDIT]: {
     path: '/accounting/costs-types/edit/:id?',
-    name: 'costTypeEdit',
     component: views.costTypeAddEdit,
     props: true,
     meta: {
@@ -346,9 +310,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Income **********
-  incomeList: {
+  [RouteNames.INCOME_LIST]: {
     path: '/accounting/income',
-    name: 'incomeList',
     component: views.incomeList,
     meta: {
       titleI18n: 'acc.incomes',
@@ -356,17 +319,15 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  incomeAdd: {
+  [RouteNames.INCOME_ADD]: {
     path: '/accounting/income/add',
-    name: 'incomeAdd',
     component: views.incomeAddEdit,
     meta: {
       requiresAuth: true,
     },
   },
-  incomeEdit: {
+  [RouteNames.INCOME_EDIT]: {
     path: '/accounting/income/edit/:id?',
-    name: 'incomeEdit',
     component: views.incomeAddEdit,
     props: true,
     meta: {
@@ -374,9 +335,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Product Cost **********
-  productCostList: {
+  [RouteNames.PRODUCT_COST_LIST]: {
     path: '/accounting/product-cost',
-    name: 'productCostList',
     component: views.productCostList,
     meta: {
       titleI18n: 'acc.productCosts',
@@ -384,26 +344,23 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  productCostAdd: {
+  [RouteNames.PRODUCT_COST_ADD]: {
     path: '/accounting/product-cost/add',
-    name: 'productCostAdd',
     component: views.productCostAddEdit,
     meta: {
       requiresAuth: true,
     },
   },
-  productCostEdit: {
+  [RouteNames.PRODUCT_COST_EDIT]: {
     path: '/accounting/product-cost/edit/:id?',
-    name: 'productCostEdit',
     component: views.productCostAddEdit,
     props: true,
     meta: {
       requiresAuth: true,
     },
   },
-  test: {
+  [RouteNames.TEST_PAGE]: {
     path: '/test',
-    name: 'testPage',
     component: views.test,
     props: true,
     meta: {
@@ -411,9 +368,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     },
   },
   // ********** Profit **********
-  profitByDate: {
+  [RouteNames.PROFIT_BY_DATE]: {
     path: '/profit-by-date',
-    name: 'profitByDate',
     component: views.profitByDate,
     props: true,
     meta: {
@@ -422,9 +378,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  profitAllYear: {
+  [RouteNames.PROFIT_ALL_YEAR]: {
     path: '/profit-all-year',
-    name: 'profitAllYear',
     component: views.profitAllYear,
     props: true,
     meta: {
@@ -436,31 +391,22 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
 
   // #################### Other ####################
   // ********** Matrix Rain **********
-  justRain: {
+  [RouteNames.JUST_RAIN]: {
     path: '/just-rain',
     component: views.justRain,
-    name: 'justRain',
   },
 
-  '404': {
+  // Always leave this as last one,
+  // but you can also remove it
+  [RouteNames.ERROR_404]: {
     path: '/:catchAll(.*)*',
     component: () => import('pages/Error404.vue'),
   },
 }
 
-// const routes: RouteRecordRaw[] = [
-//   {
-//     path: '/',
-//     component: () => import('layouts/MainLayout.vue'),
-//     children: [{path: '', component: () => import('pages/IndexPage.vue')}],
-//   },
-//
-//   // Always leave this as last one,
-//   // but you can also remove it
-//   {
-//     path: '/:catchAll(.*)*',
-//     component: () => import('pages/ErrorNotFound.vue'),
-//   },
-// ]
+
+for (const [key, value] of Object.entries(routesObj)) {
+  value.name = key
+}
 
 export default routesObj
