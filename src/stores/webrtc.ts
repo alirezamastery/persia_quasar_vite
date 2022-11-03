@@ -145,6 +145,7 @@ export const useWebRTCStore = defineStore({
     createPeerConnection() {
       const audioElement = document.createElement('audio')
       audioElement.id = CALL_AUDIO_ELEMENT_ID
+      audioElement.autoplay = true // this line is very important!
       document.body.appendChild(audioElement)
 
       this.myPeerConnection = new RTCPeerConnection({
