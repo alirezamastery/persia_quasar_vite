@@ -189,7 +189,7 @@ export const useWebRTCStore = defineStore({
         }
         console.log('_handleICECandidateEvent | payload:', payload)
         const wsStore = useWebsocketStore()
-        wsStore.SendCommandToWS<WebRTCSignalCandidate>({
+        wsStore.sendCommandToWS<WebRTCSignalCandidate>({
           command: 3,
           payload: payload,
         })
@@ -224,7 +224,7 @@ export const useWebRTCStore = defineStore({
             console.log('_handleNegotiationNeededEvent | send offer')
             const userStore = useUserStore()
             const wsStore = useWebsocketStore()
-            wsStore.SendCommandToWS<WebRTCSignalOffer>({
+            wsStore.sendCommandToWS<WebRTCSignalOffer>({
               command: 3,
               payload: {
                 type: WebRTCSignalTypes.OFFER,
@@ -338,7 +338,7 @@ export const useWebRTCStore = defineStore({
             }
             console.log('_acceptCallOffer | answer payload:', payload)
             const wsStore = useWebsocketStore()
-            wsStore.SendCommandToWS<WebRTCSignalAnswer>(payload)
+            wsStore.sendCommandToWS<WebRTCSignalAnswer>(payload)
             this.createCallDialog()
           })
           .catch(this._handleGetUserMediaError)
@@ -363,7 +363,7 @@ export const useWebRTCStore = defineStore({
     rejectCall() {
       console.log('reject call')
       const wsStore = useWebsocketStore()
-      wsStore.SendCommandToWS<WebRTCSignalReject>({
+      wsStore.sendCommandToWS<WebRTCSignalReject>({
         command: 3,
         payload: {
           type: WebRTCSignalTypes.REJECT,
@@ -391,7 +391,7 @@ export const useWebRTCStore = defineStore({
       this.waitingForAnswer = false
       const userStore = useUserStore()
       const wsStore = useWebsocketStore()
-      wsStore.SendCommandToWS<WebRTCSignalHangUp>({
+      wsStore.sendCommandToWS<WebRTCSignalHangUp>({
         command: 3,
         payload: {
           type: WebRTCSignalTypes.HANG_UP,

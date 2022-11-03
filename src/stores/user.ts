@@ -50,7 +50,7 @@ export const useUserStore = defineStore({
       this.user = user
       LocalStorage.set(StorageKeys.USER, user)
       const wsStore = useWebsocketStore()
-      wsStore.HandleTokenUpdate()
+      wsStore.handleTokenUpdate()
     },
     Logout(): void {
       console.log('logout')
@@ -59,7 +59,7 @@ export const useUserStore = defineStore({
       broadcastInstance.sendBroadcastMessage('LOGOUT', {})
       broadcastInstance.teardown()
       const wsStore = useWebsocketStore()
-      wsStore.HandleLogout()
+      wsStore.handleLogout()
       const robotStore = useRobotStore()
       robotStore.$reset()
       const webrtcStore = useWebRTCStore()

@@ -99,7 +99,7 @@ axiosInstance.interceptors.response.use(
               originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access
 
               const wsStore = useWebsocketStore()
-              wsStore.HandleTokenUpdate()
+              wsStore.handleTokenUpdate()
 
               return axiosInstance(originalRequest)
             })

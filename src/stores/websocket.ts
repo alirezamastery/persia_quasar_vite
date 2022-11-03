@@ -54,7 +54,7 @@ export const useWebsocketStore = defineStore({
 
       this.WS.onopen = async () => {
         console.log('%cws opened', 'color: green;')
-        this.HandleWSIsOpen()
+        this._handleWSIsOpen()
       }
 
       this.WS.onerror = err => {
@@ -97,7 +97,7 @@ export const useWebsocketStore = defineStore({
             webrtcStore.handleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
             break
           default:
-            console.error('WS response did not have a proper type')
+            console.error('WS response did not have a proper type | response:', response)
             break
         }
       }
@@ -113,18 +113,18 @@ export const useWebsocketStore = defineStore({
       }
     },
 
-    HandleTokenUpdate() {
+    handleTokenUpdate() {
       const accessToken = LocalStorage.getItem(StorageKeys.ACCESS_TOKEN)
       console.log('Token Updated', accessToken)
       if (accessToken) {
         if (this.WS) {
-          this.HandleLogout()
+          this.handleLogout()
         }
         this.openWS()
       }
     },
 
-    HandleLogout() {
+    handleLogout() {
       if (this.WS) {
         this.WS.onclose = function () {
           console.log('ws close after logout')
@@ -134,10 +134,10 @@ export const useWebsocketStore = defineStore({
       this.$reset()
     },
 
-    HandleWSIsOpen() {
+    _handleWSIsOpen() {
       this.isConnected = true
 
-      this.SendCommandToWS({
+      this.sendCommandToWS({
         command: WebsocketCommands.FETCH, // robot data fetch command
       })
 
@@ -146,20 +146,20 @@ export const useWebsocketStore = defineStore({
         queueCopy.push(msg)
       }
       for (const msg of queueCopy) {
-        this.sendToWS(msg)
+        this._sendToWS(msg)
         const index = this.requestQueue.indexOf(msg)
         this.requestQueue.splice(index, 1)
       }
     },
 
-    SendCommandToWS<Payload>(req: WebsocketRequest<Payload>) {
+    sendCommandToWS<Payload>(req: WebsocketRequest<Payload>) {
       if (this.isConnected)
-        this.sendToWS(req)
+        this._sendToWS(req)
       else
         this.requestQueue.push(req)
     },
 
-    sendToWS<Payload>(req: WebsocketRequest<Payload>) {
+    _sendToWS<Payload>(req: WebsocketRequest<Payload>) {
       const msg: WebsocketMessage = {
         command: req.command,
         req_key: uid(),

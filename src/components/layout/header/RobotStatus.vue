@@ -34,7 +34,7 @@ const robotIsOn = computed(() => robotStore.robotIsOn)
 
 function updateRobotStatus(event: boolean) {
   console.log('event:', event)
-  wsStore.SendCommandToWS<ToggleRobot>({
+  wsStore.sendCommandToWS<ToggleRobot>({
     command: WebsocketCommands.TOGGLE_ROBOT,
     payload: {
       robot_is_on: event,
