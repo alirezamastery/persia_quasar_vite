@@ -3,7 +3,6 @@
     class="q-ma-md q-pa-sm"
   >
     <div class="row">
-      <!--      <q-img :src="imgUrl" height="50" width="50"/>-->
       <q-list
         class="col-xs-12 col-md-6 col-lg-3"
         bordered
@@ -47,8 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, watch} from 'vue'
-import {useRouter} from 'vue-router'
+import {ref, computed} from 'vue'
 import useUserStore from 'stores/user'
 import useWebRTCStore from 'stores/webrtc'
 import {axiosInstance} from 'boot/axios'
@@ -57,8 +55,6 @@ import {userResponseToDomain} from 'src/types/converter/profile/user-profile'
 import {UserResponse} from 'src/types/network/response/auth/user'
 import {UserDomain} from 'src/types/domain/auth/user'
 
-
-const router = useRouter()
 const webrtcStore = useWebRTCStore()
 const userStore = useUserStore()
 
@@ -69,13 +65,6 @@ const canCall = computed(() => {
   return !webrtcStore.waitingForAnswer
     && !webrtcStore.hasCallInvite
     && !webrtcStore.callConnected
-})
-const waitingForAnswer = computed(() => webrtcStore.waitingForAnswer)
-
-watch(waitingForAnswer, () => router.push({name: 'CallWaiting'}))
-watch(() => webrtcStore.callConnected, (newVal) => {
-  if (newVal)
-    router.push({name: 'CallConnected'})
 })
 
 function inviteToCall(targetUser: UserDomain) {
@@ -93,5 +82,4 @@ axiosInstance.get<UserResponse[]>(urls.users)
     console.log('users domain:', usersDomain)
     users.value = usersDomain
   })
-
 </script>

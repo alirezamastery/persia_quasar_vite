@@ -1,5 +1,5 @@
 <template>
-  <q-slide-transition>
+  <q-slide-transition duration="150">
     <div
       v-if="showCallBanner"
       class="q-pa-none flex full-width bg-green"
@@ -10,6 +10,7 @@
         class="text-black"
         clickable
         @click="handleBannerClick"
+        style="flex: 1;"
       >
         <q-item-section avatar>
           <q-avatar>
@@ -30,8 +31,6 @@
         </q-item-section>
       </q-item>
 
-      <q-space/>
-
       <q-btn
         icon="phone_disabled"
         color="red"
@@ -47,6 +46,7 @@
 import useWebRTCStore from 'stores/webrtc'
 import {computed} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import webrtc from 'stores/webrtc'
 
 const route = useRoute()
 const router = useRouter()
@@ -64,14 +64,10 @@ const targetUserFullName = computed(() => {
 const callConnected = computed(() => webrtcStore.callConnected)
 const showCallBanner = computed(() => {
   return (callConnected.value || webrtcStore.waitingForAnswer)
-    && !hideCallBannerRoutes.includes(String(route.name))
 })
 
 function handleBannerClick() {
-  if (webrtcStore.waitingForAnswer)
-    router.push({name: 'CallWaiting'})
-  else if (webrtcStore.callConnected)
-    router.push({name: 'CallConnected'})
+  webrtcStore.createCallDialog()
 }
 </script>
 

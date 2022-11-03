@@ -36,8 +36,6 @@ export const ToggleVariantStatus = () => import('pages/products/variant/ToggleVa
 
 // Voice Call
 export const ContactList = () => import('pages/voice_call/ContactList.vue')
-export const CallWaiting = () => import('pages/voice_call/CallWaiting.vue')
-export const CallConnected = () => import('pages/voice_call/CallConnected.vue')
 
 
 // Accounting

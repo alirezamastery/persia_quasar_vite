@@ -17,20 +17,27 @@
   }
 }
 
-.call-container-mobile {
+.call-dialog-main-card {
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: 1024px) {
+    width: 1024px;
+  }
+}
+
+.call-avatar-container {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  flex: 1;
 }
 
-.callee-image {
+.call-actions {
   position: absolute;
-  right: 0;
-  top: 0;
   bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
 }
 
 .mobile-img {
@@ -38,29 +45,10 @@
   border-radius: 50%;
 }
 
-.call-actions-container {
-  background-color: rgba(62, 62, 62, 0.2);
-
-  &.call-actions-mobile {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
-.callee-info-container {
-  background-color: rgba(62, 62, 62, 0.2);
-
-  &.callee-info-mobile {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-  }
+.call-info-container {
+  background-color: rgba(62, 62, 62, 0.4);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }

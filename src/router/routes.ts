@@ -256,24 +256,6 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  CallWaiting: {
-    path: '/call/waiting',
-    name: 'CallWaiting',
-    component: views.CallWaiting,
-    meta: {
-      titleI18n: 'general.call',
-      requiresAuth: true,
-    },
-  },
-  CallConnected: {
-    path: '/call/connected',
-    name: 'CallConnected',
-    component: views.CallConnected,
-    meta: {
-      titleI18n: 'general.call',
-      requiresAuth: true,
-    },
-  },
   // ********** Toggle Variant Status **********
   toggleVariantStatus: {
     path: '/robot/toggle-variant-status',

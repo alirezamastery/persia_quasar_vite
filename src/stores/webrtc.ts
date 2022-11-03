@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Notify, QNotifyUpdateOptions} from 'quasar'
+import {Notify, Dialog, QNotifyUpdateOptions, DialogChainObject} from 'quasar'
 import useWebsocketStore from 'stores/websocket'
 import useUserStore from 'stores/user'
 import {notifyMessage} from 'src/modules/notif'
@@ -17,6 +17,7 @@ import {WebsocketRequest} from 'src/types/websocket/request'
 import {WebsocketResponse} from 'src/types/websocket/response'
 import {UserDomain} from 'src/types/domain/auth/user'
 import waitToneUrl from 'src/assets/sound/call-waiting.mp3'
+import CallDialog from 'src/components/dialog/call/CallDialog.vue'
 
 
 export interface WebrtcStoreState {
@@ -34,6 +35,8 @@ export interface WebrtcStoreState {
   callNotifDismiss: Nullable<(props?: QNotifyUpdateOptions) => void>
   callOfferData: Nullable<WebRTCSignalOffer>
   iceCandidateMsgQueue: RTCIceCandidate[]
+  callDialog: Nullable<DialogChainObject>
+  localStream: Nullable<MediaStream>
 }
 
 export const CALL_AUDIO_ELEMENT_ID = 'voice-call-audio'
@@ -55,6 +58,8 @@ export const useWebRTCStore = defineStore({
     callNotifDismiss: null,
     callOfferData: null,
     iceCandidateMsgQueue: [],
+    callDialog: null,
+    localStream: null,
   } as WebrtcStoreState),
   getters: {},
   actions: {
@@ -95,12 +100,17 @@ export const useWebRTCStore = defineStore({
         navigator.mediaDevices.getUserMedia(this.mediaConstraints)
             .then(async (localStream) => {
               console.log(`InviteToCall | got user media: ${localStream}`)
+              this.localStream = localStream
               localStream.getTracks().forEach(track => {
                 console.log('InviteToCall | track of stream:', track)
                 if (this.myPeerConnection === null) throw Error('myPeerConnection is null')
                 this.myPeerConnection.addTrack(track, localStream)
               })
+
               await this._AddWaitTone()
+
+              this.createCallDialog()
+
             })
             .catch(this.handleGetUserMediaError)
       }
@@ -299,6 +309,7 @@ export const useWebRTCStore = defineStore({
           .then((stream) => {
             console.log('handleVideoOfferMsg | got user stream:', stream)
             localStream = stream
+            this.localStream = stream
 
             localStream.getTracks().forEach(track => {
               console.log('track of stream:', track)
@@ -328,6 +339,7 @@ export const useWebRTCStore = defineStore({
             console.log('AcceptCallOffer | answer payload:', payload)
             const wsStore = useWebsocketStore()
             wsStore.SendCommandToWS<WebRTCSignalAnswer>(payload)
+            this.createCallDialog()
           })
           .catch(this.handleGetUserMediaError)
 
@@ -372,7 +384,6 @@ export const useWebRTCStore = defineStore({
           'warning',
           t('general.callRejected'),
       )
-      this._RemoveWaitTone()
     },
 
     HangUpCall() {
@@ -423,7 +434,6 @@ export const useWebRTCStore = defineStore({
       const waitTone = document.createElement('audio')
       document.body.appendChild(waitTone)
       waitTone.id = WAIT_AUDIO_ELEMENT_ID
-      console.log('mp3 tone src:', waitToneUrl)
       waitTone.src = waitToneUrl
       waitTone.loop = true
       await waitTone.play()
@@ -437,10 +447,38 @@ export const useWebRTCStore = defineStore({
       }
     },
 
+    createCallDialog() {
+      this.callDialog = Dialog.create({
+        component: CallDialog,
+      })
+    },
+
+    closeCallDialog() {
+      if (this.callDialog) {
+        this.callDialog.hide()
+        this.callDialog = null
+      }
+    },
+
+    ToggleMuteMicrophone() {
+      if (this.localStream) {
+        const userAudio = this.localStream.getAudioTracks().find(track => track.kind === 'audio')
+        if (userAudio)
+          userAudio.enabled = !userAudio.enabled
+      }
+    },
+
+    ToggleMuteSpeaker() {
+      const audioEl = document.getElementById(CALL_AUDIO_ELEMENT_ID) as HTMLAudioElement
+      audioEl.muted = !audioEl.muted
+    },
+
     terminateCall() {
       console.log('terminateCall | myPeerConnection:', this.myPeerConnection)
-      this.hasCallInvite = false
       this.callConnected = false
+      this.hasCallInvite = false
+
+      this.closeCallDialog()
 
       if (this.myPeerConnection) {
         this.myPeerConnection.ontrack = null
