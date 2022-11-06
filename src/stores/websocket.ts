@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {LocalStorage, uid} from 'quasar'
+import {LocalStorage, Notify, uid} from 'quasar'
 import useRobotStore from './robot'
 import useWebRTCStore from 'stores/webrtc'
 import {StorageKeys} from 'src/utils'
@@ -8,10 +8,12 @@ import {
   WebsocketResponse,
   FetchData,
   RobotRunningData,
-  ToggleRobotData,
+  ToggleRobotData, UserStatsData,
 } from 'src/types/websocket/response'
 import {WebsocketCommands, WebsocketRequest} from 'src/types/websocket/request'
 import {WebRTCSignal} from 'src/types/websocket/payloads/WebRTCSignal'
+import {i18n} from 'boot/i18n'
+import useUserStore from 'stores/user'
 
 
 export interface WebsocketMessage {
@@ -96,6 +98,9 @@ export const useWebsocketStore = defineStore({
           case ResponseTypes.WEBRTC_SIGNAL:
             webrtcStore.handleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
             break
+          case ResponseTypes.USER_STATUS:
+            this._updateUserStatus(response as WebsocketResponse<UserStatsData>)
+            break
           default:
             console.error('WS response did not have a proper type | response:', response)
             break
@@ -168,6 +173,22 @@ export const useWebsocketStore = defineStore({
       if (this.WS === null) throw Error('Websocket instance is null')
       this.WS.send(JSON.stringify(msg))
       this.sentMessages[msg['req_key']] = msg
+    },
+
+    _updateUserStatus(response: WebsocketResponse<UserStatsData>) {
+      const {t} = i18n.global
+      const userStore = useUserStore()
+      if (!response.data.is_online || response.data.user.mobile === userStore.mobile) return
+      const profile = response.data.user.profile
+      const fullName = `${profile.first_name} ${profile.last_name}`
+      Notify.create({
+        position: 'bottom-right',
+        message: t('general.userIsOnline', {user: fullName}),
+        avatar: profile.avatar || undefined,
+        actions: [
+          {label: '', icon: 'close', color: 'white', round: true},
+        ],
+      })
     },
 
   },

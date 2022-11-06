@@ -1,9 +1,13 @@
+import {UserResponse} from 'src/types/network/response/auth/user'
+
+
 export enum ResponseTypes {
   ERROR = 'error',
   FETCH_RESPONSE = 'fetch_response',
   TOGGLE_ROBOT = 'toggle_robot',
   ROBOT_RUNNING = 'robot_running',
   WEBRTC_SIGNAL = 'webrtc_signal',
+  USER_STATUS = 'user_status',
 }
 
 export interface WebsocketResponse<DataType> {
@@ -23,4 +27,9 @@ export interface ToggleRobotData {
 
 export interface RobotRunningData {
   robot_running: boolean
+}
+
+export interface UserStatsData {
+  user: UserResponse
+  is_online: boolean
 }

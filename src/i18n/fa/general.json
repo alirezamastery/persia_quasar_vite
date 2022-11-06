@@ -49,6 +49,7 @@
   "bulkCreate": "ایجاد گروهی",
   "change": "تغییر",
   "pwaUpdated": "محتوای جدید در دسترس است",
+  "userIsOnline": "{user} آنلاین شد",
   "refreshScreen": "بارگزاری مجدد",
   "number": "شماره",
   "row": "ردیف",
