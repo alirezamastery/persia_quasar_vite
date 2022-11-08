@@ -416,9 +416,14 @@ export const useWebRTCStore = defineStore({
     _handleCallHangUp() {
       console.log('*** Received hang up notification from other peer')
       this.hangUpSignal = true
-      if (this.callNotifDismiss !== null)
-        this.callNotifDismiss()
       this.terminateCall()
+    },
+
+    _dismissCallNotif() {
+      if (this.callNotifDismiss !== null) {
+        this.callNotifDismiss()
+        this.callNotifDismiss = null
+      }
     },
 
     _handleGetUserMediaError(e: Error) {
@@ -489,6 +494,7 @@ export const useWebRTCStore = defineStore({
       this.hasCallInvite = false
 
       this.closeCallDialog()
+      this._dismissCallNotif()
 
       if (this.myPeerConnection) {
         this.myPeerConnection.ontrack = null
