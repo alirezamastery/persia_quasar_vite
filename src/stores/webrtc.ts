@@ -37,10 +37,14 @@ export interface WebrtcStoreState {
   iceCandidateMsgQueue: RTCIceCandidate[]
   callDialog: Nullable<DialogChainObject>
   localStream: Nullable<MediaStream>
+  callStartTime: Nullable<Date>
+  callDuration: string
+  durationCheckInterval: Nullable<NodeJS.Timeout>
 }
 
 export const CALL_AUDIO_ELEMENT_ID = 'voice-call-audio'
 export const WAIT_AUDIO_ELEMENT_ID = 'waiting-tone-audio'
+const _ONE_HOUR_IN_MS = 60 * 60 * 1000
 
 export const useWebRTCStore = defineStore({
   id: 'webrtc',
@@ -60,6 +64,9 @@ export const useWebRTCStore = defineStore({
     iceCandidateMsgQueue: [],
     callDialog: null,
     localStream: null,
+    callStartTime: null,
+    callDuration: '00:00',
+    durationCheckInterval: null,
   } as WebrtcStoreState),
   getters: {},
   actions: {
@@ -346,6 +353,7 @@ export const useWebRTCStore = defineStore({
             })
 
             this.createCallDialog()
+            this._startDurationCalc()
           })
           .catch(this._handleGetUserMediaError)
 
@@ -364,6 +372,7 @@ export const useWebRTCStore = defineStore({
       this.callConnected = true
       this.waitingForAnswer = false
       this._removeWaitTone()
+      this._startDurationCalc()
     },
 
     rejectCall() {
@@ -445,6 +454,25 @@ export const useWebRTCStore = defineStore({
       this.terminateCall()
     },
 
+    _startDurationCalc() {
+      this.callStartTime = new Date()
+      this.durationCheckInterval = setInterval(() => {
+        const now = new Date()
+        const diff = Number(now) - Number(this.callStartTime!)
+        const sliceStart = diff > _ONE_HOUR_IN_MS ? 11 : 14
+        this.callDuration = new Date(diff).toISOString().slice(sliceStart, -5)
+      }, 1000)
+    },
+
+    _stopDurationCalc() {
+      if (this.durationCheckInterval !== null) {
+        clearInterval(this.durationCheckInterval)
+        this.durationCheckInterval = null
+        this.callStartTime = null
+        this.callDuration = '00:00'
+      }
+    },
+
     async _addWaitTone() {
       const waitTone = document.createElement('audio')
       document.body.appendChild(waitTone)
@@ -495,6 +523,7 @@ export const useWebRTCStore = defineStore({
 
       this.closeCallDialog()
       this._dismissCallNotif()
+      this._stopDurationCalc()
 
       if (this.myPeerConnection) {
         this.myPeerConnection.ontrack = null

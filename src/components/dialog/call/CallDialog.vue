@@ -30,6 +30,9 @@
           <div class="text-h4">
             {{ targetUserFullName }}
           </div>
+          <div v-show="callConnected" class="q-mt-md text-h6">
+            {{ callDuration }}
+          </div>
         </div>
       </div>
 
@@ -100,6 +103,7 @@ const targetUserFullName = computed(() => {
   const lastName = targetUser.value.profile.lastName
   return firstName + ' ' + lastName
 })
+const callDuration = computed(() => webrtcStore.callDuration)
 
 showDialog.value = canDisplayDialog.value
 

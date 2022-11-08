@@ -29,6 +29,14 @@
             {{ targetUserFullName }}
           </q-item-label>
         </q-item-section>
+
+        <div
+          class="q-px-md text-black flex-center"
+          style="display: flex"
+        >
+          {{ callDuration }}
+        </div>
+
       </q-item>
 
       <q-btn
@@ -58,6 +66,7 @@ const callConnected = computed(() => webrtcStore.callConnected)
 const showCallBanner = computed(() => {
   return (callConnected.value || webrtcStore.waitingForAnswer)
 })
+const callDuration = computed(() => webrtcStore.callDuration)
 
 function handleBannerClick() {
   webrtcStore.createCallDialog()
