@@ -13,7 +13,7 @@ import {
   WebRTCSignalReject,
   WebRTCSignalTypes,
 } from 'src/types/websocket/payloads/WebRTCSignal'
-import {WebsocketRequest} from 'src/types/websocket/request'
+import {WebsocketCommands, WebsocketRequest} from 'src/types/websocket/request'
 import {WebsocketResponse} from 'src/types/websocket/response'
 import {UserDomain} from 'src/types/domain/auth/user'
 import waitToneUrl from 'src/assets/sound/call-waiting.mp3'
@@ -339,6 +339,10 @@ export const useWebRTCStore = defineStore({
             console.log('_acceptCallOffer | answer payload:', payload)
             const wsStore = useWebsocketStore()
             wsStore.sendCommandToWS<WebRTCSignalAnswer>(payload)
+            wsStore.sendCommandToWS({
+              command: WebsocketCommands.WEBRTC_ANSWERED,
+            })
+
             this.createCallDialog()
           })
           .catch(this._handleGetUserMediaError)
@@ -369,6 +373,10 @@ export const useWebRTCStore = defineStore({
           type: WebRTCSignalTypes.REJECT,
           target: this.callOfferData!.caller.mobile,
         },
+      })
+
+      wsStore.sendCommandToWS({
+        command: WebsocketCommands.WEBRTC_ANSWERED,
       })
 
       this.callOfferData = null
@@ -511,8 +519,13 @@ export const useWebRTCStore = defineStore({
       this.iceCandidateMsgQueue = []
       this.callOfferData = null
     },
-  },
 
+    handleCallAnsweredOnOtherDevice() {
+      if (this.callConnected) return
+      this.terminateCall()
+    },
+
+  },
 })
 
 export default useWebRTCStore

@@ -7,6 +7,7 @@ export enum ResponseTypes {
   TOGGLE_ROBOT = 'toggle_robot',
   ROBOT_RUNNING = 'robot_running',
   WEBRTC_SIGNAL = 'webrtc_signal',
+  WEBRTC_ANSWERED = 'webrtc_answered',
   USER_STATUS = 'user_status',
 }
 

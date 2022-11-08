@@ -72,7 +72,10 @@ export const useWebsocketStore = defineStore({
         console.info('%c onmessage - data:', 'color: yellow;', msgData)
 
         // If the response was not for a command sent from this device, do nothing
-        const passThroughMsgTypes = [ResponseTypes.TOGGLE_ROBOT]
+        const passThroughMsgTypes = [
+          ResponseTypes.TOGGLE_ROBOT,
+          ResponseTypes.WEBRTC_ANSWERED,
+        ]
         if (
             !!reqKey
             && !passThroughMsgTypes.includes(responseType)
@@ -97,6 +100,9 @@ export const useWebsocketStore = defineStore({
             break
           case ResponseTypes.WEBRTC_SIGNAL:
             webrtcStore.handleWebRTCSignal(response as WebsocketResponse<WebRTCSignal>)
+            break
+          case ResponseTypes.WEBRTC_ANSWERED:
+            webrtcStore.handleCallAnsweredOnOtherDevice()
             break
           case ResponseTypes.USER_STATUS:
             this._updateUserStatus(response as WebsocketResponse<UserStatsData>)
