@@ -117,6 +117,8 @@ export const useWebRTCStore = defineStore({
     },
 
     _handleCallInvite(response: WebsocketResponse<WebRTCSignalOffer>) {
+      if (this.callConnected || this.waitingForAnswer) return
+
       this.hasCallInvite = true
       this.targetUser = response.data.caller
       this.callOfferData = response.data
