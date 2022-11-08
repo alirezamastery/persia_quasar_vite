@@ -10,6 +10,7 @@
         class="text-black"
         clickable
         @click="handleBannerClick"
+        dense
         style="flex: 1;"
       >
         <q-item-section avatar>

@@ -479,6 +479,7 @@ export const useWebRTCStore = defineStore({
       waitTone.id = WAIT_AUDIO_ELEMENT_ID
       waitTone.src = waitToneUrl
       waitTone.loop = true
+      waitTone.volume = 0.2
       await waitTone.play()
     },
 
