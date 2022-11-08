@@ -9,9 +9,6 @@
       <q-item-label style="white-space: nowrap">
         {{ dateDisplay }}
       </q-item-label>
-<!--      <q-item-label>-->
-<!--        {{ timeDisplay }}-->
-<!--      </q-item-label>-->
     </q-item-section>
     <div class="q-px-sm flex items-center">
       <q-icon name="fa fa-calendar-alt" size="xs"/>
@@ -20,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue'
+import {onBeforeUnmount, onMounted, ref} from 'vue'
 
 const date = new Date()
 const dateDisplay = Intl.DateTimeFormat(
@@ -33,13 +30,23 @@ const time = Intl.DateTimeFormat(
   {hour: 'numeric', minute: '2-digit'},
 ).format(date)
 const timeDisplay = ref(time)
+
+let intervalHandle: Nullable<NodeJS.Timeout> = null
+
 onMounted(() => {
-  setInterval(() => {
+  intervalHandle = setInterval(() => {
     timeDisplay.value = Intl.DateTimeFormat(
       'fa-IR-u-nu-latn',
       {hour: 'numeric', minute: '2-digit'},
     ).format(new Date())
   }, 60000)
+})
+
+onBeforeUnmount(() => {
+  if (intervalHandle !== null) {
+    clearInterval(intervalHandle)
+    intervalHandle = null
+  }
 })
 </script>
 
