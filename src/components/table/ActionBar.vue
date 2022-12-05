@@ -29,28 +29,18 @@
   </q-toolbar>
 </template>
 
-<script>
-export default {
-  name: 'ActionBar',
-  props: {
-    title: {
-      type: String,
-      required: false,
-    },
-    addRoute: {
-      type: String,
-      required: false,
-      default: null,
-    },
-    extraLinks: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-  },
+<script setup lang="ts">
+import {TableExtraLink} from 'components/table/types'
+
+export interface TableActionBarProps {
+  title: Nullable<string>
+  addRoute: Nullable<string>
+  extraLinks: TableExtraLink[]
 }
+
+withDefaults(defineProps<TableActionBarProps>(), {
+  title: '',
+  addRoute: null,
+  extraLinks: () => ([]),
+})
 </script>
-
-<style scoped>
-
-</style>

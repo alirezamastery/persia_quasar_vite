@@ -37,7 +37,7 @@
                 v-for="column in columns"
                 :key="column.name"
                 :props="props"
-                :auto-width="column['auto-width']"
+                :auto-width="column.autoWidth"
               >
                 <slot
                   :name="`col-${column.name}`"
@@ -93,32 +93,51 @@
   </div>
 </template>
 
-
-<script setup>
+<script setup lang="ts">
 import {ref, watch, computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {cloneDeep} from 'lodash'
 import Pagination from './Pagination.vue'
-import DisplayFilters from './filters/DisplayFilters.vue'
+import DisplayFilters from './filter/DisplayFilters.vue'
 import Header from './ActionBar.vue'
 import TableHeader from './TableHeader.vue'
 import {axiosInstance} from 'src/boot/axios'
+import {TableColumn, TableExtraLink, TableFilter} from 'components/table/types'
+
+export interface TablePagination {
+  rowsNumber: number
+  page?: number
+  rowsPerPage?: number
+  sortBy?: string
+  descending?: boolean
+}
+
+export interface TableProps {
+  title: string
+  apiRoot: string
+  columns?: TableColumn[]
+  editRoute?: Nullable<string>
+  addRoute?: Nullable<string>
+  extraLinks?: TableExtraLink[]
+  itemKey?: string
+  denseRows?: boolean
+  filters?: TableFilter[]
+  hideSearch?: boolean
+  searchWord?: string
+}
+
+const props = withDefaults(defineProps<TableProps>(), {
+  editRoute: null,
+  addRoute: null,
+  extraLinks: () => [],
+  itemKey: 'id',
+  denseRows: true,
+  filters: () => [],
+  hideSearch: false,
+  searchWord: 'search',
+})
 
 const {t} = useI18n()
-
-const props = defineProps({
-  title: {type: String, required: true},
-  apiRoot: {type: String, required: true},
-  columns: {type: Array, required: true},
-  editRoute: {type: String, required: false, default: null},
-  addRoute: {type: String, required: false, default: null},
-  extraLinks: {type: Array, required: false, default: () => ([])},
-  itemKey: {type: String, required: false, default: 'id'},
-  denseRows: {type: Boolean, required: false, default: true},
-  filters: {type: Array, required: false, default: () => ([])},
-  hideSearch: {type: Boolean, required: false, default: false},
-  searchWord: {type: String, required: false, default: 'search'},
-})
 
 const loading = ref(false)
 const pageSize = ref(20)
@@ -126,7 +145,7 @@ const pageSizeOptions = ref([10, 20, 50, 100])
 const page = ref(1)
 const queries = ref('')
 const filter = ref('')
-const pagination = ref({
+const pagination = ref<TablePagination>({
   rowsNumber: 10,
 })
 const data = ref({
@@ -140,11 +159,20 @@ const searchPhrase = ref('')
 const sideFilterQuery = ref('')
 
 const finalColumns = computed(() => {
-  const columns = cloneDeep(props.columns)
-  if (props.editRoute) {
-    columns.push({name: 'edit', label: t('general.tools'), field: 'id', align: 'left'})
+  const editCol: TableColumn = {
+    name: 'edit',
+    label: t('general.tools'),
+    field: 'id',
+    align: 'left',
   }
-  return columns
+  if (props.columns !== undefined) {
+    const columns = cloneDeep(props.columns)
+    if (props.editRoute) {
+      columns.push(editCol)
+    }
+    return columns
+  }
+  return [editCol]
 })
 
 watch(pageSize, () => {
@@ -169,7 +197,7 @@ function constructQuery() {
   return query
 }
 
-function handlePageSelect(event) {
+function handlePageSelect(event: number) {
   console.log('handlePageSelect', event)
   page.value = event
   fetchData()
@@ -190,7 +218,7 @@ function fetchData() {
     .finally(() => loading.value = false)
 }
 
-function handleRequest(props) {
+function handleRequest(props: any) {
   console.log('handleRequest', props)
   const {page: tablePage, rowsPerPage, sortBy, descending} = props.pagination
   console.log(tablePage, rowsPerPage, sortBy, descending)
@@ -210,7 +238,7 @@ function handleRequest(props) {
   fetchData()
 }
 
-function handleFilterChange(event) {
+function handleFilterChange(event: string) {
   console.log('handleFilterChange', event)
   sideFilterQuery.value = event
   page.value = 1

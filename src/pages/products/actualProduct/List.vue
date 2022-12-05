@@ -37,7 +37,7 @@ import {notifyMessage} from 'src/modules/notif'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
 import {axiosInstance} from 'src/boot/axios'
-import RouteNames from '../../../router/route-names'
+import RouteNames from 'src/router/route-names'
 
 const {t} = useI18n()
 

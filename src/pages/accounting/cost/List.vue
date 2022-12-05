@@ -45,6 +45,7 @@ import {useQuasar} from 'quasar'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
 import RouteNames from 'src/router/route-names'
+import {TableColumn, TableFilter} from 'components/table/types'
 
 const {t} = useI18n()
 const q = useQuasar()
@@ -52,14 +53,14 @@ const q = useQuasar()
 const apiRoot = urls.costs
 const editRoute = RouteNames.COST_EDIT
 const addRoute = RouteNames.COST_ADD
-const columns = [
-  {name: 'type', label: t('general.type'), field: 'type', align: 'left', 'auto-width': true},
-  {name: 'date', label: t('general.date'), field: 'date', 'auto-width': false},
-  {name: 'amount', label: t('general.amountToman'), field: 'amount', sortable: true, 'auto-width': true},
+const columns: TableColumn[] = [
+  {name: 'type', label: t('general.type'), field: 'type', align: 'left', autoWidth: true},
+  {name: 'date', label: t('general.date'), field: 'date', autoWidth: false},
+  {name: 'amount', label: t('general.amountToman'), field: 'amount', sortable: true, autoWidth: true},
   {name: 'description', label: t('general.description'), field: 'description', align: 'center'},
 ]
 
-const filters = [
+const filters: TableFilter[] = [
   {
     type: 'date',
     queryParam: 'date_gte',

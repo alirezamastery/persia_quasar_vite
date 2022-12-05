@@ -34,6 +34,7 @@ import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
 import RouteNames from 'src/router/route-names'
+import {TableColumn, TableFilter} from 'components/table/types'
 
 const q = useQuasar()
 const {t} = useI18n()
@@ -41,12 +42,12 @@ const {t} = useI18n()
 const apiRoot = urls.incomes
 const editRoute = RouteNames.INCOME_EDIT
 const addRoute = RouteNames.INCOME_ADD
-const columns = [
+const columns: TableColumn[] = [
   {name: 'amount', label: t('general.amountToman'), field: 'amount', align: 'left'},
   {name: 'date', label: t('general.date'), field: 'date'},
 ]
 
-const filters = [
+const filters: TableFilter[] = [
   {
     type: 'date',
     queryParam: 'date_gte',

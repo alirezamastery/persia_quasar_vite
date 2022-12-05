@@ -20,17 +20,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TableHeader',
-  data() {
-    return {
-      searchPhrase: '',
-    }
-  },
-}
+<script setup lang="ts">
+import {ref} from 'vue'
+
+const searchPhrase = ref('')
 </script>
-
-<style scoped>
-
-</style>

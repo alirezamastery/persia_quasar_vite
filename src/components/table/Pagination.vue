@@ -33,32 +33,34 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, computed, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useQuasar} from 'quasar'
+
+export interface TablePaginationProps {
+  page: number
+  pageSize: number
+  pageCount: number
+  totalCount:number
+  pageSizeOptions?: number[]
+  tableLoading?: boolean
+  totalVisible? : number
+}
+
+const props = withDefaults(defineProps<TablePaginationProps>(),{
+  pageSizeOptions: () => [10, 20, 50, 100],
+  tableLoading: false,
+  totalVisible: 7
+})
 
 const emits = defineEmits(['page-select', 'page-size-select'])
 // const emits = defineEmits<{
 //   (e: 'page-select', value: number): void
 //   (e: 'page-size-select', value: number): void
 // }>()
-const props = defineProps({
-  page: {type: Number, required: true},
-  pageSize: {type: Number, required: true},
-  pageSizeOptions: {
-    type: Array,
-    required: false,
-    default: () => [10, 20, 50, 100],
-  },
-  tableLoading: {type: Boolean, required: false},
-  totalVisible: {type: Number, required: false, default: 7},
-  pageCount: {type: Number, required: true},
-  totalCount: {type: Number, required: true},
-})
 
 const {t} = useI18n()
-
 const q = useQuasar()
 
 const pageValue = ref(props.page)

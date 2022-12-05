@@ -43,12 +43,13 @@ import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
 import RouteNames from 'src/router/route-names'
+import {TableColumn, TableExtraLink, TableFilter} from 'components/table/types'
 
 const {t} = useI18n()
 const apiRoot = urls.variants
 const editRoute = RouteNames.VARIANT_EDIT
 const addRoute = RouteNames.VARIANT_ADD
-const columns = [
+const columns: TableColumn[] = [
   {name: 'product', label: t('products.product'), field: 'product', align: 'left'},
   {name: 'actualProduct', label: t('products.actualProduct'), field: 'actual_product', align: 'left'},
   {name: 'dkpc', label: t('products.DKPC'), field: 'dkpc', align: 'left'},
@@ -64,7 +65,7 @@ const columns = [
   {name: 'is_active', label: t('products.isActive'), field: 'is_active', align: 'center'},
 ]
 
-const filters = [
+const filters: TableFilter[] = [
   {
     type: 'boolean',
     queryParam: 'is_active',
@@ -77,7 +78,7 @@ const filters = [
   },
 ]
 
-const extraLinks = [
+const extraLinks: TableExtraLink[] = [
   {routeName: RouteNames.VARIANT_BULK_CREATE, title: t('general.bulkCreate')},
 ]
 

@@ -23,13 +23,14 @@ import {useI18n} from 'vue-i18n'
 import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
 import RouteNames from 'src/router/route-names'
+import {TableColumn} from 'components/table/types'
 
 const {t} = useI18n()
 
 const apiRoot = urls.costTypes
 const editRoute = RouteNames.COST_TYPE_EDIT
 const addRoute = RouteNames.COST_TYPE_ADD
-const columns = [
+const columns: TableColumn[] = [
   {name: 'title', label: t('general.title'), field: 'title', align: 'left'},
 ]
 </script>

@@ -26,26 +26,29 @@
       :key="index"
       class="q-pa-sm q-ma-sm"
     >
-      <FilterTypes
+      <FilterSelector
+        v-model="filterValues[filter.queryParam]"
         :filter="filter"
         :reset-signal="justForResetSignal"
-        v-model="filterValues[filter.queryParam]"
       />
       <q-separator v-if="index < filters.length - 1"/>
     </template>
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, watch} from 'vue'
-import FilterTypes from './FilterTypes.vue'
+import FilterSelector from './FilterSelector.vue'
 import useGeneralStore from 'src/stores/general'
+import {TableFilter} from 'components/table/types'
+
+export interface DisplayFiltersProps {
+  filters: TableFilter[]
+}
+
+defineProps<DisplayFiltersProps>()
 
 const emits = defineEmits(['filter-change'])
-
-defineProps({
-  filters: {type: Array, required: true},
-})
 
 const generalStore = useGeneralStore()
 

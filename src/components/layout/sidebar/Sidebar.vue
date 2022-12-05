@@ -6,8 +6,8 @@
     elevated
     style="overflow: hidden"
   >
-    <BannerDesktop v-if="$q.screen.gt.sm" @height-change="handleUserIngoHeightChange"/>
-    <UserInfoMobile v-else @height-change="handleUserIngoHeightChange"/>
+    <BannerDesktop v-if="$q.screen.gt.sm" @height-change="handleUserInfoHeightChange"/>
+    <UserInfoMobile v-else @height-change="handleUserInfoHeightChange"/>
     <q-list>
       <q-scroll-area :style="scrollStyle">
         <template
@@ -74,7 +74,7 @@ if (userStore.isAuthenticated) {
     })
 }
 
-function handleUserIngoHeightChange(newHeight: number) {
+function handleUserInfoHeightChange(newHeight: number) {
   scrollStyle.value = `height: calc(100vh - ${newHeight + 1}px)`
   console.log('scroll h:', scrollStyle.value)
 }
