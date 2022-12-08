@@ -13,26 +13,33 @@
     />
     <q-space/>
     <q-btn
+      v-if="showSave"
       :label="$t('general.save')"
       :disable="saveDisabled"
       type="submit"
       color="primary"
       @click="$emit('save')"
     />
+    <q-btn
+      v-if="showBack"
+      :label="$t('general.back')"
+      @click="$emit('go-back')"
+    />
   </div>
 </template>
 
-<script setup>
-defineProps({
-  saveDisabled: {
-    type: Boolean,
-    default: false,
-    required: false,
-  },
-  showDelete: {
-    type: Boolean,
-    default: true,
-    required: false,
-  },
+<script setup lang="ts">
+export interface FormActionProps {
+  saveDisabled?: boolean
+  showDelete?: boolean
+  showSave?: boolean,
+    showBack?: boolean
+}
+
+withDefaults(defineProps<FormActionProps>(), {
+  saveDisabled: false,
+  showDelete: true,
+  showSave: true,
+  showBack: false,
 })
 </script>

@@ -11,8 +11,12 @@
       <slot name="form-fields"/>
 
       <FormActions
-        :show-delete="itemId !== null"
+        :show-delete="canDelete && itemId !== null"
+        :save-disabled="saveDisabled"
+        :show-save="showSave"
+        :show-back="showBack"
         @delete="emits('handle-delete-dialog', true)"
+        @go-back="router.go(-1)"
       />
 
     </q-form>
@@ -29,6 +33,7 @@
 
 <script setup lang="ts">
 import {ref, watch} from 'vue'
+import {useRouter} from 'vue-router'
 import FormActions from 'src/components/addEdit/FormActions.vue'
 import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
 
@@ -38,9 +43,18 @@ export interface AddEditProps {
   itemRepr: string,
   showForm: boolean,
   showDeleteDialog: boolean,
+  saveDisabled?: boolean,
+  canDelete?: boolean,
+  showSave?: boolean,
+  showBack?: boolean
 }
 
-const props = defineProps<AddEditProps>()
+const props = withDefaults(defineProps<AddEditProps>(), {
+  saveDisabled: false,
+  canDelete: true,
+  showSave: true,
+  showBack: false,
+})
 
 const emits = defineEmits([
   'form-submit',
@@ -48,6 +62,7 @@ const emits = defineEmits([
   'delete',
 ])
 
+const router = useRouter()
 const displayDeleteDialog = ref(props.showDeleteDialog)
 
 watch(() => props.showDeleteDialog, newVal => displayDeleteDialog.value = newVal)
