@@ -1,6 +1,7 @@
 import {ref, reactive} from 'vue'
 import routesObj from 'src/router/routes'
 import {RouteRecordName} from 'vue-router'
+import RouteNames from 'src/router/route-names'
 
 export const sidebarOpen = ref(true)
 
@@ -39,14 +40,14 @@ export const menuItems: Array<SidebarMenuList> = [
     titleI18n: 'general.routes.products',
     collapsed: false,
     children: [
-      getRoute('brandList'),
-      getRoute('productTypeList'),
-      getRoute('actualProductList'),
-      getRoute('productList'),
+      getRoute(RouteNames.BRAND_LIST),
+      getRoute(RouteNames.PRODUCT_TYPE_LIST),
+      getRoute(RouteNames.ACTUAL_PRODUCTS_LIST),
+      getRoute(RouteNames.PRODUCT_LIST),
       // getRoute('productTypeSelectorList'),
       // getRoute('productTypeSelectorValueList'),
-      getRoute('variantList'),
-      getRoute('toggleVariantStatus'),
+      getRoute(RouteNames.VARIANT_LIST),
+      getRoute(RouteNames.TOGGLE_VARIANT_STATUS),
     ],
   },
   {
@@ -55,12 +56,12 @@ export const menuItems: Array<SidebarMenuList> = [
     titleI18n: 'general.routes.robot',
     collapsed: false,
     children: [
-      getRoute('editVariantStatus'),
-      getRoute('editVariantStatusDKPC'),
-      getRoute('inactiveVariants'),
-      getRoute('digiCredentials'),
-      getRoute('scrapeInvoice'),
-      getRoute('ContactList'),
+      getRoute(RouteNames.EDIT_VARIANT_STATUS),
+      getRoute(RouteNames.EDIT_VARIANT_STATUS_DKPC),
+      getRoute(RouteNames.INACTIVE_VARIANTS),
+      getRoute(RouteNames.DK_CREDENTIALS),
+      getRoute(RouteNames.SCRAPE_INVOICE),
+      getRoute(RouteNames.CONTACT_LIST),
     ],
   },
   {
@@ -69,13 +70,13 @@ export const menuItems: Array<SidebarMenuList> = [
     titleI18n: 'acc.accounting',
     collapsed: false,
     children: [
-      getRoute('invoiceList'),
-      getRoute('costTypeList'),
-      getRoute('costList'),
-      getRoute('incomeList'),
-      getRoute('productCostList'),
-      getRoute('profitAllYear'),
-      getRoute('profitByDate'),
+      getRoute(RouteNames.INVOICE_LIST),
+      getRoute(RouteNames.COST_TYPE_LIST),
+      getRoute(RouteNames.COST_LIST),
+      getRoute(RouteNames.INCOME_LIST),
+      getRoute(RouteNames.PRODUCT_COST_LIST),
+      getRoute(RouteNames.PROFIT_ALL_YEAR),
+      getRoute(RouteNames.PROFIT_BY_DATE),
     ],
   },
 ]
