@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import {LocalStorage, Notify, uid} from 'quasar'
 import useRobotStore from './robot'
 import useWebRTCStore from 'stores/webrtc'
-import {StorageKeys} from 'src/utils'
+import {StorageKeys} from 'src/utils/storage'
 import {
   ResponseTypes,
   WebsocketResponse,

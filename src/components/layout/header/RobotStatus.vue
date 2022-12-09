@@ -22,7 +22,7 @@ import {computed} from 'vue'
 import useWebsocketStore from 'src/stores/websocket'
 import useRobotStore from 'src/stores/robot'
 import GearsMotionless from 'src/components/static/GearsMotionless.vue'
-import {isMobileLightMode} from 'src/utils'
+import {isMobileLightMode} from 'src/utils/app-status'
 import {WebsocketCommands} from 'src/types/websocket/request'
 import {ToggleRobot} from 'src/types/websocket/payloads/ToggleRobot'
 

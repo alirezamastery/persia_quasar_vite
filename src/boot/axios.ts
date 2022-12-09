@@ -5,7 +5,7 @@ import {notifyAxiosError} from 'src/modules/notif'
 import useUserStore from '../stores/user'
 import useWebsocketStore from '../stores/websocket'
 import urls from 'src/urls'
-import {StorageKeys} from 'src/utils'
+import {StorageKeys} from 'src/utils/storage'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {

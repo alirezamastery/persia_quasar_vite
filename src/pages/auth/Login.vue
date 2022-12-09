@@ -80,8 +80,8 @@ import useUserStore from 'src/stores/user'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 import {LoginForm} from 'src/types/domain/auth/login'
-import {StorageKeys} from 'src/utils'
 import RouteNames from 'src/router/route-names'
+import {StorageKeys} from 'src/utils/storage'
 
 const q = useQuasar()
 const userStore = useUserStore()

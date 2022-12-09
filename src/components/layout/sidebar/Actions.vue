@@ -22,6 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import {handleThemeToggle} from 'src/utils'
+import {handleThemeToggle} from 'src/utils/theme'
 </script>
 

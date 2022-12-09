@@ -48,7 +48,7 @@ import Chart from 'chart.js/auto'
 import moment from 'moment-jalaali'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
-import {persianMonth} from 'src/utils'
+import {persianMonth} from 'src/utils/date'
 import {YearProfitResponse} from 'src/types/network/response/accounting/year-profit'
 
 
@@ -62,7 +62,7 @@ watch(jYear, async () => await getProfitData())
 onMounted(async () => {
   await createChart()
   await getProfitData()
-  calculateChatHeight()
+  calculateChartHeight()
 })
 
 async function getProfitData() {
@@ -124,7 +124,7 @@ function getBG(profits: number[]): string[] {
   return colors
 }
 
-function calculateChatHeight() {
+function calculateChartHeight() {
   const header = document.getElementById('layout-header')
   const headerH = parseInt(getComputedStyle(header!).height)
 

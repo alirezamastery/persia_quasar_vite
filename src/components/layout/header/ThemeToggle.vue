@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import {useQuasar} from 'quasar'
 import {LocalStorage} from 'quasar'
-import {StorageKeys} from 'src/utils'
+import {StorageKeys} from 'src/utils/storage'
 
 const q = useQuasar()
 

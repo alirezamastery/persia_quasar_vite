@@ -66,9 +66,9 @@ import {computed, ref, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import {useElementSize} from '@vueuse/core'
 import useUserStore from 'stores/user'
-import {handleThemeToggle} from 'src/utils'
-import {isMobileLightMode} from 'src/utils'
 import RouteNames from 'src/router/route-names'
+import {handleThemeToggle} from 'src/utils/theme'
+import {isMobileLightMode} from 'src/utils/app-status'
 
 const emits = defineEmits(['height-change'])
 const router = useRouter()

@@ -106,9 +106,9 @@
 
 <script setup lang="ts">
 import {ref, nextTick} from 'vue'
-import {visualizeVariantSelector} from 'src/utils'
+import {visualizeVariantSelector} from 'src/utils/variant'
 import {axiosInstance} from 'boot/axios'
-import {isMobileLightMode} from 'src/utils'
+import {isMobileLightMode} from 'src/utils/app-status'
 import urls from 'src/urls'
 import {
   ActualProduct,

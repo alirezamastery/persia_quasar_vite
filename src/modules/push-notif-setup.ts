@@ -1,5 +1,5 @@
 import {PushNotifications} from '@capacitor/push-notifications'
-import {logger} from 'src/utils'
+import {logger} from 'src/utils/log'
 
 
 const addFireBaseListeners = () => {

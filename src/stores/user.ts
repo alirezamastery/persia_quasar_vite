@@ -6,11 +6,11 @@ import useWebRTCStore from 'stores/webrtc'
 import {routerInstance} from 'src/router'
 import {axiosInstance} from 'src/boot/axios'
 import {broadcastInstance} from 'src/boot/broadcast'
-import {StorageKeys} from 'src/utils'
 import {UserProfileResponse} from 'src/types/network/response/profile/user-profile'
 import {UserProfileDomain} from 'src/types/domain/profile/user-profile'
 import {userProfileResponseToDomain} from 'src/types/converter/profile/user-profile'
 import RouteNames from 'src/router/route-names'
+import {StorageKeys} from 'src/utils/storage'
 
 
 const storeID = 'user'
