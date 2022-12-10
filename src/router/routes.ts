@@ -384,7 +384,7 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     props: true,
     meta: {
       titleI18n: 'acc.profitYearView',
-      icon: 'bar_chart',
+      icon: 'fa-solid fa-chart-column',
       requiresAuth: true,
     },
   },
@@ -394,8 +394,8 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: views.salesCount,
     meta: {
       titleI18n: 'acc.salesCount',
-      icon: 'show_chart',
-        iconSide: 'fiber_new',
+      icon: 'fa-solid fa-chart-line',
+      iconSide: 'fiber_new',
       requiresAuth: true,
     },
   },

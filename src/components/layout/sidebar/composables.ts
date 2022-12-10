@@ -24,7 +24,7 @@ function getRoute(route: string): SideMenuRoute {
     titleI18n: r.meta?.titleI18n as string,
     permissions: r.meta?.permission as string[] || [],
     icon: r.meta?.icon as string,
-    iconSide: r.meta?.iconSide ? r.meta?.iconSide as string : undefined
+    iconSide: r.meta?.iconSide ? r.meta?.iconSide as string : undefined,
   }
 }
 
