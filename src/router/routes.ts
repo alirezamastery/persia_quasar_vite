@@ -384,11 +384,21 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     props: true,
     meta: {
       titleI18n: 'acc.profitYearView',
-      icon: 'fas fa-chart-bar',
+      icon: 'bar_chart',
       requiresAuth: true,
     },
   },
-
+  // ********** Sales **********
+  [RouteNames.SALES_COUNT]: {
+    path: '/sales-count',
+    component: views.salesCount,
+    meta: {
+      titleI18n: 'acc.salesCount',
+      icon: 'show_chart',
+        iconSide: 'fiber_new',
+      requiresAuth: true,
+    },
+  },
   // #################### Other ####################
   // ********** Matrix Rain **********
   [RouteNames.JUST_RAIN]: {

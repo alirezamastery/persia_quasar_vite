@@ -39,6 +39,9 @@
               <q-item-section>
                 <q-item-label>{{ $t(subItem.titleI18n) }}</q-item-label>
               </q-item-section>
+              <q-item-section v-if="subItem.iconSide" side>
+                <q-icon :name="subItem.iconSide"/>
+              </q-item-section>
             </q-item>
           </q-expansion-item>
         </template>

@@ -14,14 +14,17 @@ export interface SideMenuRoute {
   titleI18n: string
   permissions: string[]
   icon: string
+  iconSide?: string
 }
 
 function getRoute(route: string): SideMenuRoute {
+  const r = routesObj[route]
   return {
-    routeName: routesObj[route].name,
-    titleI18n: routesObj[route].meta?.titleI18n as string,
-    permissions: routesObj[route].meta?.permission as string[] || [],
-    icon: routesObj[route].meta?.icon as string,
+    routeName: r.name,
+    titleI18n: r.meta?.titleI18n as string,
+    permissions: r.meta?.permission as string[] || [],
+    icon: r.meta?.icon as string,
+    iconSide: r.meta?.iconSide ? r.meta?.iconSide as string : undefined
   }
 }
 
@@ -75,6 +78,7 @@ export const menuItems: Array<SidebarMenuList> = [
       getRoute(RouteNames.COST_LIST),
       getRoute(RouteNames.INCOME_LIST),
       getRoute(RouteNames.PRODUCT_COST_LIST),
+      getRoute(RouteNames.SALES_COUNT),
       getRoute(RouteNames.PROFIT_ALL_YEAR),
       getRoute(RouteNames.PROFIT_BY_DATE),
     ],

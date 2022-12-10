@@ -38,6 +38,7 @@ export const urls = {
   profitYear: 'accounting/profit-year/',
   invoices: 'accounting/invoices/',
   invoiceItems: 'accounting/invoice-items/',
+  salesCount: 'accounting/sales-count/',
 }
 
 export default urls

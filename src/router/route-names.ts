@@ -46,6 +46,7 @@ export enum RouteNames {
   TEST_PAGE = 'testPage',
   PROFIT_BY_DATE = 'profitByDate',
   PROFIT_ALL_YEAR = 'profitAllYear',
+  SALES_COUNT = 'salesCount',
 
   JUST_RAIN = 'justRain',
   ERROR_404 = 'error_404',

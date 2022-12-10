@@ -57,6 +57,8 @@ export const productCostAddEdit = () => import('../pages/accounting/productCost/
 export const profitByDate = () => import('../pages/accounting/profit/ProfitByDate.vue')
 export const profitAllYear = () => import('../pages/accounting/profit/ProfitAllYear.vue')
 
+export const salesCount = () => import('../pages/accounting/sales/SalesCount.vue')
+
 
 // Other:
 export const justRain = () => import('../pages/JustRain.vue')

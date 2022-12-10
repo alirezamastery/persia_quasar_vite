@@ -78,11 +78,13 @@ export interface AutoCompleteMultipleProps {
   queryParam: string
   listQueryParam: string
   listApi: string
-  objRepr?: string | ((obj: any) => string)
+  objRepr: string | ((obj: any) => string)
   isRequired?: boolean
   rules?: ValidationRule[]
   errorMsg?: string
   inputDebounce?: number
+  pageSize?: number
+  pageSizeParam?: string
 }
 
 const props = withDefaults(defineProps<AutoCompleteMultipleProps>(), {
@@ -90,6 +92,8 @@ const props = withDefaults(defineProps<AutoCompleteMultipleProps>(), {
   rules: () => ([]),
   errorMsg: '',
   inputDebounce: 200,
+  pageSize: 50,
+  pageSizeParam: 'page_size',
 })
 
 const emits = defineEmits([
@@ -127,21 +131,21 @@ interface VirtualScrollDetails {
 
 function onScroll({index, to, ref}: VirtualScrollDetails) {
   const lastIndex = items.value.length - 1
-  console.log('AutoCompleteMultiple | onScroll | came into view:', index)
-  console.log('AutoCompleteMultiple | onScroll | last rendered:', to)
-  console.log('AutoCompleteMultiple | onScroll | last index:', lastIndex)
+  // console.log('AutoCompleteMultiple | onScroll | came into view:', index)
+  // console.log('AutoCompleteMultiple | onScroll | last rendered:', to)
+  // console.log('AutoCompleteMultiple | onScroll | last index:', lastIndex)
 
   if (loading.value === false && !!nextPage.value && index === lastIndex) {
-    console.log('AutoCompleteMultiple | onScroll | getting data')
+    // console.log('AutoCompleteMultiple | onScroll | getting data')
 
     loading.value = true
 
     axiosInstance.get(nextPage.value)
       .then(res => {
-        console.log('AutoCompleteMultiple | onScroll | response:', res)
+        // console.log('AutoCompleteMultiple | onScroll | response:', res)
         items.value.push(...res.data.items)
-        console.log('AutoCompleteMultiple | onScroll | items value:', items.value)
-        console.log('AutoCompleteMultiple | onScroll | items length:', items.value.length)
+        // console.log('AutoCompleteMultiple | onScroll | items value:', items.value)
+        // console.log('AutoCompleteMultiple | onScroll | items length:', items.value.length)
         nextPage.value = res.data.next
         ref.refresh(-1)
       })
@@ -165,7 +169,7 @@ function handleSearchInput(
       if (searchPhrase === val) return
       searchPhrase = val
       loading.value = true
-      const url = `${props.api}?${props.queryParam}=${val}`
+      const url = `${props.api}?${props.queryParam}=${val}&${props.pageSizeParam}=${props.pageSize}`
       axiosInstance.get(url)
         .then(res => {
           console.log('AutoCompleteMultiple | handleSearchInput | response:', res)
@@ -218,7 +222,7 @@ if (props.modelValue.length > 0)
   getInitialDataToDisplay(props.modelValue)
 
 // Populate the dropdown list
-axiosInstance.get(props.api)
+axiosInstance.get(`${props.api}?${props.pageSizeParam}=${props.pageSize}`)
   .then(res => {
     items.value = res.data.items
     nextPage.value = res.data.next
