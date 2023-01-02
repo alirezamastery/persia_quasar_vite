@@ -34,15 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import {parentCardClass} from 'src/utils/screen'
 import {ref, watch, onMounted} from 'vue'
 import Chart from 'chart.js/auto'
+import {parentCardClass} from 'src/utils/screen'
 import {axiosInstance} from 'src/boot/axios'
 import urls from 'src/urls'
 import AutoCompleteMultiple from 'components/AutoCompleteMultiple.vue'
+import {actualProductSalesResponseToDomain} from 'src/types/converter/accounting/sales'
 import {ActualProductSalesDomain} from 'src/types/domain/accounting/sales'
 import {ActualProductSalesResponse} from 'src/types/network/response/accounting/sales'
-import {actualProductSalesResponseToDomain} from 'src/types/converter/accounting/sales'
 
 
 const chartCanvas = ref<HTMLCanvasElement>()
