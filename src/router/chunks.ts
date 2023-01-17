@@ -32,6 +32,7 @@ export const digiCredentials = () => import('pages/robot/DigiCredentials.vue')
 export const scrapeInvoice = () => import('pages/robot/ScrapeInvoice.vue')
 export const inactiveVariants = () => import('pages/robot/InactiveVariants.vue')
 export const ToggleVariantStatus = () => import('pages/products/variant/ToggleVariantStatus.vue')
+export const recordScreen = () => import('pages/robot/RecordScreen.vue')
 
 
 // Voice Call

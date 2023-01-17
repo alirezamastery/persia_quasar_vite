@@ -239,7 +239,15 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-
+  // ********** Record Screen **********
+  [RouteNames.RECORD_SCREEN]: {
+    path: '/robot/record-screen',
+    component: views.recordScreen,
+    meta: {
+      titleI18n: 'general.routes.recordScreen',
+      requiresAuth: true,
+    },
+  },
   // #################### Accounting ####################
   // ********** Invoice List **********
   [RouteNames.INVOICE_LIST]: {
