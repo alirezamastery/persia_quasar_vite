@@ -11,6 +11,7 @@ import {UserProfileDomain} from 'src/types/domain/profile/user-profile'
 import {userProfileResponseToDomain} from 'src/types/converter/profile/user-profile'
 import RouteNames from 'src/router/route-names'
 import {StorageKeys} from 'src/utils/storage'
+import {BroadcastTypes} from 'src/utils/broadcast'
 
 
 const storeID = 'user'
@@ -57,7 +58,7 @@ export const useUserStore = defineStore({
       console.log('logout')
       this.clearLocalStorage()
       delete axiosInstance.defaults.headers['Authorization']
-      broadcastInstance.sendBroadcastMessage('LOGOUT', {})
+      broadcastInstance.sendBroadcastMessage(BroadcastTypes.LOGOUT, {})
       broadcastInstance.teardown()
       const wsStore = useWebsocketStore()
       wsStore.handleLogout()

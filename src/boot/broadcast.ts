@@ -4,7 +4,7 @@ import {boot} from 'quasar/wrappers'
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 
-type BroadcastPayload = { [key: string]: string }
+type BroadcastPayload = { [key: string]: string | number | null }
 
 interface BroadcastInstance {
   broadcastChannel: Nullable<BroadcastChannel>

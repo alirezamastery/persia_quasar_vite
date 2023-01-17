@@ -30,6 +30,7 @@ import {broadcastInstance} from 'src/boot/broadcast'
 import {firebaseSetup} from 'src/modules/push-notif-setup'
 import {logger} from 'src/utils/log'
 import {StorageKeys} from 'src/utils/storage'
+import {BroadcastTypes} from 'src/utils/broadcast'
 import Header from 'src/components/layout/header/Header.vue'
 import Sidebar from 'src/components/layout/sidebar/Sidebar.vue'
 import Banners from 'src/components/layout/Banners.vue'
@@ -62,5 +63,6 @@ if (q.platform.is.android) {
   firebaseSetup()
 }
 
-broadcastInstance.addBroadcastCallback('LOGOUT', () => userStore.logout())
+broadcastInstance.addBroadcastCallback(BroadcastTypes.LOGOUT, () => userStore.logout())
+broadcastInstance.addBroadcastCallback(BroadcastTypes.SW_NEW_CONTENT, () => window.location.reload())
 </script>
