@@ -79,6 +79,5 @@ if (userStore.isAuthenticated) {
 
 function handleUserInfoHeightChange(newHeight: number) {
   scrollStyle.value = `height: calc(100vh - ${newHeight + 1}px)`
-  console.log('scroll h:', scrollStyle.value)
 }
 </script>

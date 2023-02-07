@@ -4,6 +4,7 @@
     <q-ajax-bar
       position="top"
       color="info"
+      :hijack-filter="ajaxBarFilter"
     />
 
     <Header v-if="showAppLayout"/>
@@ -57,7 +58,6 @@ if (isDark) {
 }
 q.dark.set(!!isDark)
 
-logger('check platform')
 if (q.platform.is.android) {
   logger('android detected')
   firebaseSetup()
@@ -65,4 +65,9 @@ if (q.platform.is.android) {
 
 broadcastInstance.addBroadcastCallback(BroadcastTypes.LOGOUT, () => userStore.logout())
 broadcastInstance.addBroadcastCallback(BroadcastTypes.SW_NEW_CONTENT, () => window.location.reload())
+
+function ajaxBarFilter(url: string) {
+  const parts = url.split('/')
+  return !['stream-chunk'].includes(parts[5])
+}
 </script>

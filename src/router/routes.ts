@@ -239,15 +239,6 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
-  // ********** Record Screen **********
-  [RouteNames.RECORD_SCREEN]: {
-    path: '/robot/record-screen',
-    component: views.recordScreen,
-    meta: {
-      titleI18n: 'general.routes.recordScreen',
-      requiresAuth: true,
-    },
-  },
   // #################### Accounting ####################
   // ********** Invoice List **********
   [RouteNames.INVOICE_LIST]: {
@@ -404,6 +395,25 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       titleI18n: 'acc.salesCount',
       icon: 'fa-solid fa-chart-line',
       iconSide: 'fiber_new',
+      requiresAuth: true,
+    },
+  },
+  // #################### Stream ####################
+  // ********** Record Screen **********
+  [RouteNames.RECORD_SCREEN]: {
+    path: '/stream/record',
+    component: views.recordScreen,
+    meta: {
+      titleI18n: 'general.routes.recordScreen',
+      requiresAuth: true,
+    },
+  },
+  // ********** Watch Stream **********
+  [RouteNames.WATCH_STREAM]: {
+    path: '/stream/watch',
+    component: views.watchStream,
+    meta: {
+      titleI18n: 'general.routes.watchStream',
       requiresAuth: true,
     },
   },

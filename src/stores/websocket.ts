@@ -48,7 +48,6 @@ export const useWebsocketStore = defineStore({
       this.setupWS()
     },
     setupWS() {
-      console.log('ws setup')
       if (this.WS === null) throw Error('Websocket instance is null')
 
       const robotStore = useRobotStore()

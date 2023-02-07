@@ -26,7 +26,9 @@ export enum RouteNames {
   SCRAPE_INVOICE = 'scrapeInvoice',
   INACTIVE_VARIANTS = 'inactiveVariants',
   TOGGLE_VARIANT_STATUS = 'toggleVariantStatus',
+
   RECORD_SCREEN = 'recordScreen',
+  WATCH_STREAM = 'watchStream',
 
   CONTACT_LIST = 'ContactList',
 

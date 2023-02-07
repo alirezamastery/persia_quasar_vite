@@ -43,7 +43,6 @@ async function startRecording() {
     const fr = new FileReader()
     fr.onload = async function () {
       const result = this.result as string
-      console.log('res:', result)
       pos = result.search(base)
       pos = pos + base.length
       const chunk = result.substring(pos)
@@ -89,8 +88,12 @@ async function startRecording() {
 }
 
 async function stopRecording() {
-  if (recorder)
-    recorder.stop()
+  try {
+    if (recorder)
+      recorder.stop()
+  } catch (e) {
+    console.log('stop error:', e)
+  }
 }
 </script>
 
