@@ -394,7 +394,6 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     meta: {
       titleI18n: 'acc.salesCount',
       icon: 'fa-solid fa-chart-line',
-      iconSide: 'fiber_new',
       requiresAuth: true,
     },
   },

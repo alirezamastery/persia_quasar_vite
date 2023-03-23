@@ -68,6 +68,6 @@ broadcastInstance.addBroadcastCallback(BroadcastTypes.SW_NEW_CONTENT, () => wind
 
 function ajaxBarFilter(url: string) {
   const parts = url.split('/')
-  return !['stream-chunk'].includes(parts[5])
+  return !['task-state' , 'stream-chunk'].includes(parts[5])
 }
 </script>
