@@ -5,12 +5,12 @@
         {{ timeDisplay }}
       </q-item-label>
     </q-item-section>
-    <q-item-section style="width: 2.5rem">
+    <q-item-section>
       <q-item-label style="white-space: nowrap">
         {{ dateDisplay }}
       </q-item-label>
     </q-item-section>
-    <div class="q-px-sm flex items-center">
+    <div class="q-px-sm q-ml-sm flex items-center">
       <q-icon name="fa fa-calendar-alt" size="xs"/>
     </div>
   </q-item>
