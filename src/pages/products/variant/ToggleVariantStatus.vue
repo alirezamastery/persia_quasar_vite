@@ -89,7 +89,7 @@
 
     <div class="q-mt-lg">
       <q-spinner-gears
-        v-if="taskId && !taskDone"
+        v-if="!taskDone"
         color="amber"
         size="xl"
       />
@@ -163,11 +163,21 @@ async function handleSubmit() {
   try {
     const res = await axiosInstance.post<ToggleVariantStatusResponse>(urls.toggleVariantStatus, data)
     console.log('res:', res.data)
-    taskId.value = res.data.task_id
-    handleTaskStatus()
+    // taskId.value = res.data.task_id
+    // handleTaskStatus()
+    if (res.data.has_error) {
+      for (const error of res.data.errors) {
+        notifyMessage('negative', error.data[0].message)
+      }
+      notifyMessage('negative', 'عملیات با خطا همراه بود:')
+    } else {
+      notifyMessage('positive', t('general.alert.operationSuccess'))
+    }
   } catch (err) {
     console.log('toggle error:', err)
   }
+  isWorking.value = false
+  taskDone.value = true
 }
 
 function handleTaskStatus() {
