@@ -39,6 +39,21 @@ export const urls = {
   invoices: 'accounting/invoices/',
   invoiceItems: 'accounting/invoice-items/',
   salesCount: 'accounting/sales-count/',
+
+  shopBrands: 'shop/brands/',
+  shopBrandDetail: 'shop/brands/{0}/',
+  shopCategories: 'shop/categories/',
+  shopCategoryDetail: 'shop/categories/{0}/',
+  shopCategoriesAdmin: 'shop/categories-admin/',
+  shopCategoryDetailAdmin: 'shop/categories-admin/{0}/',
+  shopProducts: 'shop/products/',
+  shopProductDetail: 'shop/products/{0}/',
+  shopVariants: 'shop/variants/',
+  shopVariantDetail: 'shop/variants/{0}/',
+  shopSelectorTypes: 'shop/selector-types/',
+  shopSelectorTypeDetail: 'shop/selector-types/{0}/',
+  shopOrders: 'shop/orders/',
+  shopOrderDetail: 'shop/orders/{0}/',
 }
 
 export default urls

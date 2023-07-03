@@ -1,7 +1,10 @@
 <template>
   <div
-    class="row q-pa-md q-my-sm q-mt-lg rounded-borders"
-    :class="$q.dark.isActive ? ['bg-grey-10'] : ['bg-grey-2']"
+    class="row q-pa-md q-my-sm q-mt-lg"
+    :class="[
+      $q.dark.isActive ? ['bg-grey-10'] : ['bg-grey-2'],
+       $q.screen.gt.sm ? 'rounded-borders' : ''
+    ]"
   >
     <q-btn
       v-if="showDelete"
@@ -33,7 +36,7 @@ export interface FormActionProps {
   saveDisabled?: boolean
   showDelete?: boolean
   showSave?: boolean,
-    showBack?: boolean
+  showBack?: boolean
 }
 
 withDefaults(defineProps<FormActionProps>(), {

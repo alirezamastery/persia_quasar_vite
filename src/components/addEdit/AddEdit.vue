@@ -1,5 +1,5 @@
 <template>
-  <div class="fit" :class="$q.screen.gt.sm ? 'q-pa-sm' : 'q-pa-sm'">
+  <div :class="parentCardClass">
 
     <div class="text-h6 q-ma-md">{{ formTitle }}</div>
 
@@ -36,6 +36,7 @@ import {ref, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import FormActions from 'src/components/addEdit/FormActions.vue'
 import DeleteDialog from 'src/components/addEdit/DeleteDialog.vue'
+import {parentCardClass} from 'src/utils/screen'
 
 export interface AddEditProps {
   itemId: Nullable<string>,

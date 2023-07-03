@@ -32,6 +32,111 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
+  // #################### Shop App ####################
+  // ********** Brands **********
+  [RouteNames.SHOP_BRAND_LIST]: {
+    path: '/shop/brands',
+    component: views.shopBrandList,
+    meta: {
+      titleI18n: 'general.routes.brands',
+      icon: 'fab fa-apple',
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_BRAND_ADD]: {
+    path: '/shop/brands/add',
+    component: views.shopBrandAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_BRAND_EDIT]: {
+    path: '/shop/brands/edit/:id',
+    component: views.shopBrandAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  // ********** Categories **********
+  [RouteNames.SHOP_CATEGORY_LIST]: {
+    path: '/shop/categories',
+    component: views.shopCategoryList,
+    meta: {
+      titleI18n: 'general.routes.shopCategories',
+      icon: 'fab fa-apple',
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_CATEGORY_ADD]: {
+    path: '/shop/categories/add',
+    component: views.shopCategoryAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_CATEGORY_EDIT]: {
+    path: '/shop/categories/edit/:id',
+    component: views.shopCategoryAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  // ********** Products **********
+  [RouteNames.SHOP_PRODUCT_LIST]: {
+    path: '/shop/products',
+    component: views.shopProductList,
+    meta: {
+      titleI18n: 'general.routes.products',
+      icon: 'fab fa-apple',
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_PRODUCT_ADD]: {
+    path: '/shop/products/add',
+    component: views.shopProductAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_PRODUCT_EDIT]: {
+    path: '/shop/products/edit/:id',
+    component: views.shopProductAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  // ********** Variants **********
+  [RouteNames.SHOP_VARIANT_LIST]: {
+    path: '/shop/variants',
+    component: views.shopVariantList,
+    meta: {
+      titleI18n: 'general.routes.variants',
+      icon: 'fab fa-apple',
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_VARIANT_ADD]: {
+    path: '/shop/variants/add',
+    component: views.shopVariantAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.SHOP_VARIANT_EDIT]: {
+    path: '/shop/variants/edit/:id',
+    component: views.shopVariantAddEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   // #################### Products App ####################
   // ********** Actual Products **********
   [RouteNames.ACTUAL_PRODUCTS_LIST]: {

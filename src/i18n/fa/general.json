@@ -36,7 +36,12 @@
     "variantStatusDKPC": "وضعیت تنوع با dkpc",
     "inactiveVariants": "تنوع های غیر فعال",
     "profile": "پروفایل",
-    "toggleVariantStatus": "تغییر وضعیت تنوع"
+    "toggleVariantStatus": "تغییر وضعیت تنوع",
+    "shop": "فروشگاه",
+    "shopBrads": "برندهای فروشگاه",
+    "shopCategories": "دسته بندی ها",
+    "shopProducts": "محصولات فروشگاه",
+    "shopVariants": "تنوع محصولات فروشگاه"
   },
   "siteHeader": "پرشیا اطلس",
   "all": "همه",

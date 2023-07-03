@@ -5,6 +5,16 @@ export const logout = () => import('../pages/auth/Logout.vue')
 export const profile = () => import('../pages/dashboard/Profile.vue')
 
 
+// Shop
+export const shopBrandList = () => import('../pages/shop/brand/List.vue')
+export const shopBrandAddEdit = () => import('../pages/shop/brand/AddEdit.vue')
+export const shopCategoryList = () => import('../pages/shop/category/List.vue')
+export const shopCategoryAddEdit = () => import('../pages/shop/category/AddEdit.vue')
+export const shopProductList = () => import('../pages/shop/product/List.vue')
+export const shopProductAddEdit = () => import('../pages/shop/product/AddEdit.vue')
+export const shopVariantList = () => import('../pages/shop/variant/List.vue')
+export const shopVariantAddEdit = () => import('../pages/shop/variant/AddEdit.vue')
+
 // Products
 export const actualProductsList = () => import('../pages/products/actualProduct/List.vue')
 export const actualProductAddEdit = () => import('../pages/products/actualProduct/AddEdit.vue')
