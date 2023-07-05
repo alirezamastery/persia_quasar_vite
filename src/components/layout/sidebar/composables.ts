@@ -45,6 +45,8 @@ export const menuItems: Array<SidebarMenuList> = [
     children: [
       getRoute(RouteNames.SHOP_BRAND_LIST),
       getRoute(RouteNames.SHOP_CATEGORY_LIST),
+      getRoute(RouteNames.SHOP_PRODUCT_LIST),
+      // getRoute(RouteNames.SHOP_VARIANT_LIST),
     ],
   },
   {

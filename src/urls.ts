@@ -46,6 +46,8 @@ export const urls = {
   shopCategoryDetail: 'shop/categories/{0}/',
   shopCategoriesAdmin: 'shop/categories-admin/',
   shopCategoryDetailAdmin: 'shop/categories-admin/{0}/',
+  shopProductAttributes: 'shop/product-attrs/',
+  shopProductAttributeDetail: 'shop/product-attrs/{0}/',
   shopProducts: 'shop/products/',
   shopProductDetail: 'shop/products/{0}/',
   shopVariants: 'shop/variants/',

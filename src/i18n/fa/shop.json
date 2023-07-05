@@ -13,7 +13,7 @@
   "productType": "نوع محصول",
   "isActive": "فعال",
   "tools": "ابزارها",
-  "createANew": "ایجاد یک {0} جدید",
+  "createANew": "ایجاد یک {item} جدید",
   "product": "محصول",
   "products": "محصولات",
   "selectorValue": "مقدار انتخابگر",

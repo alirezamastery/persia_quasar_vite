@@ -1,6 +1,6 @@
 export interface ShopCategoryPayload {
   title: string
-  parent: number
+  parent: number | null
   selector_type: number
   attributes: number[]
 }

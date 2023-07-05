@@ -1,8 +1,6 @@
 export interface ShopCategoryForm {
   title: string
-  parentNodeId: number | null
+  parentNodeId: number
   selectorTypeId: number | null
-  attributeIds: Array<{
-    id: number | null
-  }>
+  attributeIds: number[]
 }

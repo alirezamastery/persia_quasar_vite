@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {Ref, ref, watch} from 'vue'
 import {axiosInstance} from 'src/boot/axios'
 import {QSelect, QSelectProps, ValidationRule} from 'quasar'
 
@@ -85,6 +85,8 @@ export interface AutoCompleteMultipleProps {
   inputDebounce?: number
   pageSize?: number
   pageSizeParam?: string
+  afterOptionsUpdate?: (opts: Ref<unknown[]>) => void
+  reInitializeSignal?: boolean
 }
 
 const props = withDefaults(defineProps<AutoCompleteMultipleProps>(), {
@@ -111,15 +113,17 @@ let searchPhrase = ''
 
 
 watch(selectedValue, (newValue) => {
-  console.log('AutoCompleteMultiple | watch selectedValue | new selected value:', newValue)
   const emitVal = newValue.map(item => {
     if (typeof item === 'string' || typeof item === 'number')
       return item
     return item[props.objUniqueId]
   })
-  console.log('AutoCompleteMultiple | watch selectedValue | emit value:', emitVal)
   emits('update:modelValue', emitVal)
 }, {deep: true})
+watch(() => props.reInitializeSignal, () => {
+  console.log('init again')
+  getItems()
+})
 
 interface VirtualScrollDetails {
   index: number
@@ -131,21 +135,15 @@ interface VirtualScrollDetails {
 
 function onScroll({index, to, ref}: VirtualScrollDetails) {
   const lastIndex = items.value.length - 1
-  // console.log('AutoCompleteMultiple | onScroll | came into view:', index)
-  // console.log('AutoCompleteMultiple | onScroll | last rendered:', to)
-  // console.log('AutoCompleteMultiple | onScroll | last index:', lastIndex)
 
   if (loading.value === false && !!nextPage.value && index === lastIndex) {
-    // console.log('AutoCompleteMultiple | onScroll | getting data')
-
     loading.value = true
 
     axiosInstance.get(nextPage.value)
       .then(res => {
-        // console.log('AutoCompleteMultiple | onScroll | response:', res)
         items.value.push(...res.data.items)
-        // console.log('AutoCompleteMultiple | onScroll | items value:', items.value)
-        // console.log('AutoCompleteMultiple | onScroll | items length:', items.value.length)
+        if (props.afterOptionsUpdate !== undefined)
+          props.afterOptionsUpdate(items)
         nextPage.value = res.data.next
         ref.refresh(-1)
       })
@@ -163,7 +161,6 @@ function handleSearchInput(
   update: OnFilterArguments[1],
   abort: OnFilterArguments[2],
 ) {
-  console.log('handleSearchInput | phrase:', val)
   update(
     () => {
       if (searchPhrase === val) return
@@ -172,7 +169,6 @@ function handleSearchInput(
       const url = `${props.api}?${props.queryParam}=${val}&${props.pageSizeParam}=${props.pageSize}`
       axiosInstance.get(url)
         .then(res => {
-          console.log('AutoCompleteMultiple | handleSearchInput | response:', res)
           items.value = res.data.items
           nextPage.value = res.data.next
         })
@@ -196,7 +192,6 @@ function handleSearchInput(
  * the server to display in the input field as chips
  */
 function getInitialDataToDisplay(modelVal: any[]) {
-  console.log('AutoCompleteMultiple | getInitialDataToDisplay | modelVal', modelVal)
   let query = '?'
   for (const id of modelVal) {
     query += `&${props.listQueryParam}=${id}`
@@ -204,27 +199,29 @@ function getInitialDataToDisplay(modelVal: any[]) {
   const url = props.api + props.listApi + query
   axiosInstance.get(url)
     .then(res => {
-      console.log('AutoCompleteMultiple | getInitialDataToDisplay | got initial data:', res)
       selectedValue.value = res.data
     })
 }
 
 function handleClear(value: any) {
-  console.log('handleClear | value:', value)
   selectedValue.value = []
 }
 
 
-console.log('AutoCompleteMultiple | ---------------------------------------------------')
-console.log('AutoCompleteMultiple | start with modelValue from props:', props.modelValue)
 // If propHasValue is true, it means we are in an Edit view and should display the existing item
 if (props.modelValue.length > 0)
   getInitialDataToDisplay(props.modelValue)
 
+function getItems() {
+  axiosInstance.get(`${props.api}?${props.pageSizeParam}=${props.pageSize}`)
+    .then(res => {
+      items.value = res.data.items
+      nextPage.value = res.data.next
+      if (props.afterOptionsUpdate !== undefined)
+        props.afterOptionsUpdate(items)
+    })
+}
+
 // Populate the dropdown list
-axiosInstance.get(`${props.api}?${props.pageSizeParam}=${props.pageSize}`)
-  .then(res => {
-    items.value = res.data.items
-    nextPage.value = res.data.next
-  })
+getItems()
 </script>

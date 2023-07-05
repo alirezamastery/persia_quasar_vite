@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {onMounted, Ref, ref, watch} from 'vue'
 import {axiosInstance} from 'src/boot/axios'
 import {QSelect, QSelectProps, ValidationRule} from 'quasar'
 
@@ -74,7 +74,9 @@ export interface AutoCompleteMultipleProps {
   pageSize?: number
   pageSizeParam?: string
   allowNull?: boolean
-
+  afterOptionsUpdate?: (opts: Ref<unknown[]>) => void
+  reInitializeSignal?: boolean
+  getInitData?: (selectedVal: Ref<never | null>) => void
 }
 
 const props = withDefaults(defineProps<AutoCompleteMultipleProps>(), {
@@ -101,7 +103,6 @@ let searchPhrase = ''
 
 
 watch(selectedValue, (newValue) => {
-  // console.log('AutoComplete | watch selectedValue | new selected value:', newValue)
   let emitVal
   if (newValue === null) {
     emitVal = null
@@ -110,8 +111,11 @@ watch(selectedValue, (newValue) => {
   } else {
     emitVal = newValue
   }
-  // console.log('AutoComplete | watch selectedValue | emit value:', emitVal)
   emits('update:modelValue', emitVal)
+})
+watch(() => props.reInitializeSignal, () => {
+  console.log('init again')
+  getItems()
 })
 
 interface VirtualScrollDetails {
@@ -124,21 +128,15 @@ interface VirtualScrollDetails {
 
 function onScroll({index, to, ref}: VirtualScrollDetails) {
   const lastIndex = items.value.length - 1
-  // console.log('AutoComplete | onScroll | came into view:', index)
-  // console.log('AutoComplete | onScroll | last rendered:', to)
-  // console.log('AutoComplete | onScroll | last index:', lastIndex)
 
   if (loading.value === false && !!nextPage.value && index === lastIndex) {
-    // console.log('AutoComplete | onScroll | getting data')
-
     loading.value = true
 
     axiosInstance.get(nextPage.value)
       .then(res => {
-        // console.log('AutoComplete | onScroll | response:', res)
         items.value.push(...res.data.items)
-        // console.log('AutoComplete | onScroll | items value:', items.value)
-        // console.log('AutoComplete | onScroll | items length:', items.value.length)
+        if (props.afterOptionsUpdate !== undefined)
+          props.afterOptionsUpdate(items)
         nextPage.value = res.data.next
         ref.refresh(-1)
       })
@@ -156,7 +154,6 @@ function handleSearchInput(
   update: OnFilterArguments[1],
   abort: OnFilterArguments[2],
 ) {
-  // console.log('handleSearchInput | phrase:', val)
   update(
     () => {
       if (searchPhrase === val) return
@@ -165,7 +162,6 @@ function handleSearchInput(
       const url = `${props.api}?${props.queryParam}=${val}&${props.pageSizeParam}=${props.pageSize}`
       axiosInstance.get(url)
         .then(res => {
-          // console.log('AutoComplete | handleSearchInput | response:', res)
           items.value = res.data.items
           nextPage.value = res.data.next
         })
@@ -189,38 +185,47 @@ function handleSearchInput(
  * the server to display in the input field as chips
  */
 function getInitialDataToDisplay(modelVal: never) {
-  // console.log('AutoComplete | getInitialDataToDisplay | modelVal', modelVal)
   if (!modelVal) return
   axiosInstance.get(props.api + modelVal)
     .then(res => {
-      // console.log('AutoComplete | getInitialDataToDisplay | got initial data:', res)
+      console.log('got data:', res.data)
       selectedValue.value = res.data
     })
 }
 
 function handleClear(value: unknown) {
-  // console.log('handleClear | value:', value)
   selectedValue.value = null
 }
 
-
-// console.log('AutoComplete | ---------------------------------------------------')
-// console.log('AutoComplete | start with modelValue from props:', props.modelValue)
-// If propHasValue is true, it means we are in an Edit view and should display the existing item
-if (props.modelValue)
-  getInitialDataToDisplay(props.modelValue)
-
-// Populate the dropdown list
-axiosInstance.get(`${props.api}?${props.pageSizeParam}=${props.pageSize}`)
-  .then(res => {
-    items.value = res.data.items
-    if (props.allowNull) {
-      const nullObj: { [key: string]: string | null } = {[props.objUniqueId]: null}
-      if (typeof props.objRepr === 'string') {
-        nullObj[props.objRepr] = '--------'
+function getItems() {
+  axiosInstance.get(`${props.api}?${props.pageSizeParam}=${props.pageSize}`)
+    .then(res => {
+      items.value = res.data.items
+      if (props.allowNull) {
+        const nullObj: { [key: string]: string | null } = {[props.objUniqueId]: null}
+        if (typeof props.objRepr === 'string') {
+          nullObj[props.objRepr] = '--------'
+        }
+        items.value.unshift(nullObj)
       }
-      items.value.unshift(nullObj)
-    }
-    nextPage.value = res.data.next
-  })
+      if (props.afterOptionsUpdate !== undefined)
+        props.afterOptionsUpdate(items)
+      nextPage.value = res.data.next
+    })
+}
+
+onMounted(() => {
+// Populate the dropdown list
+  getItems()
+
+  // If propHasValue is true, it means we are in an Edit view
+  // and should display the existing item
+  if (props.modelValue !== null) {
+    console.log('props.getInitData:', props.getInitData)
+    if (props.getInitData !== undefined)
+      props.getInitData(selectedValue)
+    else
+      getInitialDataToDisplay(props.modelValue)
+  }
+})
 </script>

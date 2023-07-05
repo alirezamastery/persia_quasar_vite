@@ -7,17 +7,15 @@ export function shopCategoryDetailResponseToForm(date: ShopCategoryDetailRespons
     title: date.title,
     selectorTypeId: date.selector_type,
     parentNodeId: date.parent_node_id,
-    attributeIds: date.attribute_ids.map(attr => ({
-      id: attr.id,
-    })),
+    attributeIds: date.attributes.map(attr => attr.id),
   }
 }
 
 export function shopCategoryFormToPayload(form: ShopCategoryForm): ShopCategoryPayload {
   return {
     title: form.title,
-    parent: form.parentNodeId!,
+    parent: form.parentNodeId === 0 ? null : form.parentNodeId,
     selector_type: form.selectorTypeId!,
-    attributes: form.attributeIds.map(attr => attr.id!),
+    attributes: form.attributeIds,
   }
 }

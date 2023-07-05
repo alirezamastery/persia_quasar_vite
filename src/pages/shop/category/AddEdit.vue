@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
+import {computed, ref, Ref} from 'vue'
 import {useRoute} from 'vue-router'
-import {useAddEdit, getItemIdFromRoute} from 'src/modules/add-edit-composable'
+import {getItemIdFromRoute, useAddEdit} from 'src/modules/add-edit-composable'
 import {isRequired} from 'src/modules/form-validation'
 import urls from 'src/urls'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
@@ -11,6 +11,8 @@ import {ShopCategoryDetailResponse} from 'src/types/network/response/shop/catego
 import {ShopCategoryPayload} from 'src/types/network/payload/shop/category'
 import {shopCategoryDetailResponseToForm, shopCategoryFormToPayload} from 'src/types/converter/shop/category'
 import AutoCompleteSingle from 'components/AutoCompleteSingle.vue'
+import CreateAttributeDialog from 'pages/shop/category/CreateAttributeDialog.vue'
+import AutoCompleteMultiple from 'components/AutoCompleteMultiple.vue'
 
 
 const route = useRoute()
@@ -20,13 +22,13 @@ const listViewRoute = RouteNames.SHOP_CATEGORY_LIST
 const itemTypeTranslate = 'shop.category'
 const form = ref<ShopCategoryForm>({
   title: '',
-  parentNodeId: null,
+  parentNodeId: 0,
   selectorTypeId: null,
-  attributeIds: [
-    {id: null},
-  ],
+  attributeIds: [],
 })
+const showCreateAttributeDialog = ref(false)
 const itemRepr = computed(() => form.value.title)
+const reInitAttrsSignal = ref(false)
 
 const {
   formTitle,
@@ -45,16 +47,38 @@ const {
   shopCategoryDetailResponseToForm,
   shopCategoryFormToPayload,
 )
+const getParentNodeInitData = computed(() => {
+  if (form.value.parentNodeId === 0) {
+    return function (selectedVal: Ref) {
+      selectedVal.value = {
+        id: 0,
+        title: '-- سرشاخه --',
+      }
+    }
+  } else
+    return undefined
+})
 
-function addAttributeInput() {
-  form.value.attributeIds.push({
-    id: null,
-  })
-}
+// function addAttributeInput() {
+//   form.value.attributeIds.push({
+//     id: null,
+//   })
+// }
 
-function removeAttributeInput(index: number) {
-  form.value.attributeIds.splice(index, 1)
-}
+// function removeAttributeInput(attId: number) {
+//   console.log('remove:', attId)
+//   const newAttrs = form.value.attributeIds.filter(attr => attr.id !== attId)
+//   form.value.attributeIds = []
+//   form.value.attributeIds = newAttrs
+//   console.log(form.value.attributeIds)
+// }
+//
+// function handleFilter(options: Ref<any[]>) {
+//   console.log('fffffffffffffffffffffffffffffffffffffffffffff', options.value)
+//   options.value = options.value.filter(opt => {
+//     return !form.value.attributeIds.map(attr => attr.id).includes(opt.id)
+//   })
+// }
 </script>
 
 <template>
@@ -91,6 +115,7 @@ function removeAttributeInput(index: number) {
             :query-param="'search'"
             :api="urls.shopCategoriesAdmin"
             :rules="[isRequired]"
+            :get-init-data="getParentNodeInitData"
           />
         </div>
       </div>
@@ -98,7 +123,7 @@ function removeAttributeInput(index: number) {
       <div class="row q-ma-sm">
         <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
           <AutoCompleteSingle
-            v-model="form.parentNodeId"
+            v-model="form.selectorTypeId"
             :label="$t('shop.selectorType')"
             :obj-repr="'title'"
             :query-param="'search'"
@@ -109,45 +134,83 @@ function removeAttributeInput(index: number) {
       </div>
 
       <q-separator size="2px" class="q-my-xl" inset/>
-      <h5>{{ $t('shop.specifications')}}</h5>
-
-      <div
-        v-for="(attribute, i) in form.attributeIds"
-        :key="i"
-        class="row q-ma-sm"
-      >
-        <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
-          <AutoCompleteSingle
-            v-model="attribute.id"
-            :label="$t('shop.specification')"
-            :obj-repr="'title'"
-            :query-param="'search'"
-            :api="urls.shopSelectorTypes"
-            :rules="[isRequired]"
+      <div class="row q-ma-sm">
+        <div class="text-h5 col-xs-5 col-sm-3 col-md-2 col-xl-1">
+          {{ $t('shop.specifications') }}
+        </div>
+        <div>
+          <q-btn
+            :label="$t('general.create')"
+            color="primary"
+            icon="add"
+            @click="showCreateAttributeDialog = true"
           />
         </div>
-        <div class="q-pt-sm col-1">
-          <q-btn
-            v-if="i === form.attributeIds.length - 1"
-            icon="add"
-            color="primary"
-            round
-            flat
-            @click="addAttributeInput"
-          />
-          <q-btn
-            v-else
-            icon="remove"
-            color="red"
-            round
-            flat
-            @click="removeAttributeInput(i)"
+
+      </div>
+
+      <div class="row q-ma-sm">
+        <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">
+          <AutoCompleteMultiple
+            v-model="form.attributeIds"
+            obj-unique-id="id"
+            :label="$t('shop.specifications')"
+            :obj-repr="'title'"
+            :api="urls.shopProductAttributes"
+            :list-api="'get-by-id-list/'"
+            :list-query-param="'ids[]'"
+            :query-param="'search'"
+            :rules="[isRequired]"
+            outlined
+            options-dense
+            :re-initialize-signal="reInitAttrsSignal"
           />
         </div>
       </div>
+      <!--      <div-->
+      <!--        v-for="(attribute, i) in form.attributeIds"-->
+      <!--        :key="i"-->
+      <!--        class="row q-ma-sm"-->
+      <!--      >-->
+      <!--        <div class="col col-xs-12 col-md-6 col-lg-4 col-xl-3">-->
+      <!--          <AutoCompleteSingle-->
+      <!--            v-model="attribute.id"-->
+      <!--            :label="$t('shop.specification')"-->
+      <!--            :obj-repr="'title'"-->
+      <!--            :query-param="'search'"-->
+      <!--            :api="urls.shopProductAttributes"-->
+      <!--            :rules="[isRequired]"-->
+      <!--            :after-options-update="handleFilter"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--        <div class="q-pt-sm col-1" v-if="i > 0">-->
+      <!--          <q-btn-->
+      <!--            icon="remove"-->
+      <!--            color="red"-->
+      <!--            round-->
+      <!--            flat-->
+      <!--            @click="removeAttributeInput(attribute.id)"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--        <div class="q-pt-sm col-1" v-if="i === form.attributeIds.length - 1">-->
+      <!--          <q-btn-->
+      <!--            icon="add"-->
+      <!--            color="primary"-->
+      <!--            round-->
+      <!--            flat-->
+      <!--            @click="addAttributeInput"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--      </div>-->
 
     </template>
 
   </AddEdit>
+
+  <CreateAttributeDialog
+    v-model="showCreateAttributeDialog"
+    @attribute-created="reInitAttrsSignal = !reInitAttrsSignal"
+  />
+
 </template>
 

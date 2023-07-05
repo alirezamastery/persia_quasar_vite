@@ -3,11 +3,20 @@ export interface ShopBrandForm {
 }
 
 export interface ShopProductForm {
-  brandId: number
+  brandId: number | null
   title: string
-  categoryId: number
+  categoryId: number | null
   description: string
   isActive: boolean
+  attributeFields: Array<{
+    id: number
+    attribute: {
+      id: number
+      title: string
+      description: string
+    }
+    value: string
+  }>
   attributeValues: Array<{
     attrId: number
     attrTitle: string

@@ -21,6 +21,7 @@ export function shopProductResponseToForm(data: ShopProductResponse): ShopProduc
     categoryId: data.category.id,
     description: data.description,
     isActive: data.is_active,
+    attributeFields: data.attribute_values,
     attributeValues: data.attribute_values.map(av => ({
       attrId: av.attribute.id,
       attrTitle: av.attribute.title,
@@ -33,9 +34,9 @@ export function shopProductResponseToForm(data: ShopProductResponse): ShopProduc
 
 export function shopProductFormToPayload(form: ShopProductForm): ShopProductPayload {
   return {
-    brand: form.brandId,
+    brand: form.brandId!,
     title: form.title,
-    category: form.categoryId,
+    category: form.categoryId!,
     description: form.description,
     is_active: form.isActive,
     attribute_values: form.attributeValues.map(attr => ({
