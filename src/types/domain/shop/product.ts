@@ -2,6 +2,13 @@ export interface ShopBrandForm {
   title: string
 }
 
+// export type ShopProductFormAttrValue = {
+//   [key: number]: {
+//     title: string
+//     value: string
+//   }
+// }
+
 export interface ShopProductForm {
   brandId: number | null
   title: string
@@ -21,7 +28,24 @@ export interface ShopProductForm {
     attrId: number
     attrTitle: string
     attrDescription: string
-    attributeValueId: number
+    // attributeValueId: number
     value: string
   }>
+  currentImages: ShopProductFormCurrentImage[]
+  newImages: ShopProductFormNewImage[]
+  mainImgId: number
+}
+
+export interface ShopProductFormCurrentImage {
+  id: number
+  url: string
+  description: string
+  isMain: boolean
+  productId: number
+}
+
+export interface ShopProductFormNewImage {
+  file: string
+  key: string
+  isMain: boolean
 }

@@ -24,6 +24,16 @@ export interface ShopProductResponse {
     }
     value: string
   }>
+  images: ProductImageResponse[]
+}
+
+
+export interface ProductImageResponse {
+  id: number
+  product: number
+  url: string
+  is_main: boolean
+  description: string
 }
 
 // export type CamelizeString<ObjectProperty extends string> =

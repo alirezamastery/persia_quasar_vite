@@ -133,6 +133,7 @@ module.exports = configure(function (ctx) {
         'Notify',
         'LocalStorage',
         'Dialog',
+        'Cookies',
       ]
     },
 

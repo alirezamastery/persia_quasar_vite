@@ -15,6 +15,16 @@ export function shopBrandFomToPayload(form: ShopBrandForm): ShopBrandPayload {
 }
 
 export function shopProductResponseToForm(data: ShopProductResponse): ShopProductForm {
+  let mainImgId = 0
+  for (const img of data.images) {
+    if (img.is_main) {
+      mainImgId = img.id
+      break
+    }
+  }
+
+  console.log('main img:')
+
   return {
     brandId: data.id,
     title: data.title,
@@ -26,9 +36,17 @@ export function shopProductResponseToForm(data: ShopProductResponse): ShopProduc
       attrId: av.attribute.id,
       attrTitle: av.attribute.title,
       attrDescription: av.attribute.description,
-      attributeValueId: av.id,
       value: av.value,
     })),
+    currentImages: data.images.map(img => ({
+      id: img.id,
+      url: img.url,
+      description: img.description,
+      isMain: img.is_main,
+      productId: img.product,
+    })),
+    newImages: [],
+    mainImgId: mainImgId,
   }
 }
 
@@ -43,5 +61,10 @@ export function shopProductFormToPayload(form: ShopProductForm): ShopProductPayl
       attribute: attr.attrId,
       value: attr.value,
     })),
+    new_images: form.newImages.map(img => ({
+      file: img.file,
+      is_main: img.isMain,
+    })),
+    main_img: form.mainImgId,
   }
 }

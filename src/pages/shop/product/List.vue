@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
-import Table from 'src/components/table/Table.vue'
 import urls from 'src/urls'
+import Table from 'src/components/table/Table.vue'
 import RouteNames from 'src/router/route-names'
 import {TableColumn, TableFilter} from 'components/table/types'
 
@@ -46,7 +46,7 @@ const filters: TableFilter[] = [
     </template>
 
     <template v-slot:col-category="{ props }">
-      {{ props.row.brand.category.title }}
+      {{ props.row.category.title }}
     </template>
 
     <template v-slot:col-isActive="{ props }">
