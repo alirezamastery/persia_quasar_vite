@@ -1,6 +1,6 @@
 import {ShopBrandForm, ShopProductForm} from 'src/types/domain/shop/product'
 import {ShopBrandPayload, ShopProductPayload} from 'src/types/network/payload/shop/product'
-import {ShopBrandResponse, ShopProductResponse} from 'src/types/network/response/shop/product'
+import {ShopBrandResponse, ShopProductDetailResponse} from 'src/types/network/response/shop/product'
 
 export function shopBrandResponseToForm(data: ShopBrandResponse): ShopBrandForm {
   return {
@@ -14,16 +14,15 @@ export function shopBrandFomToPayload(form: ShopBrandForm): ShopBrandPayload {
   }
 }
 
-export function shopProductResponseToForm(data: ShopProductResponse): ShopProductForm {
-  let mainImgId = 0
+export function shopProductResponseToForm(data: ShopProductDetailResponse): ShopProductForm {
+  let mainImgId: number | null = null
   for (const img of data.images) {
     if (img.is_main) {
       mainImgId = img.id
       break
     }
   }
-
-  console.log('main img:')
+  console.log('main img:', mainImgId)
 
   return {
     brandId: data.id,

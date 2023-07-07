@@ -48,18 +48,22 @@
                 </slot>
               </q-td>
 
-              <!-- key should be set for the cell to show -->
-              <q-td v-if="editRoute" :props="props" key="edit" auto-width>
-                <q-btn
-                  :to="{name: editRoute, params: {id: props.row.id}}"
-                  icon="edit"
-                  size="sm"
-                  flat
-                  round
+              <!-- "key" should be set for the cell to show -->
+              <q-td v-if="editRoute" :props="props" key="tools" auto-width>
+                <slot
+                  :name="`col-tools`"
+                  :props="props"
+                  :data="data"
                 >
-                </q-btn>
+                  <q-btn
+                    :to="{name: editRoute, params: {id: props.row.id}}"
+                    icon="edit"
+                    :size="denseRows ? 'sm' : 'md'"
+                    flat
+                    round
+                  />
+                </slot>
               </q-td>
-
             </q-tr>
           </template>
 
@@ -160,10 +164,10 @@ const sideFilterQuery = ref('')
 
 const finalColumns = computed(() => {
   const editCol: TableColumn = {
-    name: 'edit',
+    name: 'tools',
     label: t('general.tools'),
     field: 'id',
-    align: 'left',
+    align: 'center',
   }
   if (props.columns !== undefined) {
     const columns = cloneDeep(props.columns)

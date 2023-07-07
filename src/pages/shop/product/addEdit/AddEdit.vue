@@ -3,18 +3,18 @@ import {ref, computed, watch} from 'vue'
 import {useRoute} from 'vue-router'
 import {useAddEdit, getItemIdFromRoute} from 'src/modules/add-edit-composable'
 import {isRequired} from 'src/modules/form-validation'
+import {notifyMessage} from 'src/modules/notif'
 import {axiosInstance} from 'boot/axios'
 import urls from 'src/urls'
-import AddEdit from 'src/components/addEdit/AddEdit.vue'
+import AddEdit from 'components/addEdit/AddEdit.vue'
 import AutoCompleteSingle from 'components/AutoCompleteSingle.vue'
+import ImageUploader from 'pages/shop/product/addEdit/ImageUploader.vue'
 import RouteNames from 'src/router/route-names'
 import {ShopProductForm} from 'src/types/domain/shop/product'
-import {ShopProductResponse} from 'src/types/network/response/shop/product'
+import {ShopProductDetailResponse} from 'src/types/network/response/shop/product'
 import {ShopProductPayload} from 'src/types/network/payload/shop/product'
 import {ShopCategoryDetailResponse} from 'src/types/network/response/shop/category'
 import {shopProductFormToPayload, shopProductResponseToForm} from 'src/types/converter/shop/product'
-import ImageUploader from 'pages/shop/product/ImageUploader.vue'
-import {notifyMessage} from 'src/modules/notif'
 
 
 const route = useRoute()
@@ -32,11 +32,14 @@ const form = ref<ShopProductForm>({
   attributeValues: [],
   newImages: [],
   currentImages: [],
-  mainImgId: 0,
+  mainImgId: null,
 })
 const selectedCategory = ref<ShopCategoryDetailResponse | null>(null)
+const imageUploader = ref<typeof ImageUploader | null>(null)
 const isLoadingCategory = ref(false)
-const mainImgId = ref(0)
+const uploaderMainImgSelected = ref(false)
+const canSubmit = ref(false)
+
 const itemRepr = computed(() => form.value.title)
 
 watch(() => form.value.categoryId, async (newVal) => {
@@ -61,14 +64,7 @@ watch(() => form.value.categoryId, async (newVal) => {
   }
   isLoadingCategory.value = true
 })
-watch(() => form.value.currentImages, newVal => {
-  for (const img of newVal) {
-    if (img.isMain === true) {
-      mainImgId.value = img.id
-      break
-    }
-  }
-})
+
 
 const {
   formTitle,
@@ -77,7 +73,7 @@ const {
   toggleDeleteDialog,
   handleFormSubmit,
   handleDelete,
-} = useAddEdit<ShopProductPayload, ShopProductResponse, ShopProductForm>(
+} = useAddEdit<ShopProductPayload, ShopProductDetailResponse, ShopProductForm>(
   form,
   itemId,
   apiRoot,
@@ -88,9 +84,6 @@ const {
   shopProductFormToPayload,
 )
 
-function getImageFullPath(relPath: string): string {
-  return process.env.SERVER_BASE_URL + relPath
-}
 
 async function handleImageDelete(id: number) {
   try {
@@ -107,12 +100,44 @@ async function handleImageDelete(id: number) {
   }
 }
 
-function handleSubmit() {
-  if (!route.params.hasOwnProperty('id') && form.value.newImages.length === 0) {
+function validate(): boolean {
+  if (
+    !route.params.hasOwnProperty('id')
+    && imageUploader.value!.queuedImageCount === 0
+    && form.value.newImages.length === 0
+  ) {
     notifyMessage('negative', 'حداقل یک عکس اضافه کنید')
-    return
+    return false
   }
-  handleFormSubmit()
+
+  if (form.value.mainImgId === null && !uploaderMainImgSelected.value) {
+    notifyMessage('negative', 'یک عکس را به عنوان عکس اصلی انتخاب کنید')
+    return false
+  }
+
+  return true
+}
+
+async function handleSubmit() {
+  if (imageUploader.value === null)
+    throw Error('image uploader not created!')
+  if (!validate()) return
+  console.log('uploader:', imageUploader.value.uploader.isBusy)
+  console.log('hasUploadFail:', imageUploader.value.hasUploadFail)
+  console.log('queuedImageCount:', imageUploader.value.queuedImageCount)
+  canSubmit.value = true
+  if (imageUploader.value.queuedImageCount > 0 && !imageUploader.value.hasUploadFail)
+    imageUploader.value.startUpload()
+  else
+    handleFormSubmit()
+}
+
+function handleUploadFinished() {
+  console.log('s & f:', canSubmit.value, !imageUploader.value!.hasUploadFail)
+  if (canSubmit.value && !imageUploader.value!.hasUploadFail) {
+    console.log('finished uploadgin:', form.value.newImages)
+    handleFormSubmit()
+  }
 }
 </script>
 
@@ -223,7 +248,7 @@ function handleSubmit() {
             >
               <q-card-section class="" horizontal>
                 <q-img
-                  :src="getImageFullPath(img.url)"
+                  :src="img.url"
                   :ratio="1"
                   height="150px"
                   :fit="'contain'"
@@ -241,6 +266,7 @@ function handleSubmit() {
                 <q-card-actions>
                   <q-btn
                     icon="delete"
+                    color="pink"
                     flat
                     @click="handleImageDelete(img.id)"
                   />
@@ -250,32 +276,12 @@ function handleSubmit() {
           </div>
         </div>
 
-        <!--        <q-list>-->
-        <!--          <q-item v-for="img in form.currentImages" :key="img.id">-->
-        <!--            <q-item-section thumbnail>-->
-        <!--              <img :src="getImageFullPath(img.url)" :alt="img.description"/>-->
-        <!--            </q-item-section>-->
-        <!--            <q-item-section side>-->
-        <!--              <q-btn-->
-        <!--                icon="delete"-->
-        <!--                round-->
-        <!--                flat-->
-        <!--                @click="handleImageDelete(img.id)"-->
-        <!--              />-->
-        <!--            </q-item-section>-->
-        <!--            <q-item-section side>-->
-        <!--              <q-btn-->
-        <!--                icon="delete"-->
-        <!--                round-->
-        <!--                flat-->
-        <!--                @click="handleImageDelete(img.id)"-->
-        <!--              />-->
-        <!--            </q-item-section>-->
-        <!--          </q-item>-->
-        <!--        </q-list>-->
-
         <ImageUploader
-          v-model="form.newImages"
+          v-model:model-value="form.newImages"
+          v-model:can-submit="canSubmit"
+          ref="imageUploader"
+          @finished="handleUploadFinished"
+          @mainSelected="uploaderMainImgSelected = $event"
         />
         <!-- Product Images END-->
 

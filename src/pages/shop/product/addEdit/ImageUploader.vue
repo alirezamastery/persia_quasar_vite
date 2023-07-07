@@ -8,12 +8,16 @@ import {notifyMessage} from 'src/modules/notif'
 
 interface ImageUploaderProps {
   modelValue: ShopProductFormNewImage[]
+  canSubmit: boolean
 }
 
 const props = defineProps<ImageUploaderProps>()
 const emits = defineEmits<{
   (e: 'update:modelValue', value: ShopProductFormNewImage[]): void,
+  (e: 'update:canSubmit', value: boolean): void,
+  (e: 'mainSelected', value: boolean): void,
   (e: 'failed', value: boolean): void,
+  (e: 'finished', value: boolean): void,
 }>()
 
 const q = useQuasar()
@@ -24,26 +28,29 @@ const uploadHeaders = [
   {name: 'X-CSRFToken', value: q.cookies.get('csrftoken')},
 ]
 
-const uploaderComponent = ref<QUploader | null>(null)
+const uploader = ref<QUploader | null>(null)
 const hasUploadFail = ref(false)
-const imgCnt = ref(0)
 const mainImgKey = ref('')
-const submitted = ref(false)
+const queuedImageCount = ref(0)
 
 const newImages = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emits('update:modelValue', value)
-  },
+  get: () => props.modelValue,
+  set: (value) => emits('update:modelValue', value),
 })
-const queuedImageCount = computed(() => imgCnt.value)
-const uploaderReadonly = computed(() => !!uploaderComponent.value?.isBusy)
+const canSubmit = computed({
+  get: () => props.canSubmit,
+  set: (value) => emits('update:canSubmit', value),
+})
+const uploaderReadonly = computed(() => !!uploader.value?.isBusy)
 
 
-function handleUploaderRemove(e: any) {
-  const key = e[0].__key
+function handleImageAdded(files: any[]) {
+  console.log('image added', files)
+  queuedImageCount.value += files.length
+}
+
+function handleImageRemoved(files: any[]) {
+  const key = files[0].__key
   for (const [index, img] of Object.entries(newImages.value)) {
     if (img.key === key) {
       newImages.value.splice(parseInt(index), 1)
@@ -51,14 +58,9 @@ function handleUploaderRemove(e: any) {
     }
   }
   if (queuedImageCount.value > 0)
-    imgCnt.value -= 1
+    queuedImageCount.value -= 1
 
   console.log('images after remove:', newImages.value)
-}
-
-function handleUploaderImage() {
-  console.log('image added')
-  imgCnt.value += 1
 }
 
 function handleImageUploaded(e: any) {
@@ -68,22 +70,37 @@ function handleImageUploaded(e: any) {
   newImages.value.push({
     file: response.file_address,
     key: key,
-    isMain: mainImgKey.value === key
+    isMain: mainImgKey.value === key,
   })
-  imgCnt.value -= 1
-  console.log('images after upload', newImages.value , key===mainImgKey.value )
+  queuedImageCount.value -= 1
+  console.log('images after upload', newImages.value, key === mainImgKey.value)
 }
 
 function handleUploaderFail() {
   hasUploadFail.value = true
-  submitted.value = false
+  canSubmit.value = false
   notifyMessage('negative', 'خطا در آپلود عکس')
 }
 
-function handleMainFile(file: any) {
+function handleMainImageSelected(file: any) {
   console.log('file:', file.__key)
   mainImgKey.value = file.__key
+  emits('mainSelected', true)
 }
+
+function startUpload() {
+  console.log('start upload')
+  hasUploadFail.value = false
+  uploader.value!.upload()
+}
+
+
+defineExpose({
+  uploader: uploader,
+  queuedImageCount: queuedImageCount,
+  hasUploadFail: hasUploadFail,
+  startUpload: startUpload,
+})
 </script>
 
 <template>
@@ -95,11 +112,12 @@ function handleMainFile(file: any) {
       :label="$t('shop.addImage')"
       :multiple="true"
       :field-name="'image'"
-      @removed="handleUploaderRemove"
-      @added="handleUploaderImage"
+      @removed="handleImageRemoved"
+      @added="handleImageAdded"
       @uploaded="handleImageUploaded"
       @failed="handleUploaderFail"
-      ref="imageUploader"
+      @finish="emits('finished', true)"
+      ref="uploader"
       :readonly="uploaderReadonly"
       flat
       bordered
@@ -146,9 +164,9 @@ function handleMainFile(file: any) {
 
               <q-card-actions>
                 <q-btn
-                  flat
-                  dense
                   icon="delete"
+                  color="pink"
+                  flat
                   :disable="uploaderReadonly"
                   @click="scope.removeFile(file)"
                 />
@@ -157,10 +175,9 @@ function handleMainFile(file: any) {
                 <q-btn
                   :icon="mainImgKey === file.__key ? 'fa-solid fa-flag' : 'fa-regular fa-flag'"
                   :color="mainImgKey === file.__key ? 'primary' : ''"
-                  flat
-                  dense
                   :disable="uploaderReadonly"
-                  @click="handleMainFile(file)"
+                  flat
+                  @click="handleMainImageSelected(file)"
                 />
               </q-card-actions>
             </q-card-section>

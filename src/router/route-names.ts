@@ -60,6 +60,7 @@ export enum RouteNames {
   SHOP_PRODUCT_LIST = 'shopProductList',
   SHOP_PRODUCT_ADD = 'shopProductAdd',
   SHOP_PRODUCT_EDIT = 'shopProductEdit',
+  SHOP_PRODUCT_ADD_VARIANT = 'shopProductAddVariant',
   SHOP_VARIANT_LIST = 'shopVariantList',
   SHOP_VARIANT_ADD = 'shopVariantAdd',
   SHOP_VARIANT_EDIT = 'shopVariantEdit',

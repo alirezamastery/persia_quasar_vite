@@ -38,7 +38,7 @@ export interface SidebarMenuList {
 
 export const menuItems: Array<SidebarMenuList> = [
   {
-    icon: 'mdi-warehouse',
+    icon: 'mdi-storefront',
     order: 10,
     titleI18n: 'general.routes.shop',
     collapsed: false,

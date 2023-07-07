@@ -15,5 +15,5 @@ export interface ShopProductPayload {
   is_active: boolean
   attribute_values: ShopProductAttributeValuesPayload[]
   new_images: Array<{ file: string, is_main: boolean }>
-  main_img: number
+  main_img: number | null
 }

@@ -11,6 +11,7 @@ export interface ShopVariantResponse {
     value: string
     extra_info: string
   }
-  price: number
   is_active: boolean
+  price: number
+  inventory: number
 }

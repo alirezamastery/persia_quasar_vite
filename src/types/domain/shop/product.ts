@@ -33,7 +33,7 @@ export interface ShopProductForm {
   }>
   currentImages: ShopProductFormCurrentImage[]
   newImages: ShopProductFormNewImage[]
-  mainImgId: number
+  mainImgId: number | null
 }
 
 export interface ShopProductFormCurrentImage {

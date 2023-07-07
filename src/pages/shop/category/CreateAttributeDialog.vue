@@ -32,6 +32,8 @@ async function handleSubmit() {
     const res = axiosInstance.post(urls.shopProductAttributes, form)
     showDialog.value = false
     emits('attribute-created', true)
+    form.title = ''
+    form.description = ''
   } catch (e: any) {
     console.log('create attribute error:', e)
     notifyErrors(e.response.data)

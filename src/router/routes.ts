@@ -111,6 +111,14 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
       requiresAuth: true,
     },
   },
+  [RouteNames.SHOP_PRODUCT_ADD_VARIANT]: {
+    path: '/shop/products/:id/add-variant',
+    component: views.shopProductAddVariant,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   // ********** Variants **********
   [RouteNames.SHOP_VARIANT_LIST]: {
     path: '/shop/variants',

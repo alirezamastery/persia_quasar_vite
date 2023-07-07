@@ -1,9 +1,11 @@
+import {ShopVariantResponse} from 'src/types/network/response/shop/variant'
+
 export interface ShopBrandResponse {
   id: number
   title: string
 }
 
-export interface ShopProductResponse {
+export interface ShopProductDetailResponse {
   id: number
   brand: ShopBrandResponse
   title: string
@@ -25,6 +27,7 @@ export interface ShopProductResponse {
     value: string
   }>
   images: ProductImageResponse[]
+  variants: ShopVariantResponse[]
 }
 
 

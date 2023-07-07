@@ -10,10 +10,12 @@ const apiRoot = urls.shopProducts
 const editRoute = RouteNames.SHOP_PRODUCT_EDIT
 const addRoute = RouteNames.SHOP_PRODUCT_ADD
 const columns: TableColumn[] = [
+  {name: 'image', label: t('shop.image'), field: 'main_img', align: 'left'},
   {name: 'title', label: t('general.title'), field: 'title', align: 'left'},
   {name: 'brand', label: t('shop.brand'), field: 'brand', align: 'left'},
   {name: 'category', label: t('shop.category'), field: 'category', align: 'left'},
   {name: 'isActive', label: t('general.isActive'), field: 'is_active', align: 'left'},
+  // {name: 'addVariant', label: t('general.addVariant'), field: 'is_active', align: 'left'},
 ]
 
 const filters: TableFilter[] = [
@@ -33,7 +35,18 @@ const filters: TableFilter[] = [
     :edit-route="editRoute"
     :add-route="addRoute"
     :filters="filters"
+    :dense-rows="false"
   >
+
+    <template v-slot:col-image="{ props }">
+      <q-img
+        :src="props.row.main_img.url"
+        height="50"
+        :ratio="1"
+        style="cursor: pointer"
+        @click="$router.push({name: editRoute, params: {id: props.row.id}})"
+      />
+    </template>
 
     <template v-slot:col-title="{ props }">
       <q-btn :to="{name: editRoute, params: {id: props.row.id}}" dense flat>
@@ -52,6 +65,23 @@ const filters: TableFilter[] = [
     <template v-slot:col-isActive="{ props }">
       <q-icon v-if="props.row.is_active" right small color="green" name="mdi-checkbox-marked-circle"/>
       <q-icon v-else right small color="red" name="mdi-cancel"/>
+    </template>
+
+    <template v-slot:col-tools="{ props }">
+      <q-btn
+        :to="{name: editRoute, params: {id: props.row.id}}"
+        icon="edit"
+        size="md"
+        class="q-mr-sm"
+      >
+        <q-tooltip>{{ $t('shop.editProduct') }}</q-tooltip>
+      </q-btn>
+      <q-btn
+        :to="{name: RouteNames.SHOP_PRODUCT_ADD_VARIANT, params: {id: props.row.id}}"
+        icon="format_list_bulleted"
+      >
+        <q-tooltip>{{ $t('shop.addVariant') }}</q-tooltip>
+      </q-btn>
     </template>
 
   </Table>
