@@ -1,4 +1,4 @@
-import {ShopVariantSelectorValueResponse} from 'src/types/network/response/shop/selector'
+import {ShopSelectorValueResponse} from 'src/types/network/response/shop/selector'
 
 export interface ShopVariantForm {
   productId: number
@@ -9,7 +9,7 @@ export interface ShopVariantForm {
 
 export interface ShopProductAddVariantForm {
   productId: number
-  selectorValue: ShopVariantSelectorValueResponse
+  selectorValue: ShopSelectorValueResponse
   isActive: boolean
   maxInOrder: number | null
   inventory: number | null

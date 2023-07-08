@@ -14,4 +14,5 @@ export interface ShopVariantResponse {
   is_active: boolean
   price: number
   inventory: number
+  max_in_order: number
 }

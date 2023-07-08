@@ -4,6 +4,7 @@ import validation from './validation.json'
 import acc from './acc.json'
 import robot from './robot.json'
 import shop from './shop.json'
+import vuelidate from './vuelidate.json'
 
 export default {
   general,
@@ -11,5 +12,6 @@ export default {
   validation,
   acc,
   robot,
-  shop
+  shop,
+  vuelidate,
 }

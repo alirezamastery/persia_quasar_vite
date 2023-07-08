@@ -12,7 +12,7 @@ export const shopCategoryList = () => import('../pages/shop/category/List.vue')
 export const shopCategoryAddEdit = () => import('../pages/shop/category/AddEdit.vue')
 export const shopProductList = () => import('../pages/shop/product/List.vue')
 export const shopProductAddEdit = () => import('pages/shop/product/addEdit/AddEdit.vue')
-export const shopProductAddVariant = () => import('../pages/shop/product/AddVariant.vue')
+export const shopProductAddVariant = () => import('pages/shop/product/addVariants/Form.vue')
 export const shopVariantList = () => import('../pages/shop/variant/List.vue')
 export const shopVariantAddEdit = () => import('../pages/shop/variant/AddEdit.vue')
 

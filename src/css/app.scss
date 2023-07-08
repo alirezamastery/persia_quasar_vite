@@ -98,3 +98,13 @@ body.body--light {
 .sw-update-notif .q-notification__actions {
   justify-content: space-between;
 }
+
+input[type="number"] {
+  // remove number arrows from number input:
+  -moz-appearance: textfield; // firefox
+  &::-webkit-outer-spin-button, // chrome
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

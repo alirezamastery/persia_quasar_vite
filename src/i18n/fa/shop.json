@@ -21,6 +21,7 @@
   "product": "محصول",
   "products": "محصولات",
   "addVariantFor": "افزودن تنوع برای محصول {product}",
+  "addVariant": "افزودن تنوع",
   "editProduct": "ویرایش محصول",
   "maxInOrder": "حداکثر تعداد در سفارش",
   "selectorValue": "مقدار انتخابگر",

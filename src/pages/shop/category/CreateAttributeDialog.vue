@@ -29,7 +29,7 @@ const form = reactive({
 
 async function handleSubmit() {
   try {
-    const res = axiosInstance.post(urls.shopProductAttributes, form)
+    await axiosInstance.post(urls.shopProductAttributes, form)
     showDialog.value = false
     emits('attribute-created', true)
     form.title = ''

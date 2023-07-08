@@ -1,5 +1,6 @@
 import {computed, ComputedRef, Ref, ref} from 'vue'
 import {RouteLocationNormalizedLoaded, useRouter} from 'vue-router'
+import {useQuasar} from 'quasar'
 import {useI18n} from 'vue-i18n'
 import {addBanner, notifyErrors} from './notif'
 import {axiosInstance} from 'src/boot/axios'
@@ -22,11 +23,13 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
     responseToForm: (r: ResponseType) => FormType,
     formToRequest: (f: FormType) => RequestType,
 ) {
-  const {t} = useI18n()
+  const q = useQuasar()
   const router = useRouter()
+  const {t} = useI18n()
 
   const showForm = ref(false)
   const showDeleteDialog = ref(false)
+  const isLoading = ref(false)
 
   const editingItemId = computed(() => itemId)
   const formTitle = computed(() => {
@@ -50,6 +53,8 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
   }
 
   function handleFormSubmit() {
+    isLoading.value = true
+    q.loading.show({delay: 300})
     const data = formToRequest(form.value)
     console.log('save payload', data)
     let url = apiRoot
@@ -70,6 +75,10 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
           console.log('create error', err)
           notifyErrors(err.response.data)
         })
+        .finally(() => {
+          isLoading.value = false
+          q.loading.hide()
+        })
   }
 
   function updateItem(url: string, data: RequestType) {
@@ -80,6 +89,10 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
         .catch(err => {
           console.log('update error', err)
           notifyErrors(err.response.data)
+        })
+        .finally(() => {
+          isLoading.value = false
+          q.loading.hide()
         })
   }
 
@@ -124,6 +137,7 @@ export function useAddEdit<RequestType, ResponseType, FormType>(
   return {
     formTitle,
     showForm,
+    isLoading,
     showDeleteDialog,
     toggleDeleteDialog,
     handleFormSubmit,

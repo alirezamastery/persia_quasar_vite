@@ -9,7 +9,7 @@
     "serverError": "خطا در برقراری ارتباط با سرور",
     "fieldIsRequired": "این فیلد الزامی است",
     "positiveNumber": "این مقدار باید عدد مثبت باشد",
-    "positiveNaturalNumber": "این مقدار باید بزرگتر از صفر باشد"
+    "positiveNaturalNumber": "این مقدار باید عدد بزرگتر از صفر باشد"
   },
   "routes": {
     "aboutUs": "درباره ما",

@@ -50,6 +50,7 @@ export const urls = {
   shopProductAttributeDetail: 'shop/product-attrs/{0}/',
   shopProducts: 'shop/products/',
   shopProductDetail: 'shop/products/{0}/',
+  shopAddVariants : 'shop/products/add-variants/',
   shopImages: 'shop/images/',
   shopImageUpload: 'shop/images/upload/',
   shopImageDetail: 'shop/images/{0}/',

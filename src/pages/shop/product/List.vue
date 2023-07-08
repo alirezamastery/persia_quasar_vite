@@ -41,7 +41,8 @@ const filters: TableFilter[] = [
     <template v-slot:col-image="{ props }">
       <q-img
         :src="props.row.main_img.url"
-        height="50"
+        height="70px"
+        width="70px"
         :ratio="1"
         style="cursor: pointer"
         @click="$router.push({name: editRoute, params: {id: props.row.id}})"

@@ -1,11 +1,11 @@
-export interface ShopVariantSelectorTypeDetailResponse {
+export interface ShopSelectorTypeDetailResponse {
   id: number
   title: string
   code: 'COLOR' | 'SIZE'
-  values: ShopVariantSelectorValueResponse[]
+  values: ShopSelectorValueResponse[]
 }
 
-export interface ShopVariantSelectorValueResponse {
+export interface ShopSelectorValueResponse {
   id: number
   type: number
   title: string

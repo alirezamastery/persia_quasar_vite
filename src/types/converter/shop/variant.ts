@@ -14,10 +14,10 @@ export function shopVariantFormToPayload(form: ShopVariantForm): ShopVariantPayl
 export function shopAddVariantFormToPayload(form: ShopProductAddVariantForm): ShopProductAddVariantPayload {
   return {
     product: form.productId,
-    selector_value: form.selectorValueId,
+    selector_value: form.selectorValue.id,
     is_active: form.isActive,
     price: parseCommaSeparatedInt(form.price),
-    max_in_order: form.maxInOrder,
-    inventory: form.inventory,
+    inventory: form.inventory!,
+    max_in_order: form.maxInOrder!,
   }
 }
