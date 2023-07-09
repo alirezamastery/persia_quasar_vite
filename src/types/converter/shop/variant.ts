@@ -1,6 +1,7 @@
+import {parseCommaSeparatedInt} from 'src/modules/number-tools'
 import {ShopProductAddVariantForm, ShopVariantForm} from 'src/types/domain/shop/variant'
 import {ShopProductAddVariantPayload, ShopVariantPayload} from 'src/types/network/payload/shop/variant'
-import {parseCommaSeparatedInt} from 'src/modules/number-tools'
+
 
 export function shopVariantFormToPayload(form: ShopVariantForm): ShopVariantPayload {
   return {
@@ -11,13 +12,13 @@ export function shopVariantFormToPayload(form: ShopVariantForm): ShopVariantPayl
   }
 }
 
-export function shopAddVariantFormToPayload(form: ShopProductAddVariantForm): ShopProductAddVariantPayload {
+export function shopProductAddVariantToPayload(form: ShopProductAddVariantForm): ShopProductAddVariantPayload {
   return {
     product: form.productId,
     selector_value: form.selectorValue.id,
     is_active: form.isActive,
     price: parseCommaSeparatedInt(form.price),
-    inventory: form.inventory!,
-    max_in_order: form.maxInOrder!,
+    inventory: parseCommaSeparatedInt(form.inventory),
+    max_in_order: parseCommaSeparatedInt(form.maxInOrder),
   }
 }

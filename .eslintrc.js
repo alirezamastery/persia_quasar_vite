@@ -91,5 +91,6 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'vue/no-useless-template-attributes': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 }

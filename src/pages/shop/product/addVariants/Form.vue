@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import {computed, onMounted, Ref, ref, watch} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {useRoute} from 'vue-router'
 import {axiosInstance} from 'boot/axios'
 import {parentCardClass} from 'src/utils/screen'
 import urls from 'src/urls'
+import NewVariants from 'pages/shop/product/addVariants/NewVariants.vue'
 import {ShopProductAddVariantForm} from 'src/types/domain/shop/variant'
 import {ShopProductDetailResponse} from 'src/types/network/response/shop/product'
-import {ShopSelectorTypeDetailResponse, ShopSelectorValueResponse} from 'src/types/network/response/shop/selector'
-import {isRequired, positiveNaturalNumber} from 'src/modules/form-validation'
-import NewVariant from 'pages/shop/product/addVariants/NewVariant.vue'
+import {ShopSelectorTypeDetailResponse} from 'src/types/network/response/shop/selector'
+import {ShopVariantResponse} from 'src/types/network/response/shop/variant'
+import {shopProductAddVariantToPayload} from 'src/types/converter/shop/variant'
+import ExistingVariant from 'pages/shop/product/addVariants/ExistingVariant.vue'
 
 
 const route = useRoute()
@@ -16,10 +18,11 @@ const route = useRoute()
 const product = ref<ShopProductDetailResponse | null>(null)
 const selectorType = ref<ShopSelectorTypeDetailResponse | null>(null)
 const mainImgUrl = ref('')
-const currentVariants = ref<number[]>([])
+const currentVariants = ref<ShopVariantResponse[]>([])
 const newVariants = ref<ShopProductAddVariantForm[]>([])
 
 const formTitle = computed(() => `${product.value?.category.title} ${product.value?.title}`)
+const currentSelectorIds = computed(()=> currentVariants.value.map(v => v.selector_value.id))
 
 onMounted(async () => {
   let url = urls.shopProductDetail.replace('{0}', String(route.params.id))
@@ -33,7 +36,8 @@ onMounted(async () => {
         break
       }
     }
-    currentVariants.value = resProduct.data.variants.map(v => v.id)
+    currentVariants.value = resProduct.data.variants
+
   } catch (e) {
     console.log('error in getting product details:', e)
   }
@@ -48,41 +52,44 @@ onMounted(async () => {
   }
 })
 
+function btnAlreadySelected(selectorId: number) {
+  console.log('s id:', selectorId, currentSelectorIds.value)
+  return newVariants.value.some(newVar => newVar.selectorValue.id === selectorId)
+    || currentSelectorIds.value.includes(selectorId)
+}
 
-function handleSelectorValueClick(selectorValue: ShopSelectorValueResponse) {
-  if (newVariants.value.map(v => v.selectorValue.id).includes(selectorValue.id))
+function handleSelectorValueClick(selectorValue: ShopSelectorTypeDetailResponse['values'][number]) {
+  if (btnAlreadySelected(selectorValue.id))
     return
   newVariants.value.push({
     productId: product.value!.id,
     selectorValue: selectorValue,
     isActive: true,
-    maxInOrder: null,
-    inventory: null,
+    maxInOrder: '',
+    inventory: '',
     price: '',
   })
 }
 
-function getBtnStatus(selectorId: number) {
-  return newVariants.value.some(newVar => newVar.selectorValue.id === selectorId)
-    || currentVariants.value.includes(selectorId)
-}
-
-function handleRemoveSelector(selectorId: number) {
-  const index = newVariants.value.map(v => v.selectorValue.id).indexOf(selectorId)
-  if (index > -1)
-    newVariants.value.splice(index, 1)
-}
-
-function formatNumber(newVar: any) {
-  console.log('changed:', newVar.price)
-  // newVar.value.price = formatAsCommaSeparated(newVar.value.price)
+async function handleSubmit() {
+  console.log('ll')
+  const data = newVariants.value.map(v => shopProductAddVariantToPayload(v))
+  try {
+    const res = await axiosInstance.post<ShopVariantResponse[]>(urls.shopAddVariants, data)
+    console.log('add variant response:', res)
+    currentVariants.value.push(...res.data)
+    newVariants.value = []
+  } catch (e) {
+    console.log('add variant error:', e)
+  }
 }
 </script>
 
 <template>
-  <div
+  <form
     v-if="product !== null && selectorType !== null"
     :class="parentCardClass"
+    @submit.prevent="handleSubmit"
   >
     <q-card class="no-shadow q-mb-md">
       <q-card-section horizontal>
@@ -95,75 +102,13 @@ function formatNumber(newVar: any) {
       </q-card-section>
     </q-card>
 
-    <q-card class="q-mt-md q-pa-md" v-if="newVariants.length > 0">
-      <NewVariant v-model="newVariants" :selector-type="selectorType"/>
-      <!--      <q-card-->
-      <!--        v-for="(newVar, j) in newVariants"-->
-      <!--        :key="j"-->
-      <!--        class="bordered no-shadow q-my-lg"-->
-      <!--      >-->
-      <!--        <q-bar>-->
-      <!--          <q-space/>-->
-      <!--          <q-btn dense flat icon="close" @click="handleRemoveSelector(newVar.selectorValue.id)"/>-->
-      <!--        </q-bar>-->
-      <!--        <q-card-section class="row justify-between">-->
-      <!--          <q-btn dense class="q-ma-sm selector-btn" outline>-->
-      <!--            <div-->
-      <!--              v-if="selectorType.code === 'COLOR'"-->
-      <!--              class="selector-icon"-->
-      <!--              :style="{'background-color': newVar.selectorValue.value}"-->
-      <!--            ></div>-->
-      <!--            <span class="q-ml-sm">{{ newVar.selectorValue.title }}</span>-->
-      <!--          </q-btn>-->
-      <!--          <q-checkbox-->
-      <!--            v-model="newVar.isActive"-->
-      <!--            :label="$t('shop.isActive')"-->
-      <!--          />-->
-      <!--        </q-card-section>-->
-
-      <!--        <q-card-section class="row q-col-gutter-sm">-->
-      <!--          <div class="col col-xs-12 col-sm-6 col-md-4">-->
-      <!--            <q-input-->
-      <!--              v-model="newVar.maxInOrder"-->
-      <!--              :label="$t('shop.maxInOrder')"-->
-      <!--              outlined-->
-      <!--              dense-->
-      <!--              :rules="[isRequired]"-->
-      <!--            />-->
-      <!--          </div>-->
-      <!--          <div class="col col-xs-12 col-sm-6 col-md-4">-->
-      <!--            <q-input-->
-      <!--              v-model="newVar.inventory"-->
-      <!--              :label="$t('shop.inventory')"-->
-      <!--              outlined-->
-      <!--              dense-->
-      <!--              :rules="[isRequired]"-->
-      <!--            />-->
-      <!--          </div>-->
-      <!--          <div class="col col-xs-12 col-sm-6 col-md-4">-->
-      <!--            <q-input-->
-      <!--              v-model="newVar.price"-->
-      <!--              :label="$t('shop.price')"-->
-      <!--              type="number"-->
-      <!--              outlined-->
-      <!--              dense-->
-      <!--              :rules="[isRequired,positiveNaturalNumber]"-->
-      <!--              @update:model-value="formatNumber(newVar)"-->
-      <!--            />-->
-      <!--          </div>-->
-      <!--        </q-card-section>-->
-      <!--      </q-card>-->
-    </q-card>
-
-
-
     <q-card class="bordered">
       <q-card-section>
         <q-btn
           v-for="(selectorValue, i) in selectorType.values"
           :key="i"
-          class="q-ma-sm selector-btn"
-          :outline="getBtnStatus(selectorValue.id)"
+          class="q-ma-xs selector-btn"
+          :outline="btnAlreadySelected(selectorValue.id)"
           dense
           unelevated
           @click="handleSelectorValueClick(selectorValue)"
@@ -178,9 +123,27 @@ function formatNumber(newVar: any) {
       </q-card-section>
     </q-card>
 
+    <q-card v-if="newVariants.length > 0" class="q-mt-md q-pa-md">
+      <NewVariants v-model="newVariants" :selector-type="selectorType"/>
 
+      <q-card-actions>
+        <q-btn
+          color="primary"
+          type="submit"
+          :label="$t('shop.addToVariantList')"
+        />
+      </q-card-actions>
+    </q-card>
 
-  </div>
+    <q-card v-if="currentVariants.length > 0" class="q-mt-md q-pa-md">
+      <ExistingVariant
+        v-for="v in currentVariants"
+        :key="v.id"
+        :variant="v"
+      />
+    </q-card>
+
+  </form>
 </template>
 
 <style scoped lang="scss">

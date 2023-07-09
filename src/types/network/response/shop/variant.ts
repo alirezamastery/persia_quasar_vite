@@ -7,7 +7,8 @@ export interface ShopVariantResponse {
       id: 1
       title: string
       code: string
-    },
+    }
+    title: string
     value: string
     extra_info: string
   }
