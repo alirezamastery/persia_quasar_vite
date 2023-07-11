@@ -46,13 +46,13 @@ export const menuItems: Array<SidebarMenuList> = [
       getRoute(RouteNames.SHOP_BRAND_LIST),
       getRoute(RouteNames.SHOP_CATEGORY_LIST),
       getRoute(RouteNames.SHOP_PRODUCT_LIST),
-      // getRoute(RouteNames.SHOP_VARIANT_LIST),
+      getRoute(RouteNames.SHOP_VARIANT_LIST),
     ],
   },
   {
     icon: 'mdi-warehouse',
     order: 20,
-    titleI18n: 'general.routes.products',
+    titleI18n: 'general.routes.digikala',
     collapsed: false,
     children: [
       getRoute(RouteNames.BRAND_LIST),

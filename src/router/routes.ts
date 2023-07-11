@@ -65,7 +65,7 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: views.shopCategoryList,
     meta: {
       titleI18n: 'general.routes.shopCategories',
-      icon: 'fab fa-apple',
+      icon: 'category',
       requiresAuth: true,
     },
   },
@@ -91,7 +91,7 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: views.shopProductList,
     meta: {
       titleI18n: 'general.routes.products',
-      icon: 'fab fa-apple',
+      icon: 'fas fa-cubes',
       requiresAuth: true,
     },
   },
@@ -125,7 +125,7 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: views.shopVariantList,
     meta: {
       titleI18n: 'general.routes.variants',
-      icon: 'fab fa-apple',
+      icon: 'account_tree',
       requiresAuth: true,
     },
   },

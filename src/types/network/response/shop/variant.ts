@@ -4,7 +4,7 @@ export interface ShopVariantResponse {
   selector_value: {
     id: number
     type: {
-      id: 1
+      id: number
       title: string
       code: string
     }

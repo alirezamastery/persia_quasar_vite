@@ -26,12 +26,12 @@ export interface ShopProductDetailResponse {
     }
     value: string
   }>
-  images: ProductImageResponse[]
+  images: ShopProductImageResponse[]
   variants: ShopVariantResponse[]
 }
 
 
-export interface ProductImageResponse {
+export interface ShopProductImageResponse {
   id: number
   product: number
   url: string

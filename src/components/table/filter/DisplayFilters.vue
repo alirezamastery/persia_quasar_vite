@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="col-xs-12 col-md-3 col-lg-3 col-xl-2 q-my-xs-md q-my-md-none q-mx-md-sm"
+    class="col-xs-12 col-md-3 col-lg-2 col-xl-2 q-my-xs-md q-my-md-none q-mx-md-sm"
     :class="$q.screen.gt.sm ? '' : 'border-radius-inherit no-shadow'"
     style="height: fit-content"
     :bordered="$q.screen.gt.sm"
@@ -21,6 +21,7 @@
       />
     </div>
     <q-separator/>
+
     <template
       v-for="(filter, index) in filters"
       :key="index"
@@ -33,46 +34,70 @@
       />
       <q-separator v-if="index < filters.length - 1"/>
     </template>
+
   </q-card>
 </template>
 
 <script setup lang="ts">
 import {ref, watch} from 'vue'
-import FilterSelector from './FilterSelector.vue'
+import {useRouter} from 'vue-router'
 import useGeneralStore from 'src/stores/general'
+import FilterSelector from './FilterSelector.vue'
 import {TableFilter} from 'components/table/types'
+import {isEqual} from 'lodash'
 
 export interface DisplayFiltersProps {
   filters: TableFilter[]
 }
 
-defineProps<DisplayFiltersProps>()
+const props = defineProps<DisplayFiltersProps>()
 
 const emits = defineEmits(['filter-change'])
 
+const router = useRouter()
 const generalStore = useGeneralStore()
 
-const filterValues = ref({})
+const filterValues = ref<{ [key: string]: Nullable<string> }>({})
 const justForResetSignal = ref(0)
 const showReset = ref(false)
+const filterUpdateLock = ref(false)
 
-watch(filterValues, (val) => {
-  console.log('side filter | watch:', val)
-  let finalQuery = ''
-  let nullCount = 0
-  for (const [key, value] of Object.entries(val)) {
-    if (value === null)
-      nullCount++
+watch(() => ({...filterValues.value}), (newValues, oldValues) => {
+  console.warn('DisplayFilters | watch filterValues | newVal:', newValues, 'oldVal:', oldValues)
+  if (isEqual(newValues, oldValues)) return
+  // when filter reset button is clicked all filters will get null value.
+  // so we should wait for all of them to become null before sending request to server
+  // if we don't check this lock, a request will be sent for each filter!!
+  if (filterUpdateLock.value === true) {
+    if (Object.keys(newValues).length === props.filters.length
+      && Object.values(newValues).every(v => v === null))
+      filterUpdateLock.value = false
     else
-      finalQuery += `&${key}=${value}`
+      return
   }
-  showReset.value = nullCount !== Object.keys(val).length
-  emits('filter-change', finalQuery)
+
+  const remainingFilters: { [key: string]: string } = {}
+  for (const [key, value] of Object.entries(newValues)) {
+    if (value !== null) {
+      remainingFilters[key] = value as string
+    }
+  }
+
+  showReset.value = !Object.values(newValues).every(v => v === null)
+  emits('filter-change', remainingFilters)
+
 }, {deep: true})
 
 
 function resetFilters() {
-  filterValues.value = {}
+  filterUpdateLock.value = true
   generalStore.resetTableFilter()
+  router.replace({query: {}})
 }
+
+for (const filter of props.filters) {
+  console.log('init null:', filter.queryParam)
+  filterValues.value[filter.queryParam] = null
+}
+
 </script>

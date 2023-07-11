@@ -89,11 +89,11 @@
 
     <div class="q-mt-lg">
       <q-spinner-gears
-        v-if="!taskDone"
+        v-if="isWorking"
         color="amber"
         size="xl"
       />
-      <div v-if="taskState === 'FAILURE' && taskDone">
+      <div v-if="taskState === 'FAILURE' && !isWorking">
         <span class="text-negative">{{ $t('general.error.operationFailed') }}</span> &nbsp;
         <q-icon name="cancel" color="negative" size="lg"/>
       </div>
@@ -140,7 +140,8 @@ onBeforeUnmount(() => {
 })
 
 function stopChecking() {
-  window.clearInterval(stateInterval.value!)
+  if (stateInterval.value !== null)
+    window.clearInterval(stateInterval.value)
 }
 
 async function handleActualProductSelect() {

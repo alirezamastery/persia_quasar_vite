@@ -2,22 +2,22 @@
   <div class="q-gutter-sm column q-pa-sm">
     <span class="flex justify-center">{{ $t(label) }}</span>
     <q-radio
-      v-model="inputVal"
+      :model-value="inputVal"
       :label="$t('general.all')"
       :val="null"
       @update:model-value="handleDualRadioUpdate"
       dense/>
     <q-radio
-      v-model="inputVal"
+      :model-value="inputVal"
       :label="$t('general.yes')"
-      :val="1"
+      :val="'1'"
       @update:model-value="handleDualRadioUpdate"
       dense
     />
     <q-radio
-      v-model="inputVal"
+      :model-value="inputVal"
       :label="$t('general.no')"
-      :val="0"
+      :val="'0'"
       @update:model-value="handleDualRadioUpdate"
       dense
     />
@@ -25,31 +25,20 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
-import useGeneralStore from 'stores/general'
+import {ref} from 'vue'
 
 interface BooleanRadioFilterProps {
-  modelValue: Nullable<number>
+  modelValue?: string | null
   label: string
 }
 
 const props = defineProps<BooleanRadioFilterProps>()
 const emits = defineEmits(['update:modelValue'])
 
-const generalStore = useGeneralStore()
+const inputVal = ref<string | null | undefined>(props.modelValue)
 
-const inputVal = ref<Nullable<number>>(props.modelValue)
-const resetSignal = computed(() => generalStore.tableFilterResetSignal)
-
-watch(
-  () => resetSignal.value,
-  () => (inputVal.value = null),
-)
-
-function handleDualRadioUpdate(val: string | number | boolean | null) {
-  if (val === null)
-    emits('update:modelValue', null)
-  else
-    emits('update:modelValue', Boolean(val))
+function handleDualRadioUpdate(val: string | null) {
+  inputVal.value = val
+  emits('update:modelValue', val)
 }
 </script>

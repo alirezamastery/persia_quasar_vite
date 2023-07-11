@@ -1,12 +1,12 @@
 <template>
   <div class="row items-center justify-between q-pa-sm">
     <div
-      class="col-12 col-md-1 col-lg-1 text-no-wrap"
+      class="col-12 col-md-2 col-lg-1 text-no-wrap"
       :class="$q.screen.gt.sm ? '' : 'q-my-md'"
     >
       {{ countDisplay }}
     </div>
-    <div class="col-12 col-md-6 col-lg-8 col-xl-9 flex justify-center">
+    <div class="col-12 col-md-7 col-lg-8 col-xl-9 flex justify-center">
       <q-pagination
         v-model="pageValue"
         :max="pageCount"
@@ -18,7 +18,7 @@
       />
     </div>
     <div
-      class="col-4 col-md-5 col-lg-3 col-xl-2 flex"
+      class="col-4 col-md-3 col-lg-3 col-xl-2 flex"
       :class="[q.screen.gt.sm ? 'justify-end' : 'q-mt-lg']"
     >
       <q-select

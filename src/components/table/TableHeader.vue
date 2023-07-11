@@ -11,7 +11,6 @@
       dense
       hide-hint
       clearable
-      @update:model-value="$emit('search-input', searchPhrase)"
     >
       <template v-slot:append>
         <q-icon name="search"/>
@@ -21,7 +20,13 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {computed} from 'vue'
 
-const searchPhrase = ref('')
+const props = defineProps<{ modelValue: string | null }>()
+const emits = defineEmits<{ (e: 'update:modelValue', value: string | null): void }>()
+
+const searchPhrase = computed({
+  get: () => props.modelValue,
+  set: (val) => emits('update:modelValue', val),
+})
 </script>
