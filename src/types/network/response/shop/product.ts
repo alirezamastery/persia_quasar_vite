@@ -1,42 +1,76 @@
-import {ShopVariantResponse} from 'src/types/network/response/shop/variant'
-
-export interface ShopBrandResponse {
+export interface ShopProductListResponse {
   id: number
-  title: string
-}
-
-export interface ShopProductDetailResponse {
-  id: number
-  brand: ShopBrandResponse
   title: string
   description: string
   is_active: boolean
   slug: string
-  category: {
-    id: number
-    title: string
-    selector_type: number
-  }
-  attribute_values: Array<{
-    id: number
-    attribute: {
-      id: number
-      title: string
-      description: string
-    }
-    value: string
-  }>
-  images: ShopProductImageResponse[]
-  variants: ShopVariantResponse[]
+  brand: BrandResponse
+  category: CategoryResponse
+  main_img: ImageResponse | null
+}
+
+export interface ShopProductDetailResponse {
+  id: number
+  title: string
+  description: string
+  is_active: boolean
+  slug: string
+  brand: BrandResponse
+  category: CategoryResponse
+  attribute_values: AttributeValueResponse []
+  variants: VariantResponse[]
+  images: ImageResponse[]
 }
 
 
-export interface ShopProductImageResponse {
+// Sub objects:
+interface BrandResponse {
+  id: number
+  title: string
+}
+
+interface ImageResponse {
   id: number
   product: number
   url: string
   is_main: boolean
   description: string
+}
+
+interface CategoryResponse {
+  id: number
+  title: string
+  selector_type: number
+}
+
+interface AttributeValueResponse {
+  id: number
+  attribute: {
+    id: number
+    title: string
+    description: string
+  }
+  value: string
+}
+
+interface VariantResponse {
+  id: number
+  product: number
+  selector_value: {
+    id: number
+    type: {
+      id: number
+      title: string
+      code: 'COLOR' | 'SIZE'
+    }
+    title: string
+    value: string
+    extra_info: string
+  }
+  is_active: boolean
+  price: number
+  inventory: number
+  max_in_order: number
 }
 
 // export type CamelizeString<ObjectProperty extends string> =

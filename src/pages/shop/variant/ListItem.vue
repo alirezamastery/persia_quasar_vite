@@ -4,38 +4,10 @@ import {formatAsCommaSeparated, parseCommaSeparatedInt} from 'src/modules/number
 import urls from 'src/urls'
 import {axiosInstance} from 'boot/axios'
 import QInputCommaSeparated from 'components/form/QInputCommaSeparated.vue'
+import {ShopVariantResponse} from 'src/types/network/response/shop/variant'
 
-interface VariantListItemProps {
-  variant: {
-    id: number
-    product: {
-      id: number
-      brand: number
-      title: string
-      description: string
-      is_active: boolean
-      slug: string
-      category: number
-    }
-    selector_value: {
-      id: number
-      type: {
-        id: number
-        title: string
-        code: 'COLOR' | 'SIZE'
-      }
-      title: string
-      value: string
-      extra_info: string
-    }
-    is_active: false
-    price: number
-    inventory: number
-    max_in_order: number
-  }
-}
 
-const props = defineProps<VariantListItemProps>()
+const props = defineProps<{ variant: ShopVariantResponse }>()
 
 const initialValues = {
   isActive: props.variant.is_active,
@@ -59,7 +31,7 @@ function handleToggleClick(variantId: number, isActive: boolean) {
   console.log('id:', variantId, isActive)
 }
 
-function formToPayload(){
+function formToPayload() {
   return {
     product: props.variant.product,
     selector_value: props.variant.selector_value.id,

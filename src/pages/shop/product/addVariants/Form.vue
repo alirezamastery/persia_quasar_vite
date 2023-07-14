@@ -5,24 +5,26 @@ import {axiosInstance} from 'boot/axios'
 import {parentCardClass} from 'src/utils/screen'
 import urls from 'src/urls'
 import NewVariants from 'pages/shop/product/addVariants/NewVariants.vue'
+import ExistingVariant from 'pages/shop/product/addVariants/ExistingVariant.vue'
+import {shopProductAddVariantToPayload} from 'src/types/converter/shop/variant'
 import {ShopProductAddVariantForm} from 'src/types/domain/shop/variant'
 import {ShopProductDetailResponse} from 'src/types/network/response/shop/product'
 import {ShopSelectorTypeDetailResponse} from 'src/types/network/response/shop/selector'
 import {ShopVariantResponse} from 'src/types/network/response/shop/variant'
-import {shopProductAddVariantToPayload} from 'src/types/converter/shop/variant'
-import ExistingVariant from 'pages/shop/product/addVariants/ExistingVariant.vue'
 
+
+type ProductVariantObject = ShopProductDetailResponse['variants'][number]
 
 const route = useRoute()
 
+const mainImgUrl = ref<string | null>(null)
 const product = ref<ShopProductDetailResponse | null>(null)
 const selectorType = ref<ShopSelectorTypeDetailResponse | null>(null)
-const mainImgUrl = ref('')
-const currentVariants = ref<ShopVariantResponse[]>([])
+const currentVariants = ref<ProductVariantObject[]>([])
 const newVariants = ref<ShopProductAddVariantForm[]>([])
 
 const formTitle = computed(() => `${product.value?.category.title} ${product.value?.title}`)
-const currentSelectorIds = computed(()=> currentVariants.value.map(v => v.selector_value.id))
+const currentSelectorIds = computed(() => currentVariants.value.map(v => v.selector_value.id))
 
 onMounted(async () => {
   let url = urls.shopProductDetail.replace('{0}', String(route.params.id))
@@ -53,7 +55,6 @@ onMounted(async () => {
 })
 
 function btnAlreadySelected(selectorId: number) {
-  console.log('s id:', selectorId, currentSelectorIds.value)
   return newVariants.value.some(newVar => newVar.selectorValue.id === selectorId)
     || currentSelectorIds.value.includes(selectorId)
 }
@@ -72,12 +73,21 @@ function handleSelectorValueClick(selectorValue: ShopSelectorTypeDetailResponse[
 }
 
 async function handleSubmit() {
-  console.log('ll')
+  const variantResponseConverter = (res: ShopVariantResponse): ProductVariantObject => ({
+    id: res.id,
+    product: res.product.id,
+    selector_value: res.selector_value,
+    is_active: res.is_active,
+    price: res.price,
+    inventory: res.inventory,
+    max_in_order: res.max_in_order,
+  })
+
   const data = newVariants.value.map(v => shopProductAddVariantToPayload(v))
   try {
     const res = await axiosInstance.post<ShopVariantResponse[]>(urls.shopAddVariants, data)
     console.log('add variant response:', res)
-    currentVariants.value.push(...res.data)
+    currentVariants.value.push(...res.data.map(v => variantResponseConverter(v)))
     newVariants.value = []
   } catch (e) {
     console.log('add variant error:', e)
@@ -93,7 +103,7 @@ async function handleSubmit() {
   >
     <q-card class="no-shadow q-mb-md">
       <q-card-section horizontal>
-        <q-img :src="mainImgUrl" :ratio="1" height="120px" width="120px"/>
+        <q-img v-if="mainImgUrl" :src="mainImgUrl" :ratio="1" height="120px" width="120px"/>
         <q-card-section>{{ formTitle }}</q-card-section>
         <q-card-section>
           <span>نوع انتخاب گر:</span>&nbsp;

@@ -1,18 +1,7 @@
-import {ShopBrandForm, ShopProductForm} from 'src/types/domain/shop/product'
-import {ShopBrandPayload, ShopProductPayload} from 'src/types/network/payload/shop/product'
-import {ShopBrandResponse, ShopProductDetailResponse} from 'src/types/network/response/shop/product'
+import {ShopProductForm} from 'src/types/domain/shop/product'
+import {ShopProductPayload} from 'src/types/network/payload/shop/product'
+import {ShopProductDetailResponse} from 'src/types/network/response/shop/product'
 
-export function shopBrandResponseToForm(data: ShopBrandResponse): ShopBrandForm {
-  return {
-    title: data.title,
-  }
-}
-
-export function shopBrandFomToPayload(form: ShopBrandForm): ShopBrandPayload {
-  return {
-    title: form.title,
-  }
-}
 
 export function shopProductResponseToForm(data: ShopProductDetailResponse): ShopProductForm {
   let mainImgId: number | null = null

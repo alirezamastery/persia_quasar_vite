@@ -5,7 +5,7 @@ export interface ShopSelectorTypeDetailResponse {
   values: ShopSelectorTypeValueResponse[]
 }
 
-export interface ShopSelectorTypeValueResponse {
+export interface ShopSelectorValueResponse {
   id: number
   type: number
   title: string
@@ -13,7 +13,9 @@ export interface ShopSelectorTypeValueResponse {
   extra_info: string
 }
 
-export interface ShopSelectorValueResponse {
+
+// Sub objs:
+interface ShopSelectorTypeValueResponse {
   id: number
   type: number
   title: string

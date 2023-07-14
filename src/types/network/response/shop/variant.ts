@@ -1,12 +1,20 @@
 export interface ShopVariantResponse {
   id: number
-  product: number
+  product: {
+    id: number
+    brand: string
+    title: string
+    description: string
+    is_active: boolean
+    slug: number
+    category: number
+  }
   selector_value: {
     id: number
     type: {
       id: number
       title: string
-      code: string
+      code: 'COLOR' | 'SIZE'
     }
     title: string
     value: string

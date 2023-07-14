@@ -14,7 +14,6 @@ export const shopProductList = () => import('../pages/shop/product/List.vue')
 export const shopProductAddEdit = () => import('pages/shop/product/addEdit/AddEdit.vue')
 export const shopProductAddVariant = () => import('pages/shop/product/addVariants/Form.vue')
 export const shopVariantList = () => import('../pages/shop/variant/List.vue')
-export const shopVariantAddEdit = () => import('../pages/shop/variant/AddEdit.vue')
 
 // Products
 export const actualProductsList = () => import('../pages/products/actualProduct/List.vue')

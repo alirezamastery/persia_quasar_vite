@@ -9,9 +9,11 @@ export interface ShopCategoryDetailResponse {
   title: string
   selector_type: number
   parent_node_id: number
-  attributes: Array<{
-    id: number
-    title: string
-    description: string
-  }>
+  attributes: CategoryAttribute[]
+}
+
+interface CategoryAttribute {
+  id: number
+  title: string
+  description: string
 }
