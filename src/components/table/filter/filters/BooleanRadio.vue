@@ -2,43 +2,38 @@
   <div class="q-gutter-sm column q-pa-sm">
     <span class="flex justify-center">{{ $t(label) }}</span>
     <q-radio
-      :model-value="inputVal"
+      v-model="inputVal"
       :label="$t('general.all')"
       :val="null"
-      @update:model-value="handleDualRadioUpdate"
       dense/>
     <q-radio
-      :model-value="inputVal"
+      v-model="inputVal"
       :label="$t('general.yes')"
       :val="'1'"
-      @update:model-value="handleDualRadioUpdate"
       dense
     />
     <q-radio
-      :model-value="inputVal"
+      v-model="inputVal"
       :label="$t('general.no')"
       :val="'0'"
-      @update:model-value="handleDualRadioUpdate"
       dense
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {computed} from 'vue'
 
-interface BooleanRadioFilterProps {
+const props = defineProps<{
   modelValue?: string | null
-  label: string
-}
+  label?: string
+}>()
+const emits = defineEmits<{
+  (e: 'update:modelValue', val: string | undefined | null): void
+}>()
 
-const props = defineProps<BooleanRadioFilterProps>()
-const emits = defineEmits(['update:modelValue'])
-
-const inputVal = ref<string | null | undefined>(props.modelValue)
-
-function handleDualRadioUpdate(val: string | null) {
-  inputVal.value = val
-  emits('update:modelValue', val)
-}
+const inputVal = computed({
+  get: () => props.modelValue,
+  set: (val) => emits('update:modelValue', val),
+})
 </script>

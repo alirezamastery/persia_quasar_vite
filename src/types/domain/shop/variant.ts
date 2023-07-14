@@ -1,10 +1,10 @@
 import {ShopSelectorTypeDetailResponse} from 'src/types/network/response/shop/selector'
 
 export interface ShopVariantForm {
-  productId: number
-  selectorValueId: number
-  price: string
   isActive: boolean
+  maxInOrder: string
+  inventory: string
+  price: string
 }
 
 export interface ShopProductAddVariantForm {

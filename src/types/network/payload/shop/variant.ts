@@ -1,11 +1,11 @@
-export interface ShopVariantPayload{
-  product: number
-  selector_value: number
-  price: number
+export interface ShopVariantUpdatePayload {
   is_active: boolean
+  price: number
+  inventory: number
+  max_in_order: number
 }
 
-export interface ShopProductAddVariantPayload{
+export interface ShopVariantCreatePayload {
   product: number
   selector_value: number
   is_active: boolean

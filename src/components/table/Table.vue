@@ -27,6 +27,7 @@
           :row-key="itemKey"
           :dense="denseRows"
           :grid="xsGridCard && $q.screen.xs || grid"
+          :loading="loading"
           v-model:pagination="pagination"
           :filter="filter"
           hide-bottom
@@ -292,6 +293,7 @@ function handlePageSelect(event: number) {
 }
 
 function fetchData() {
+  data.value.items = []
   const url = props.apiRoot + '?' + constructQuery()
   loading.value = true
   axiosInstance.get(url)
