@@ -30,14 +30,8 @@ onMounted(async () => {
   let url = urls.shopProductDetail.replace('{0}', String(route.params.id))
   try {
     const resProduct = await axiosInstance.get<ShopProductDetailResponse>(url)
+    console.log('product details:', resProduct.data)
     product.value = resProduct.data
-    console.log(resProduct.data)
-    for (const img of resProduct.data.images) {
-      if (img.is_main) {
-        mainImgUrl.value = img.url
-        break
-      }
-    }
     currentVariants.value = resProduct.data.variants
 
   } catch (e) {
@@ -47,8 +41,8 @@ onMounted(async () => {
   url = urls.shopSelectorTypeDetail.replace('{0}', String(product.value?.category.selector_type))
   try {
     const resType = await axiosInstance.get<ShopSelectorTypeDetailResponse>(url)
+    console.log('selector type details:', resType.data)
     selectorType.value = resType.data
-    console.log(resType.data)
   } catch (e) {
     console.log('error in getting selector type details:', e)
   }
@@ -103,7 +97,7 @@ async function handleSubmit() {
   >
     <q-card class="no-shadow q-mb-md">
       <q-card-section horizontal>
-        <q-img v-if="mainImgUrl" :src="mainImgUrl" :ratio="1" height="120px" width="120px"/>
+        <q-img v-if="product?.thumbnail" :src="product.thumbnail" :ratio="1" height="120px" width="120px"/>
         <q-card-section>{{ formTitle }}</q-card-section>
         <q-card-section>
           <span>نوع انتخاب گر:</span>&nbsp;

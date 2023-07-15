@@ -3,10 +3,10 @@ export interface ShopProductListResponse {
   title: string
   description: string
   is_active: boolean
+  thumbnail: string
   slug: string
   brand: BrandResponse
   category: CategoryResponse
-  main_img: ImageResponse | null
 }
 
 export interface ShopProductDetailResponse {
@@ -14,6 +14,7 @@ export interface ShopProductDetailResponse {
   title: string
   description: string
   is_active: boolean
+  thumbnail: string
   slug: string
   brand: BrandResponse
   category: CategoryResponse

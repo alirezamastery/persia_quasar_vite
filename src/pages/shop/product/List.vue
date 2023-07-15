@@ -10,7 +10,7 @@ const apiRoot = urls.shopProducts
 const editRoute = RouteNames.SHOP_PRODUCT_EDIT
 const addRoute = RouteNames.SHOP_PRODUCT_ADD
 const columns: TableColumn[] = [
-  {name: 'image', label: t('shop.image'), field: 'main_img', align: 'left'},
+  {name: 'thumbnail', label: t('shop.image'), field: 'thumbnail', align: 'left'},
   {name: 'title', label: t('general.title'), field: 'title', align: 'left'},
   {name: 'brand', label: t('shop.brand'), field: 'brand', align: 'left'},
   {name: 'category', label: t('shop.category'), field: 'category', align: 'left'},
@@ -38,9 +38,9 @@ const filters: TableFilter[] = [
     :dense-rows="false"
   >
 
-    <template v-slot:col-image="{ props }">
+    <template v-slot:col-thumbnail="{ props }">
       <q-img
-        :src="props.row.main_img.url"
+        :src="props.row.thumbnail"
         height="70px"
         width="70px"
         :ratio="1"

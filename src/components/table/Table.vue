@@ -282,7 +282,8 @@ function constructQuery(): string {
 
   console.log('constructQuery | url params:', urlParams)
   console.log('constructQuery | api query: ', apiQuery)
-  router.replace({query: urlParams})
+  router.replace({query: urlParams})  // this will cause a page reload
+  // window.history.replaceState(null, '', route.path + apiQuery)
   return apiQuery
 }
 

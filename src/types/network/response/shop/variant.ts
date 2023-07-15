@@ -6,6 +6,7 @@ export interface ShopVariantResponse {
     title: string
     description: string
     is_active: boolean
+    thumbnail: string
     slug: number
     category: number
   }

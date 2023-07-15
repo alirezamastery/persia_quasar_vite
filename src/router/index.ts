@@ -75,7 +75,7 @@ export default route(function (/* { store, ssrContext } */) {
     const pendingBanners = generalStore.pendingBanners
     for (const pendingBanner of pendingBanners) {
       generalStore.addBanner(pendingBanner)
-      console.log('for', pendingBanner)
+      console.log('banner:', pendingBanner)
     }
     generalStore.clearPendingBanners()
     next()

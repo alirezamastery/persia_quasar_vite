@@ -7,9 +7,9 @@ import urls from 'src/urls'
 import AddEdit from 'src/components/addEdit/AddEdit.vue'
 import RouteNames from 'src/router/route-names'
 import {ShopBrandForm} from 'src/types/domain/shop/product'
-import {ShopBrandResponse} from 'src/types/network/response/shop/product'
+import {ShopBrandResponse} from 'src/types/network/response/shop/brand'
 import {ShopBrandPayload} from 'src/types/network/payload/shop/product'
-import {shopBrandFomToPayload, shopBrandResponseToForm} from 'src/types/converter/shop/product'
+import {shopBrandFomToPayload, shopBrandResponseToForm} from 'src/types/converter/shop/brand'
 
 
 const route = useRoute()

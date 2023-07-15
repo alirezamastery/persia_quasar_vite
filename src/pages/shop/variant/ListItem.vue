@@ -66,28 +66,21 @@ async function handleSubmit() {
 <template>
   <q-card class="q-my-md q-mx-sm bordered no-shadow" style="width: 100%">
     <q-card-section class="row">
-      <div class="col col-xs-12 col-sm-6 col-md-4">
-        <q-btn
-          :label="variant.product.title"
-          flat
-        />
+      <div class="col col-xs-12 col-sm-4 col-md-2 col-lg-1">
+        <q-img :src="variant.product.thumbnail" height="70px" width="70px" :ratio="1"/>
       </div>
 
-      <div
-        v-if="variant.selector_value.type.code === 'COLOR'"
-        class="col col-xs-12 col-sm-6 col-md-4"
-      >
-        <q-btn flat>
-          <div
-            class="selector-icon q-mr-sm"
-            :style="{'background-color': variant.selector_value.value}"
-          ></div>
-          {{ variant.selector_value.title }}
-        </q-btn>
+      <div class="col col-xs-12 col-sm-8 col-md-8 col-lg-10 text-h6 q-pa-sm flex items-center justify-start">
+        <div>{{variant.product.title}}</div>&nbsp;
+        <div>{{ variant.selector_value.title }}</div>&nbsp;
+        <div
+          v-if="variant.selector_value.type.code === 'COLOR'"
+          class="selector-icon q-mr-sm"
+          :style="{'background-color': variant.selector_value.value}"
+        ></div>
       </div>
-      <div v-else>{{ variant.selector_value.value }}</div>
 
-      <div class="col col-xs-12 col-sm-6 col-md-4">
+      <div class="col col-xs-12 col-sm-6 col-md-2 col-lg-1 flex items-center">
         <q-toggle
           :model-value="form.isActive"
           :label="$t('shop.isActive')"
@@ -98,7 +91,7 @@ async function handleSubmit() {
     </q-card-section>
 
     <q-card-section class="row q-col-gutter-sm">
-      <div class="col col-xs-12 col-sm-6 col-md-6 col-lg-3">
+      <div class="col col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-2">
         <QInputCommaSeparated
           v-model="form.maxInOrder"
           :label="$t('shop.maxInOrder')"
@@ -107,7 +100,7 @@ async function handleSubmit() {
           :disable="isLoading"
         />
       </div>
-      <div class="col col-xs-12 col-sm-6 col-md-6 col-lg-3">
+      <div class="col col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-2">
         <QInputCommaSeparated
           v-model="form.inventory"
           :label="$t('shop.inventory')"
@@ -116,7 +109,7 @@ async function handleSubmit() {
           :disable="isLoading"
         />
       </div>
-      <div class="col col-xs-12 col-sm-6 col-md-6 col-lg-3">
+      <div class="col col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-2">
         <QInputCommaSeparated
           v-model="form.price"
           :label="$t('shop.price')"
@@ -126,7 +119,7 @@ async function handleSubmit() {
         />
       </div>
 
-      <div class="col col-xs-12 col-sm-6 col-lg-3 flex justify-around">
+      <div class="col col-xs-12 col-sm-6 col-lg-3 col-xl-2 flex justify-around">
         <div>
           <q-btn
             v-if="hasChanged"
