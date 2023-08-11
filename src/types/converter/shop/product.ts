@@ -14,7 +14,7 @@ export function shopProductResponseToForm(data: ShopProductDetailResponse): Shop
   console.log('main img:', mainImgId)
 
   return {
-    brandId: data.id,
+    brandId: data.brand.id,
     title: data.title,
     categoryId: data.category.id,
     description: data.description,
