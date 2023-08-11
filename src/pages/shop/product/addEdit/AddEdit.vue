@@ -92,6 +92,9 @@ async function handleImageDelete(id: number) {
     for (const [index, img] of Object.entries(form.value.currentImages)) {
       if (img.id === id) {
         form.value.currentImages.splice(parseInt(index), 1)
+        if (form.value.mainImgId === id) {
+          form.value.mainImgId = null
+        }
         break
       }
     }
