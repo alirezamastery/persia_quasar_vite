@@ -9,8 +9,8 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 
-const { configure } = require('quasar/wrappers');
-const path = require('path');
+const {configure} = require('quasar/wrappers')
+const path = require('path')
 
 module.exports = configure(function (ctx) {
   return {
@@ -20,7 +20,7 @@ module.exports = configure(function (ctx) {
       // exclude = [],
       // rawOptions = {},
       warnings: true,
-      errors: true
+      errors: true,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -38,7 +38,7 @@ module.exports = configure(function (ctx) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [
-      'app.scss'
+      'app.scss',
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -58,8 +58,8 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
-        node: 'node16'
+        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
+        node: 'node16',
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
@@ -82,14 +82,14 @@ module.exports = configure(function (ctx) {
 
       env: {
         SERVER_BASE_URL: ctx.dev
-          ? (ctx.mode.capacitor ? 'http://192.168.1.122:8000' : 'http://localhost:8000')
-          : 'https://persia-atlas.com',
+            ? (ctx.mode.capacitor ? 'http://192.168.1.122:8000' : 'http://localhost:8000')
+            : 'https://persia-atlas.com',
         API_BASE: ctx.dev
-          ? (ctx.mode.capacitor ? 'http://192.168.1.122:8000/api/' : 'http://localhost:8000/api/')
-          : 'https://persia-atlas.com/api/',
+            ? (ctx.mode.capacitor ? 'http://192.168.1.122:8000/api/' : 'http://localhost:8000/api/')
+            : 'https://persia-atlas.com/api/',
         WEBSOCKET_BASE: ctx.dev
-          ? (ctx.mode.capacitor ? 'ws://192.168.1.122:8000/ws/' : 'ws://localhost:8000/ws/')
-          : 'wss://persia-atlas.com/ws/',
+            ? (ctx.mode.capacitor ? 'ws://192.168.1.122:8000/ws/' : 'ws://localhost:8000/ws/')
+            : 'wss://persia-atlas.com/ws/',
         ONESIGNAL_APP_ID: '10181441-6308-414b-9d4d-2e13dd58cee5',
       },
 
@@ -99,21 +99,21 @@ module.exports = configure(function (ctx) {
           // compositionOnly: false,
 
           // you need to set i18n resource including paths !
-          include: path.resolve(__dirname, './src/i18n/**')
-        }]
-      ]
+          include: path.resolve(__dirname, './src/i18n/**'),
+        }],
+      ],
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      open: false // opens browser window automatically
+      open: false, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {
-        dark: true
+        dark: true,
       },
 
       iconSet: 'material-icons', // Quasar icon set
@@ -134,7 +134,8 @@ module.exports = configure(function (ctx) {
         'LocalStorage',
         'Dialog',
         'Cookies',
-      ]
+        'Loading',
+      ],
     },
 
     // animations: 'all', // --- includes all animations
@@ -156,7 +157,7 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
       // ssrPwaHtmlFilename: 'offline.html', // do NOT use index.html as name!
-                                          // will mess up SSR
+      // will mess up SSR
 
       // extendSSRWebserverConf (esbuildConf) {},
       // extendPackageJson (json) {},
@@ -170,8 +171,8 @@ module.exports = configure(function (ctx) {
                       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
-        'render' // keep this as last one
-      ]
+        'render', // keep this as last one
+      ],
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
@@ -195,7 +196,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
     capacitor: {
-      hideSplashscreen: true
+      hideSplashscreen: true,
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
@@ -223,18 +224,18 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'persia-quasar-vite'
-      }
+        appId: 'persia-quasar-vite',
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
       contentScripts: [
-        'my-content-script'
+        'my-content-script',
       ],
 
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
-    }
+    },
   }
-});
+})
