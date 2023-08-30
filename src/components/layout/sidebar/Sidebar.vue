@@ -8,8 +8,8 @@
   >
     <BannerDesktop v-if="$q.screen.gt.sm" @height-change="handleUserInfoHeightChange"/>
     <UserInfoMobile v-else @height-change="handleUserInfoHeightChange"/>
-      <q-scroll-area :style="scrollStyle">
-    <q-list>
+    <q-scroll-area :style="scrollStyle">
+      <q-list>
         <template
           v-for="(item, i) in menuItems"
           :key="i"
@@ -45,8 +45,8 @@
             </q-item>
           </q-expansion-item>
         </template>
-    </q-list>
-      </q-scroll-area>
+      </q-list>
+    </q-scroll-area>
   </q-drawer>
 </template>
 

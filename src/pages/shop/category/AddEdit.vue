@@ -156,7 +156,7 @@ const getParentNodeInitData = computed(() => {
             obj-unique-id="id"
             :label="$t('shop.specifications')"
             :obj-repr="'title'"
-            :api="urls.shopProductAttributes"
+            :api="urls.shopAttributes"
             :list-api="'get-by-id-list/'"
             :list-query-param="'ids[]'"
             :query-param="'search'"

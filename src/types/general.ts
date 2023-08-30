@@ -10,3 +10,12 @@ export interface UserProfile {
   last_name: Nullable<string>,
   avatar: Nullable<string>,
 }
+
+export interface PaginatedResponse<ItemType> {
+  next: string | null
+  previous: string | null
+  count: number
+  page_count: number
+  items: ItemType[]
+  extra_info: any
+}
