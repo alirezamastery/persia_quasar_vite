@@ -8,4 +8,5 @@ export interface InvoiceDetailItemDomain {
   actualProductId: number
   title: string
   count: number
+  price: string
 }

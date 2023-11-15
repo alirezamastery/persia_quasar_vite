@@ -8,4 +8,5 @@ export interface InvoiceDetailItemResponse {
   actual_product_id: number
   title: string
   count: number
+  price: number
 }

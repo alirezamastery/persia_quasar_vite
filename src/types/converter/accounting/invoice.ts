@@ -1,3 +1,4 @@
+import {formatAsCommaSeparated} from 'src/modules/number-tools'
 import {InvoiceDetailItemResponse, InvoiceDetailsResponse} from 'src/types/network/response/accounting/invoice-details'
 import {InvoiceDetailItemDomain, InvoiceDetailsDomain} from 'src/types/domain/accounting/invoice'
 
@@ -10,6 +11,7 @@ export function invoiceDetailResponseToDomain(data: InvoiceDetailsResponse): Inv
       actualProductId: item.actual_product_id,
       title: item.title,
       count: item.count,
+      price: item.price === null ? '' : formatAsCommaSeparated(item.price),
     }),
   }
 }

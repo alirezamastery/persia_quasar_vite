@@ -1,26 +1,3 @@
-<template>
-  <q-layout view="lHh Lpr lFf">
-
-    <q-ajax-bar
-      position="top"
-      color="info"
-      :hijack-filter="ajaxBarFilter"
-    />
-
-    <Header v-if="showAppLayout"/>
-
-    <Sidebar v-if="showAppLayout"/>
-
-    <q-page-container>
-
-      <Banners/>
-
-      <router-view/>
-
-    </q-page-container>
-  </q-layout>
-</template>
-
 <script setup lang="ts">
 import {computed} from 'vue'
 import {useRoute} from 'vue-router'
@@ -68,6 +45,29 @@ broadcastInstance.addBroadcastCallback(BroadcastTypes.SW_NEW_CONTENT, () => wind
 
 function ajaxBarFilter(url: string) {
   const parts = url.split('/')
-  return !['task-state' , 'stream-chunk'].includes(parts[5])
+  return !['task-state', 'stream-chunk'].includes(parts[5])
 }
 </script>
+
+<template>
+  <q-layout view="lHh Lpr lFf">
+
+    <q-ajax-bar
+      position="top"
+      color="info"
+      :hijack-filter="ajaxBarFilter"
+    />
+
+    <Header v-if="showAppLayout"/>
+
+    <Sidebar v-if="showAppLayout"/>
+
+    <q-page-container>
+
+      <Banners/>
+
+      <router-view/>
+
+    </q-page-container>
+  </q-layout>
+</template>
