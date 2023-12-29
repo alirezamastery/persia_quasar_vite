@@ -5,6 +5,7 @@ import acc from './acc.json'
 import robot from './robot.json'
 import shop from './shop.json'
 import vuelidate from './vuelidate.json'
+import car from './car'
 
 export default {
   general,
@@ -14,4 +15,5 @@ export default {
   robot,
   shop,
   vuelidate,
+  car,
 }

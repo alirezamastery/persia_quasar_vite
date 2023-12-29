@@ -1,6 +1,6 @@
-import {ref, reactive} from 'vue'
+import { ref, reactive } from 'vue'
 import routesObj from 'src/router/routes'
-import {RouteRecordName} from 'vue-router'
+import { RouteRecordName } from 'vue-router'
 import RouteNames from 'src/router/route-names'
 
 export const sidebarOpen = ref(true)
@@ -22,17 +22,17 @@ function getRoute(route: string): SideMenuRoute {
   return {
     routeName: r.name,
     titleI18n: r.meta?.titleI18n as string,
-    permissions: r.meta?.permission as string[] || [],
+    permissions: (r.meta?.permission as string[]) || [],
     icon: r.meta?.icon as string,
-    iconSide: r.meta?.iconSide ? r.meta?.iconSide as string : undefined,
+    iconSide: r.meta?.iconSide ? (r.meta?.iconSide as string) : undefined,
   }
 }
 
 export interface SidebarMenuList {
-  icon: string,
-  order: number,
-  titleI18n: string,
-  collapsed: boolean,
+  icon: string
+  order: number
+  titleI18n: string
+  collapsed: boolean
   children: SideMenuRoute[]
 }
 
@@ -77,6 +77,7 @@ export const menuItems: Array<SidebarMenuList> = [
       getRoute(RouteNames.DK_CREDENTIALS),
       getRoute(RouteNames.SCRAPE_INVOICE),
       getRoute(RouteNames.CONTACT_LIST),
+      getRoute(RouteNames.ROBOT_CAR_LIST),
     ],
   },
   {

@@ -1,6 +1,7 @@
 import {RouteRecordRaw} from 'vue-router'
 import * as views from './chunks'
 import RouteNames from 'src/router/route-names'
+import {robotCarAddEdit} from './chunks'
 
 
 const routesObj: { [index: string]: RouteRecordRaw } = {
@@ -333,6 +334,31 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     meta: {
       titleI18n: 'general.routes.toggleVariantStatus',
       icon: 'fa fa-toggle-on',
+      requiresAuth: true,
+    },
+  },
+  // ********** Robot Cars **********
+  [RouteNames.ROBOT_CAR_LIST]: {
+    path: '/robot-cars',
+    component: views.robotCarList,
+    meta: {
+      titleI18n: 'general.routes.robotCars',
+      icon: 'car',
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.ROBOT_CAR_ADD]: {
+    path: '/robot-cars/add',
+    component: views.robotCarAddEdit,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  [RouteNames.ROBOT_CAR_EDIT]: {
+    path: '/robot-cars/edit/:id',
+    component: views.robotCarAddEdit,
+    props: true,
+    meta: {
       requiresAuth: true,
     },
   },

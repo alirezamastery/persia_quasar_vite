@@ -51,6 +51,10 @@ export enum RouteNames {
   PROFIT_ALL_YEAR = 'profitAllYear',
   SALES_COUNT = 'salesCount',
 
+  ROBOT_CAR_LIST = 'robotCarList',
+  ROBOT_CAR_ADD = 'robotCarAdd',
+  ROBOT_CAR_EDIT = 'robotCarEdit',
+
   SHOP_BRAND_LIST = 'shopBrandList',
   SHOP_BRAND_ADD = 'shopBrandAdd',
   SHOP_BRAND_EDIT = 'shopBrandEdit',

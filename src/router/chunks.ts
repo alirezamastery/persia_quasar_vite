@@ -43,6 +43,8 @@ export const scrapeInvoice = () => import('pages/robot/ScrapeInvoice.vue')
 export const inactiveVariants = () => import('pages/robot/InactiveVariants.vue')
 export const ToggleVariantStatus = () => import('pages/products/variant/ToggleVariantStatus.vue')
 
+export const robotCarList = () => import('pages/robot/car/List.vue')
+export const robotCarAddEdit = () => import('pages/robot/car/Details.vue')
 
 // Stream
 export const recordScreen = () => import('pages/streaming/RecordScreen.vue')

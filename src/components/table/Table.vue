@@ -1,32 +1,30 @@
 <template>
   <div
-    :class="className !== undefined ? className : $q.screen.gt.sm ? $q.screen.gt.md ? 'q-ma-xl' : 'q-ma-lg' : 'q-ma-none'"
+    :class="
+      className !== undefined
+        ? className
+        : $q.screen.gt.sm
+        ? $q.screen.gt.md
+          ? 'q-ma-xl'
+          : 'q-ma-lg'
+        : 'q-ma-none'
+    "
   >
-
-    <Header
-      :title="title"
-      :add-route="addRoute"
-      :extra-links="extraLinks"
-    />
+    <Header :title="title" :add-route="addRoute" :extra-links="extraLinks" />
 
     <div class="row no-wrap-md">
-
       <q-card
         class="col-xs-12 col-md"
         :class="$q.screen.gt.sm ? '' : 'border-radius-inherit no-shadow'"
       >
-
-        <TableHeader
-          v-if="!hideSearch"
-          v-model="searchPhrase"
-        />
+        <TableHeader v-if="!hideSearch" v-model="searchPhrase" />
 
         <q-table
           :rows="data.items"
           :columns="finalColumns"
           :row-key="itemKey"
           :dense="denseRows"
-          :grid="xsGridCard && $q.screen.xs || grid"
+          :grid="(xsGridCard && $q.screen.xs) || grid"
           :loading="loading"
           v-model:pagination="pagination"
           :filter="filter"
@@ -34,7 +32,6 @@
           flat
           @request="handleRequest"
         >
-
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td
@@ -43,24 +40,16 @@
                 :props="props"
                 :auto-width="column.autoWidth"
               >
-                <slot
-                  :name="`col-${column.name}`"
-                  :props="props"
-                  :data="data"
-                >
+                <slot :name="`col-${column.name}`" :props="props" :data="data">
                   {{ props.row[column.field] }}
                 </slot>
               </q-td>
 
               <!-- "key" should be set for the cell to show -->
               <q-td v-if="editRoute && showTools" :props="props" key="tools" auto-width>
-                <slot
-                  :name="`col-tools`"
-                  :props="props"
-                  :data="data"
-                >
+                <slot :name="`col-tools`" :props="props" :data="data">
                   <q-btn
-                    :to="{name: editRoute, params: {id: props.row.id}}"
+                    :to="{ name: editRoute, params: { id: props.row.id } }"
                     icon="edit"
                     :size="denseRows ? 'sm' : 'md'"
                     flat
@@ -71,15 +60,10 @@
             </q-tr>
           </template>
 
-
           <template v-slot:item="props">
-            <slot
-              :name="'grid-item'"
-              :props="props"
-              :data="data"
-            >
+            <slot :name="'grid-item'" :props="props" :data="data">
               <div
-                class="q-pa-xs q-my-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
+                class="q-px-xs q-py-sm q-my-sm col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
                 :style="props.selected ? 'transform: scale(0.95);' : ''"
               >
                 <q-card
@@ -89,11 +73,7 @@
                 >
                   <q-list dense>
                     <template v-for="col in props.cols" :key="col.name">
-                      <slot
-                        :name="`col-xs-${col.name}`"
-                        :props="props"
-                        :data="data"
-                      >
+                      <slot :name="`col-xs-${col.name}`" :props="props" :data="data">
                         <q-item>
                           <q-item-section>
                             <q-item-label>{{ col.label }}</q-item-label>
@@ -113,10 +93,9 @@
           <template v-slot:no-data>
             {{ $t('general.noItemsFound') }}
           </template>
-
         </q-table>
 
-        <q-separator/>
+        <q-separator />
 
         <Pagination
           :page="page"
@@ -135,23 +114,26 @@
         :filters="filters"
         @filter-change="handleFilterChange"
       />
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, watch, computed} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import {useI18n} from 'vue-i18n'
-import {cloneDeep, toInteger} from 'lodash'
+import { ref, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { cloneDeep, toInteger } from 'lodash'
 import Pagination from './Pagination.vue'
 import DisplayFilters from './filter/DisplayFilters.vue'
 import Header from './ActionBar.vue'
 import TableHeader from './TableHeader.vue'
-import {axiosInstance} from 'src/boot/axios'
-import {QTableSlotItemProps, TableColumn, TableExtraLink, TableFilter} from 'components/table/types'
-
+import { axiosInstance } from 'src/boot/axios'
+import {
+  QTableSlotItemProps,
+  TableColumn,
+  TableExtraLink,
+  TableFilter,
+} from 'components/table/types'
 
 export interface TablePagination {
   rowsNumber: number
@@ -195,7 +177,7 @@ const props = withDefaults(defineProps<TableProps>(), {
   grid: false,
 })
 
-const {t} = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
@@ -282,7 +264,7 @@ function constructQuery(): string {
 
   console.log('constructQuery | url params:', urlParams)
   console.log('constructQuery | api query: ', apiQuery)
-  router.replace({query: urlParams})  // this will cause a page reload
+  router.replace({ query: urlParams }) // this will cause a page reload
   // window.history.replaceState(null, '', route.path + apiQuery)
   return apiQuery
 }
@@ -297,14 +279,15 @@ function fetchData() {
   data.value.items = []
   const url = props.apiRoot + '?' + constructQuery()
   loading.value = true
-  axiosInstance.get(url)
-    .then(res => {
+  axiosInstance
+    .get(url)
+    .then((res) => {
       console.log('%c fetchData | response', 'color: green', res)
       data.value = res.data
       pagination.value.rowsNumber = res.data.count
       if (props.fetchCallback !== undefined) props.fetchCallback(res.data)
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('reFetchData | error', err)
     })
     .finally(() => {
@@ -315,7 +298,7 @@ function fetchData() {
 
 function handleRequest(props: any) {
   console.log('handleRequest', props)
-  const {page: tablePage, rowsPerPage, sortBy, descending} = props.pagination
+  const { page: tablePage, rowsPerPage, sortBy, descending } = props.pagination
   console.log(tablePage, rowsPerPage, sortBy, descending)
   if (sortBy === null) {
     otherQueriesStr.value = ''
@@ -343,18 +326,21 @@ function handleFilterChange(event: Record<string, string>) {
 }
 
 function handleXsCardClick(p: QTableSlotItemProps) {
-  router.push({name: props.editRoute, params: {[props.itemKey]: p.row[props.itemKey]}})
+  router.push({
+    name: props.editRoute,
+    params: { [props.itemKey]: p.row[props.itemKey] },
+  })
 }
 
 const queryParams = route.query
 console.log('----------- Table Start -----------', 'query params:', queryParams)
 if (queryParams.hasOwnProperty('page')) page.value = toInteger(queryParams['page'])
-if (queryParams.hasOwnProperty('page_size')) pageSize.value = toInteger(queryParams['page_size'])
+if (queryParams.hasOwnProperty('page_size'))
+  pageSize.value = toInteger(queryParams['page_size'])
 otherQueries.value = {}
 if (queryParams.hasOwnProperty('o')) otherQueries.value['o'] = String(queryParams['o'])
-if (queryParams.hasOwnProperty(props.searchWord)) searchPhrase.value = String(queryParams[props.searchWord])
+if (queryParams.hasOwnProperty(props.searchWord))
+  searchPhrase.value = String(queryParams[props.searchWord])
 
-if (props.filters.length === 0)
-  fetchData()
-
+if (props.filters.length === 0) fetchData()
 </script>

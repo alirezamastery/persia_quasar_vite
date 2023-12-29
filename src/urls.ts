@@ -40,6 +40,9 @@ export const urls = {
   invoiceItems: 'accounting/invoice-items/',
   invoiceActualItems: 'accounting/invoice-actual-items/',
   salesCount: 'accounting/sales-count/',
+
+  robotCarList:'car-robot/cars/',
+  robotCarDetail:'car-robot/cars/{0}/',
 }
 
 export default urls

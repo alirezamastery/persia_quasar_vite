@@ -42,7 +42,8 @@
     "shopBrads": "برندهای فروشگاه",
     "shopCategories": "دسته بندی ها",
     "shopProducts": "محصولات فروشگاه",
-    "shopVariants": "تنوع محصولات فروشگاه"
+    "shopVariants": "تنوع محصولات فروشگاه",
+    "robotCars": "خودرو"
   },
   "siteHeader": "پرشیا اطلس",
   "all": "همه",
@@ -135,6 +136,7 @@
   "paginationText": "تعداد نمایش:",
   "deleteConfirm": "برای حذف این مورد مطمئن هستید؟",
   "date": "تاریخ",
+  "hour": "ساعت",
   "selectDate": "انتخاب تاریخ",
   "noItemsFound": "موردی پیدا نشد",
   "accounting": "حسابداری",
