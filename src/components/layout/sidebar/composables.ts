@@ -2,6 +2,7 @@ import { ref, reactive } from 'vue'
 import routesObj from 'src/router/routes'
 import { RouteRecordName } from 'vue-router'
 import RouteNames from 'src/router/route-names'
+import Permissions from 'src/permissions'
 
 export const sidebarOpen = ref(true)
 
@@ -34,6 +35,7 @@ export interface SidebarMenuList {
   titleI18n: string
   collapsed: boolean
   children: SideMenuRoute[]
+  permissions?: Permissions[]
 }
 
 export const menuItems: Array<SidebarMenuList> = [
@@ -77,7 +79,7 @@ export const menuItems: Array<SidebarMenuList> = [
       getRoute(RouteNames.DK_CREDENTIALS),
       getRoute(RouteNames.SCRAPE_INVOICE),
       getRoute(RouteNames.CONTACT_LIST),
-      getRoute(RouteNames.ROBOT_CAR_LIST),
+      // getRoute(RouteNames.ROBOT_CAR_LIST),
     ],
   },
   {
@@ -95,5 +97,13 @@ export const menuItems: Array<SidebarMenuList> = [
       getRoute(RouteNames.PROFIT_ALL_YEAR),
       getRoute(RouteNames.PROFIT_BY_DATE),
     ],
+  },
+  {
+    icon: 'fa-solid fa-users',
+    order: 30,
+    titleI18n: 'general.user',
+    collapsed: false,
+    children: [getRoute(RouteNames.USER_LIST)],
+    permissions: [Permissions.IS_SUPERUSER],
   },
 ]

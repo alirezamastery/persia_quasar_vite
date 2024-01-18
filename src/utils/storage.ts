@@ -6,3 +6,5 @@ export enum StorageKeys {
   REMEMBER_ME = 'REMEMBER_ME',
   MOBILE = 'MOBILE'
 }
+
+export default StorageKeys

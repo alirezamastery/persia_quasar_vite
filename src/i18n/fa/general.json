@@ -123,6 +123,10 @@
   "amountToman": "مقدار (تومان)",
   "amountRial": "مقدار (ریال)",
   "description": "توضیحات",
+  "user": "کاربر",
+  "users": "کاربرها",
+  "accesses": "دسترسی ها",
+  "changePassword": "تغییر رمز",
   "region": "منطقه",
   "lang": "زبان",
   "day": "روز",
@@ -149,7 +153,6 @@
   "callRejected": "تماس رد شد",
   "acceptCall": "اتصال",
   "rejectCall": "رد تماس",
-  "users": "کاربرها",
   "seeInDk": "در دیجیکالا",
   "alert": {
     "saveSuccess": "{type} \"{item}\" با موفقیت ثبت شد",

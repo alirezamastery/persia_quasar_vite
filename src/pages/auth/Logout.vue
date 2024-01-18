@@ -7,7 +7,7 @@
       <q-card-section>
         <div class="row">
           <q-btn color="red" @click="logout">{{ $t('general.yes') }}</q-btn>
-          <q-space/>
+          <q-space />
           <q-btn color="primary" @click="goBack">{{ $t('general.no') }}</q-btn>
         </div>
       </q-card-section>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import useUserStore from 'src/stores/user'
 
 const router = useRouter()
@@ -26,7 +26,8 @@ function goBack() {
   router.go(-1)
 }
 
-function logout(){
-  userStore.logout()
+async function logout() {
+  console.log('logout btn clicked')
+  await userStore.logout()
 }
 </script>

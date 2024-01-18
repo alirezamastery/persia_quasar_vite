@@ -109,7 +109,7 @@ function getDateTime(val: string) {
     </template>
 
     <template v-slot:col-openLink="{ props }">
-      <a :href="`https://divar.ir/v/blank/${props.row.token}`">open link</a>
+      <a :href="`https://divar.ir/v/blank/${props.row.token}`" target="_blank">open link</a>
     </template>
 
     <template v-slot:col-status="{ props }">
@@ -157,7 +157,7 @@ function getDateTime(val: string) {
         </q-item-section>
         <q-item-section>
           <q-item-label>
-            <a :href="`https://divar.ir/v/blank/${props.row.token}`">open link</a>
+            <a :href="`https://divar.ir/v/blank/${props.row.token}`" target="_blank">open link</a>
           </q-item-label>
         </q-item-section>
       </q-item>

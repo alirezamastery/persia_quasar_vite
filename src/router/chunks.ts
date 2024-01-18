@@ -4,6 +4,12 @@ export const login = () => import('../pages/auth/Login.vue')
 export const logout = () => import('../pages/auth/Logout.vue')
 export const profile = () => import('../pages/dashboard/Profile.vue')
 
+export const changePassword = async () => import('../pages/auth/ChangePassword.vue')
+export const userList = async () => import('../pages/auth/users/List.vue')
+export const userAdd = async () => import('../pages/auth/users/Add.vue')
+export const userEdit = async () => import('pages/auth/users/Edit.vue')
+export const authGroupsList = async () => import('../pages/auth/groups/List.vue')
+export const authGroupsAddEdit = async () => import('../pages/auth/groups/AddEdit.vue')
 
 // Shop
 export const shopBrandList = () => import('../pages/shop/brand/List.vue')

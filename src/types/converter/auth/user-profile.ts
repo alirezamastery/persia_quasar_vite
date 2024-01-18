@@ -1,6 +1,6 @@
-import { UserProfileResponse } from 'src/types/network/response/profile/user-profile'
-import { UserProfileDomain, UserProfileForm } from 'src/types/domain/profile/user-profile'
 import { UserProfilePayload } from 'src/types/network/payload/auth/user-profile'
+import { UserProfileResponse } from 'src/types/network/response/auth/profile'
+import { UserProfileDomain, UserProfileForm } from 'src/types/domain/auth/profile'
 
 export function userProfileResponseToDomain(
   data: UserProfileResponse
@@ -12,7 +12,7 @@ export function userProfileResponseToDomain(
   }
 }
 
-export function userProfileFormToRequest(form: UserProfileForm): UserProfilePayload {
+export function userProfileFormToPayload(form: UserProfileForm): UserProfilePayload {
   return {
     first_name: form.firstName,
     last_name: form.lastName,

@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import useUserStore from 'stores/user'
+import { generalState, menuItems } from './composables'
+import { axiosInstance } from 'boot/axios'
+import urls from 'src/urls'
+import BannerDesktop from './BannerDesktop.vue'
+import UserInfoMobile from './UserInfoMobile.vue'
+import RouteNames from 'src/router/route-names'
+
+const userStore = useUserStore()
+const router = useRouter()
+const scrollStyle = ref('')
+
+if (userStore.isAuthenticated) {
+  axiosInstance
+    .get(urls.userOwnInfo)
+    .then((res) => {
+      console.log('profile:', res)
+      userStore.setUserInfo(res.data)
+      userStore.setProfile(res.data.profile)
+    })
+    .catch((err) => {
+      console.log(err)
+      router.push({ name: RouteNames.LOGIN })
+    })
+}
+
+function handleUserInfoHeightChange(newHeight: number) {
+  scrollStyle.value = `height: calc(100vh - ${newHeight + 1}px)`
+}
+</script>
+
 <template>
   <q-drawer
     v-model="generalState.sideOpen"
@@ -74,36 +108,3 @@
     </q-scroll-area>
   </q-drawer>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import useUserStore from 'stores/user'
-import { generalState, menuItems } from './composables'
-import { axiosInstance } from 'boot/axios'
-import urls from 'src/urls'
-import BannerDesktop from './BannerDesktop.vue'
-import UserInfoMobile from './UserInfoMobile.vue'
-import RouteNames from 'src/router/route-names'
-
-const userStore = useUserStore()
-const router = useRouter()
-const scrollStyle = ref('')
-
-if (userStore.isAuthenticated) {
-  axiosInstance
-    .get(urls.userProfile)
-    .then((res) => {
-      console.log('profile:', res)
-      userStore.setProfile(res.data)
-    })
-    .catch((err) => {
-      console.log(err)
-      router.push({ name: RouteNames.LOGIN })
-    })
-}
-
-function handleUserInfoHeightChange(newHeight: number) {
-  scrollStyle.value = `height: calc(100vh - ${newHeight + 1}px)`
-}
-</script>

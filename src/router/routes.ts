@@ -1,14 +1,13 @@
-import {RouteRecordRaw} from 'vue-router'
+import { RouteRecordRaw } from 'vue-router'
 import * as views from './chunks'
-import RouteNames from 'src/router/route-names'
-import {robotCarAddEdit} from './chunks'
-
+import RouteNames from './route-names'
+import Permissions from 'src/permissions'
 
 const routesObj: { [index: string]: RouteRecordRaw } = {
   [RouteNames.HOME]: {
     path: '/',
-    redirect: {name: RouteNames.EDIT_VARIANT_STATUS},
-    meta: {requiresAuth: true},
+    redirect: { name: RouteNames.EDIT_VARIANT_STATUS },
+    meta: { requiresAuth: true },
     // children: [{ path: '', component: () => import('pages/Index.vue') }],
   },
   // #################### Auth ####################
@@ -31,6 +30,38 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: views.profile,
     meta: {
       requiresAuth: true,
+    },
+  },
+  // ********** User **********
+  [RouteNames.USER_LIST]: {
+    path: '/users',
+    name: RouteNames.USER_LIST,
+    component: views.userList,
+    meta: {
+      requiresAuth: true,
+      titleI18n: 'general.routes.users',
+      icon: 'fa-solid fa-user',
+      permissions: [Permissions.IS_SUPERUSER],
+    },
+  },
+  [RouteNames.USER_ADD]: {
+    path: '/users/add',
+    name: RouteNames.USER_ADD,
+    component: views.userAdd,
+    props: true,
+    meta: {
+      requiresAuth: true,
+      permissions: [Permissions.IS_SUPERUSER],
+    },
+  },
+  [RouteNames.USER_EDIT]: {
+    path: '/users/:id/edit',
+    name: RouteNames.USER_EDIT,
+    component: views.userEdit,
+    props: true,
+    meta: {
+      requiresAuth: true,
+      permissions: [Permissions.IS_SUPERUSER],
     },
   },
   // #################### Shop App ####################
@@ -343,7 +374,7 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: views.robotCarList,
     meta: {
       titleI18n: 'general.routes.robotCars',
-      icon: 'car',
+      icon: 'mdi-car-side',
       requiresAuth: true,
     },
   },
@@ -553,7 +584,6 @@ const routesObj: { [index: string]: RouteRecordRaw } = {
     component: () => import('pages/Error404.vue'),
   },
 }
-
 
 for (const [key, value] of Object.entries(routesObj)) {
   value.name = key

@@ -1,16 +1,16 @@
-import {route} from 'quasar/wrappers'
+import { route } from 'quasar/wrappers'
 import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
   createWebHistory,
 } from 'vue-router'
-import {Router} from 'vue-router'
+import { Router } from 'vue-router'
 
 import routesObj from './routes'
 import useUserStore from 'stores/user'
 import useGeneralStore from 'stores/general'
-
+import RouteNames from 'src/router/route-names'
 
 export let routerInstance: Router
 
@@ -26,10 +26,12 @@ export let routerInstance: Router
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
+    : process.env.VUE_ROUTER_MODE === 'history'
+    ? createWebHistory
+    : createWebHashHistory
 
   const router = createRouter({
-    scrollBehavior: () => ({left: 0, top: 0}),
+    scrollBehavior: () => ({ left: 0, top: 0 }),
     routes: Object.values(routesObj),
 
     // Leave this as is and make changes in quasar.conf.js instead!
@@ -38,13 +40,13 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
-  router.beforeEach((to, from, next) => {
+  router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
     const needsAuthentication = to.matched.some((record) => record.meta['requiresAuth'])
     const isAuthenticated = userStore.isAuthenticated
     if (needsAuthentication) {
-      if (!isAuthenticated && to.name !== 'Login') {
-        userStore.logout() // Logout will push to Login
+      if (!isAuthenticated && to.name !== RouteNames.LOGIN) {
+        await userStore.logout() // Logout will push to Login
         // next({name: 'Login'})
       } else {
         next()
@@ -59,10 +61,8 @@ export default route(function (/* { store, ssrContext } */) {
     const guestRoute = to.matched.some((record) => record.meta['guest'])
     const isAuthenticated = userStore.isAuthenticated
     if (guestRoute) {
-      if (isAuthenticated)
-        next({name: 'Home'})
-      else
-        next()
+      if (isAuthenticated) next({ name: 'Home' })
+      else next()
     } else {
       next()
     }

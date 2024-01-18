@@ -110,9 +110,10 @@ function handleSubmit() {
   axiosInstance.post(urls.token, form)
     .then(res => {
       console.log('Login', res)
+      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + res.data.access
+      console.log('auth:', axiosInstance.defaults.headers['Authorization']) // TO FORCE READ THE TOKEN
       q.localStorage.set(StorageKeys.ACCESS_TOKEN, res.data.access)
       q.localStorage.set(StorageKeys.REFRESH_TOKEN, res.data.refresh)
-      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + res.data.access
       userStore.login(form.mobile)
       router.push({name: RouteNames.HOME})
     })

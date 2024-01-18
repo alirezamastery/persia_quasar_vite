@@ -1,15 +1,15 @@
-import {boot} from 'quasar/wrappers'
-import {LocalStorage} from 'quasar'
-import axios, {AxiosInstance} from 'axios'
-import {notifyAxiosError} from 'src/modules/notif'
+import { boot } from 'quasar/wrappers'
+import { LocalStorage } from 'quasar'
+import axios, { AxiosInstance } from 'axios'
 import useUserStore from '../stores/user'
-import useWebsocketStore from '../stores/websocket'
+import { notifyAxiosError, notifyMessage } from 'src/modules/notif'
 import urls from 'src/urls'
-import {StorageKeys} from 'src/utils/storage'
+import StorageKeys from 'src/utils/storage'
+import { i18n } from 'boot/i18n'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $axios: AxiosInstance;
+    $axios: AxiosInstance
   }
 }
 
@@ -37,92 +37,95 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   function (response) {
-    // console.log('intercept' , response)
     return response
   },
   async function (error) {
+    const { t } = i18n.global
     const userStore = useUserStore()
 
     const originalRequest = error.config
-    console.log('in axiosInstance | BEGINNING | error: ', error)
-    console.log('config baseURL:', error.config.baseURL)
 
     if (!error.response || typeof error.response === 'undefined') {
       console.log('axios error.response is undefined', error)
       notifyAxiosError(error)
       return Promise.reject(error)
     } else {
-      console.log('in axiosInstance | BEGINNING | error.response.data: ', error.response.data)
-      console.log('in axiosInstance | BEGINNING | error.response.status: ', error.response.status)
-      if (error.response.status !== 403) {
-        notifyAxiosError(error)
+      console.log(
+        'in axiosInstance | BEGINNING | error.response.status: ',
+        error.response.status
+      )
+      console.log(
+        'in axiosInstance | BEGINNING | error.response.data: ',
+        error.response.data
+      )
+      console.log('in axiosInstance | BEGINNING | error.config.url: ', error.config.url)
+      if (error.response.status === 500) {
+        notifyMessage('negative', t('err.api.serverConnect'))
+        return Promise.reject(error)
       }
     }
 
-    if (
-      error.response.status === 401 &&
-      originalRequest.url === urls.refreshToken
-    ) {
-      userStore.logout()
-      return Promise.reject(error)
+    if (error.response.status === 401 && originalRequest.url === urls.refreshToken) {
+      await userStore.logout()
+    }
+
+    if (error.response.status === 403 && originalRequest.url === urls.refreshToken) {
+      await userStore.logout()
+    }
+
+    if (error.response.data.code === 'user_not_found') {
+      await userStore.logout()
     }
 
     if (
-      error.response.status === 403
-      && originalRequest.url === urls.refreshToken
-    ) {
-      userStore.logout()
-      return Promise.reject(error)
-    }
-
-    if (
-      error.response.status === 403
-      //&& error.response.data.code === 'token_not_valid'
+      error.response.status === 403 &&
+      error.response.data.code === 'token_not_valid'
       //&& error.response.statusText === 'Unauthorized'
     ) {
       const refreshToken = LocalStorage.getItem(StorageKeys.REFRESH_TOKEN) as string
 
       if (refreshToken) {
-        console.log(`response.status was ${error.response.status} so we will use refreshToken: `, refreshToken)
+        console.log(
+          `response.status was ${error.response.status} - we will use refreshToken: `,
+          refreshToken
+        )
         const tokenParts = JSON.parse(atob(refreshToken.split('.')[1]))
 
         const now = Date.now()
         // exp date in token is expressed in seconds, while now() returns milliseconds:
         if (tokenParts.exp * 1000 > now) {
-          return axiosInstance
-            .post(urls.refreshToken, {refresh: refreshToken})
-            .then((response) => {
-              LocalStorage.set(StorageKeys.ACCESS_TOKEN, response.data.access)
-              LocalStorage.set(StorageKeys.REFRESH_TOKEN, response.data.refresh)
-
-              axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + response.data.access
-              originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access
-
-              const wsStore = useWebsocketStore()
-              wsStore.handleTokenUpdate()
-
-              return axiosInstance(originalRequest)
+          try {
+            const res = await axiosInstance.post(urls.refreshToken, {
+              refresh: refreshToken,
             })
-            .catch(async (err) => {
-              console.log('error in refresh token part: ', err)
-              userStore.logout()
-            })
+            LocalStorage.set(StorageKeys.ACCESS_TOKEN, res.data.access)
+            LocalStorage.set(StorageKeys.REFRESH_TOKEN, res.data.refresh)
+
+            axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + res.data.access
+            originalRequest.headers['Authorization'] = 'Bearer ' + res.data.access
+
+            return axiosInstance(originalRequest)
+          } catch (e) {
+            console.log('error using refresh token:', e)
+            notifyMessage('negative', t('err.api.serverConnect'))
+            await userStore.logout()
+          }
         } else {
-          console.log('Refresh token is expired', tokenParts, now)
-          userStore.logout()
+          notifyMessage('negative', t('err.api.refreshTokenExpired'))
+          await userStore.logout()
         }
       } else {
-        console.log('in axiosInstance: Refresh token not available. refreshToken is: ', refreshToken)
-        userStore.logout()
+        notifyMessage('negative', t('err.api.refreshTokenInvalid'))
+        await userStore.logout()
       }
     }
 
     // specific error handling done elsewhere
     return Promise.reject(error)
-  },
+  }
 )
 
-export default boot(({app}) => {
+export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axiosInstance
@@ -134,4 +137,4 @@ export default boot(({app}) => {
   //       so you can easily perform requests against your app's API
 })
 
-export {axiosInstance}
+export { axiosInstance }

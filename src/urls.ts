@@ -3,6 +3,11 @@ export const urls = {
   refreshToken: 'token/refresh/',
   userProfile: 'users/profile/',
   users: 'users/users/',
+  userOwnInfo: 'users/users/my-info/',
+  changePassword: 'auth/users/{user_id}/change-password/',
+
+  authGroups: 'users/auth-groups/',
+  authPermissions: 'users/auth-permissions/',
 
   brands: 'products/brands/',
   actualProducts: 'products/actual-products/',

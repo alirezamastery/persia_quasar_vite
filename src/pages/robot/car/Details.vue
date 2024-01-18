@@ -222,7 +222,7 @@ watch(appointTime, (val) => {
               </tr>
               <tr>
                 <td>{{ $t('car.phone') }}</td>
-                <td>{{ form.phone }}</td>
+                <td style="letter-spacing: 1px">{{ form.phone }}</td>
               </tr>
               <tr>
                 <td>{{ $t('car.price') }}</td>

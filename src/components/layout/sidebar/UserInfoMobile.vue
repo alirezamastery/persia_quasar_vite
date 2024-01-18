@@ -74,7 +74,7 @@ const emits = defineEmits(['height-change'])
 const router = useRouter()
 const userStore = useUserStore()
 
-const user = computed(() => userStore.user)
+const user = computed(() => userStore.mobile)
 const profile = computed(() => userStore.profile)
 const userAvatar = computed(() => userStore.profile.avatar)
 const fullName = computed(() => {

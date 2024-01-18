@@ -4,6 +4,15 @@ export enum RouteNames {
   LOGOUT = 'Logout',
   PROFILE = 'Profile',
 
+  USER_LIST = 'userList',
+  USER_ADD = 'userAdd',
+  USER_EDIT = 'userEdit',
+  CHANGE_PASSWORD = 'changePassword',
+
+  AUTH_GROUP_LIST = 'authGroupList',
+  AUTH_GROUP_ADD = 'authGroupAdd',
+  AUTH_GROUP_EDIT = 'authGroupEdit',
+
   ACTUAL_PRODUCTS_LIST = 'actualProductList',
   ACTUAL_PRODUCTS_ADD = 'actualProductAdd',
   ACTUAL_PRODUCTS_EDIT = 'actualProductEdit',
