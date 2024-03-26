@@ -9,6 +9,8 @@ export const urls = {
   authGroups: 'users/auth-groups/',
   authPermissions: 'users/auth-permissions/',
 
+  callLocal:'admin/auth/call-local/',
+
   brands: 'products/brands/',
   actualProducts: 'products/actual-products/',
   actualProductsRelatedSelectors: 'products/actual-products/{0}/related-selectors/',
